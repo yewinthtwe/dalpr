@@ -1,0 +1,47 @@
+{
+  "name": "alpr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "alpr": "^0.3.3",
+    "axios": "^0.20.0",
+    "bcrypt": "^5.0.0",
+    "bootstrap": "^4.5.3",
+    "config": "^3.3.2",
+    "cors": "^2.8.5",
+    "date-fns": "^2.16.1",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-session": "^1.17.1",
+    "font-awesome": "^4.7.0",
+    "helmet": "^4.1.1",
+    "helmet-csp": "^3.1.0",
+    "joi": "^17.2.1",
+    "joi-browser": "^13.4.0",
+    "joi-objectid": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "mongoose": "^5.10.5",
+    "node-mjpeg-proxy": "^0.3.2",
+    "nodemon": "^2.0.4",
+    "opencv4nodejs": "^5.6.0",
+    "passport": "^0.4.1",
+    "pug": "^3.0.0",
+    "pug-cli": "^1.0.0-alpha6",
+    "react-router-dom": "^5.2.0",
+    "winston": "^3.3.3",
+    "xml-js": "^1.6.11",
+    "xml2js": "^0.4.23",
+    "xml2json": "^0.12.0"
+  },
+  "devDependencies": {
+    "http-proxy-middleware": "^1.0.6"
+  }
+}

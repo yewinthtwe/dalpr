@@ -1,0 +1,43 @@
+{
+    "jwtPrivateKey": "",
+    "dbURL" : "mongodb://localhost:27017/alpr",
+    "adamURL" : "http://172.16.20.233/digitaloutput/all/value",
+
+    "apiURL" : "http://localhost:30000/api",
+
+    "mongooseConfig" : {
+        "useNewUrlParser": true,
+        "useUnifiedTopology": true
+    },
+
+    "laneType" :{
+      "cam1" : "gate1In",
+      "cam2" : "gate1Out",
+      "cam3" : "gate2In",
+      "cam4" : "gate2Out"
+    },
+
+    "adamConfig": {
+        "headers" : {
+          "Content-Length": 0,
+          "Content-Type": "text/plain"
+        },
+        "auth" : {
+          "username" : "root",
+          "password": "00000000"
+        }
+    },
+
+    "xmlOptions": {
+        "object": true,
+        "reversible": false,
+        "coerce": false,
+        "sanitize": true,
+        "trim": true,
+        "arrayNotation": false,
+        "alternateTextNode": false
+    }
+   
+}
+
+
