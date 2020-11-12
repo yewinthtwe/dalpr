@@ -67,6 +67,7 @@ class GateUser extends Component {
     return (
       <div className="row">
         <div className="col">
+          <br></br>
         <h4> Gate users record</h4>
           <p> Total number of gateuser is {totalCount} currently.</p>
             <SearchBox value={searchQuery} onChange={this.handleSearch} />

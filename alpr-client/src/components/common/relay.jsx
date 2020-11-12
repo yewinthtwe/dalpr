@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import _, { reduce, toNumber } from "lodash";
+import { toNumber } from "lodash";
 
 class Relay extends Component {
 

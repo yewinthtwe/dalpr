@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from 'react-toastify';
 //import { toast } from 'react-toastify';
 import Relay from "./common/relay";
 import { getLaneStatus, setLaneValue } from "../services/laneServices";
@@ -29,6 +30,12 @@ handleOnToggle = async (relay) => {
 
   render()
   {
+
+    const { length: count } = this.state.relays;
+    if (count === 0) return toast.error("IO module controllers are offline! Please check network connection.", {
+      position: toast.POSITION.BOTTOM_LEFT
+    });
+
     //console.log('this.state', this.state.relays);
     return ( 
         <div className="row">

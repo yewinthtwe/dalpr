@@ -1,26 +1,6 @@
 {
     "apiUrl": "http://localhost:30000/api",
     
-    "adamURL" : "http://192.168.11.151/digitaloutput/all/value",
-
-    "adamConfig": {
-        "headers" : {
-          "Content-Length": 0,
-          "Content-Type": "text/plain"
-        },
-        "auth" : {
-          "username" : "root",
-          "password": "00000000"
-        }
-    },
-
-    "cameraUrl" : {
-      "cam1": "http://192.168.100.101/video.mjpg?user=root&pw=koye6477",
-      "cam2": "http://192.168.100.102/video.mjpg?user=root&pw=koye6477",
-      "cam3": "http://192.168.100.103/video.mjpg?user=root&pw=koye6477",
-      "cam4": "http://192.168.100.104/video.mjpg?user=root&pw=koye6477"
-    },
-
     "xmlOptions": {
         "object": true,
         "reversible": false,

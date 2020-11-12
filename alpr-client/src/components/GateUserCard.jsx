@@ -22,7 +22,7 @@ class GateUserCard extends Component {
       const gateuserId = this.props.match.params.id;
       const { data: gateuser } = await getGateUser(gateuserId);
       //console.log(gateuser);
-      this.setState({ data: this.mapToViewModel(gateuser) });
+      this.setState({ data: this.mapToViewModel( gateuser ) });
     } 
     catch (ex) {
       if (ex.response && ex.response.status === 404) this.props.history.replace('/not-found');
@@ -37,7 +37,7 @@ class GateUserCard extends Component {
     return {
       _id: gateuser._id,
       licensePlate: gateuser.licensePlate,
-      photo: gateuser.uuid,
+      photo: gateuser.photo,
       inTime: gateuser.inTime,
       outTime: gateuser.outTime,
       camera_id: gateuser.camera_id,
@@ -52,7 +52,7 @@ class GateUserCard extends Component {
   render(){
 
       const imgFilename = this.state.data.photo;
-      const imgsrc = `${imageUrl}${imgFilename}.jpg`;
+      const imgsrc = `${imageUrl}${imgFilename}`;
       //console.log(this.props);
     
     return (

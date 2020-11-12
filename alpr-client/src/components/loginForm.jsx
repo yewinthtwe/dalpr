@@ -41,7 +41,9 @@ class LoginForm extends Form {
     if (auth.getCurrentUser()) return <Redirect to='/' />;
     return (
       <div>
-        <h3>Login</h3>
+        <img src="/diamond_logo.png" width="80" height="50" alt="dip logo" />
+        <h6>Vehicle Access Control System</h6>
+        <h4>Login</h4>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}

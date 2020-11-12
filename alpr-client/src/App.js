@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import NavBar from "./components/navBar";
+import BottomNavBar from './components/BottomNavBar';
 import Members from "./components/members";
 import MemberForm from './components/memberForm';
 import Users from "./components/users";
@@ -16,6 +17,7 @@ import ProtectedRoute from './components/common/protectedRoute';
 import GateUserCard from "./components/GateUserCard";
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+
 
 
 class App extends Component {
@@ -51,6 +53,7 @@ class App extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </main>
+        <BottomNavBar></BottomNavBar>
       </React.Fragment>
     );
   }

@@ -9,7 +9,6 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.3",
     "font-awesome": "^4.7.0",
-    "image-thumbnail": "^1.0.11",
     "joi-browser": "^13.4.0",
     "jwt-decode": "^3.0.0",
     "lodash": "^4.17.20",
@@ -18,7 +17,6 @@
     "react-bootstrap": "^1.4.0",
     "react-dom": "^16.14.0",
     "react-image": "^4.0.3",
-    "react-image-gallery": "^1.0.8",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-toastify": "^6.0.9",
@@ -44,5 +42,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "DIPAlpr Client",
+  "main": "index.js",
+  "author": "yewint",
+  "license": "ISC"
 }

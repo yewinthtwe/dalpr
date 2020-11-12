@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Table from "./common/table";
 import {Img} from 'react-image'
-import Card from "./CardUI";
+//import Card from "./CardUI";
 const imageUrl = "http://localhost:30000/plateimages/";
 
 class GateUserTable extends Component {
