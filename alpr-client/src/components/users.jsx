@@ -88,7 +88,12 @@ class Users extends Component {
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
     //const { user } = this.props;
     
-    if (count === 0) return <p>There is no registered user in the database.</p>;
+    if (count === 0) return <div> <h6>There is no system user</h6> <Link 
+    to='/users/new' className='btn btn-primary m-2'
+    style={{marginBottom:20}}>
+      New User <i className="fa fa-plus-circle" aria-hidden="true"></i>
+    </Link> </div> ;
+
 
     const { totalCount, data: users } = this.getPagedData();
 
@@ -110,7 +115,7 @@ class Users extends Component {
           <Link 
           to='/users/new' className='btn btn-primary m-2'
           style={{marginBottom:20}}>
-            New User
+            New User <i className="fa fa-plus-circle" aria-hidden="true"></i>
           </Link>
 
           <Pagination

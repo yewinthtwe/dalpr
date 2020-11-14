@@ -7,13 +7,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("./middleware/logger");
 const members = require("./routes/members");
-const gateUsers = require("./routes/gateUsers");
+const inOutRecord = require("./routes/inOutRecord");
 const alprd = require("./routes/alprd");
 const lane = require('./routes/lane');
 const users = require("./routes/users");
-const obu = require('./routes/obu');
 const auth = require("./routes/auth");
-//const houseKeeper = require('./housekeeper');
 
 
 process.on('uncaughtException', (ex) => {
@@ -30,8 +28,6 @@ if (!config.get('jwtPrivateKey')) {
     message: "FATAL Error: jwtPrivateKey is not defined",
   });
     
-//console.error("'FATAL Error: jwtPrivateKey is not defined");
-  //console.error("'FATAL Error: jwtPrivateKey is not defined");
 process.exit(1);
 }
 
@@ -41,8 +37,6 @@ app.use(cors());
 app.use(express.static(__dirname + '/public'));
 app.use(express.static('/plateimages'));
 app.get('/:photo', (req, res) => {
-//   //res.sendFile(req.params.photo);
- console.log(req.params.photo);
  });
 
 mongoose
@@ -54,14 +48,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/members", members);
 app.use("/api/users", users);
-app.use("/api/gateUsers", gateUsers);
+app.use("/api/inOutRecord", inOutRecord);
 app.use("/api/alprd", alprd);
 app.use("/api/lane", lane);
-app.use("/api/obu", obu);
 app.use("/api/auth", auth);
 app.use(error);
-
-//houseKeeper();
 
 const port = process.env.PORT || 30000;
 app.listen(port);

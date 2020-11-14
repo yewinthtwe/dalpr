@@ -11,8 +11,8 @@ export function getMembers() {
     return http.get(apiEndpoint);
   }
 
-export function getMember(memberId) {
-    return http.get(memberUrl(memberId));
+export function getMember(id) {
+    return http.get(memberUrl(id));
   }
 
   export function saveMember(member) {
@@ -24,6 +24,6 @@ export function getMember(memberId) {
     return http.post(apiEndpoint, member);
   }
 
-export function deleteMember(memberId) {
-    return http.delete(memberUrl(memberId));
+export function deleteMember(id) {
+    return http.delete(memberUrl(id));
 }

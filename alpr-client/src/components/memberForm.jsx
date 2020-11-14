@@ -7,23 +7,23 @@ class MemberForm extends Form {
   state = {
     data: {
       licensePlate: "",
-      owner_name: "",
+      memberName: "",
       address:"",
-      obuId: 1,
+      obuId: 123456789012,
     },
     errors: {}
   };
 
   schema = {
     _id: Joi.string(),
+    
     licensePlate: Joi.string()
       .required()
-      .min(4)
       .label("License Plate"),
-    owner_name: Joi.string()
+    memberName: Joi.string()
       .required()
       .min(6)
-      .label("Owner Name"),
+      .label("Member Name"),
     address: Joi.string()
       .required()
       .min(6)
@@ -35,26 +35,25 @@ class MemberForm extends Form {
 
   async populateMember(){
     try {
-      const memberId = this.props.match.params.id;
-      if (memberId === "new") return;
+      const member_id = this.props.match.params.id;
+      if ( member_id === "new") return;
+      const { data: member } = await getMember( member_id );
+      this.setState({ data: this.mapToViewModel( member ) });
 
-      const { data: member } = await getMember(memberId);
-      this.setState({ data: this.mapToViewModel(member) });
-    } 
-    catch (ex) {
+    } catch (ex) {
       if (ex.response && ex.response.status === 404) this.props.history.replace('/not-found');
     }
-  }
+ }
 
   async componentDidMount() {
    await this.populateMember();
   }
   
-  mapToViewModel(member) {
+  mapToViewModel( member ) {
     return {
       _id: member._id,
       licensePlate: member.licensePlate,
-      owner_name: member.owner_name,
+      memberName: member.memberName,
       address: member.address,
       obuId: member.obuId
     };
@@ -71,7 +70,7 @@ class MemberForm extends Form {
       <h4> Member </h4>
       <form onSubmit={this.handleSubmit}>
         {this.renderInput('licensePlate', 'License Plate')}
-        {this.renderInput('owner_name', 'Owner Name')}
+        {this.renderInput('memberName', 'Member Name')}
         {this.renderInput('address', 'Address')}
         {this.renderInput('obuId', 'OBU')}
         {this.renderButton('Save')}

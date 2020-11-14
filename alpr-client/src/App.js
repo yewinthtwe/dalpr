@@ -10,11 +10,11 @@ import UserForm from "./components/userForm";
 import LoginForm from "./components/loginForm";
 import Logout from './components/logout';
 import Relays from "./components/relays";
-import GateUser from "./components/GateUser";
+import InOutRecord from "./components/inOutRecord";
 import auth from './services/authService';
 import NotFound from "./components/notFound";
 import ProtectedRoute from './components/common/protectedRoute';
-import GateUserCard from "./components/GateUserCard";
+import InOutRecordCard from "./components/inOutRecordCard";
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -46,10 +46,10 @@ class App extends Component {
             <ProtectedRoute path="/members/:id" component={MemberForm} />
             <Route path="/members" render={props => <Members {...props} user={this.state.user} 
             />} />
-            <ProtectedRoute path="/gateUsers/:id" component={GateUserCard} />
-            <Route path="/gateUsers" render={props => <GateUser {...props} user={this.state.user}/>} />
+            <ProtectedRoute path="/inOutRecord/:id" component={InOutRecordCard} />
+            <Route path="/inOutRecord" render={props => <InOutRecord {...props} user={this.state.user}/>} />
             <Route path="/not-found" component={NotFound} />
-            <Redirect from="/" exact to="/users" />
+            <Redirect from="/" exact to="/inOutRecord" />
             <Redirect to="/not-found" />
           </Switch>
         </main>

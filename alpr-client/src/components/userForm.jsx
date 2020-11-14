@@ -34,10 +34,9 @@ class UserForm extends Form {
   async populateUser(){
     try {
       const userId = this.props.match.params.id;
-      if (userId === "new") return;
-
-      const { data: user } = await getUser(userId);
-      this.setState({ data: this.mapToViewModel(user) });
+      if ( userId === "new") return;
+      const { data: user } = await getUser( userId );
+      this.setState({ data: this.mapToViewModel( user ) });
     } 
     catch (ex) {
       if (ex.response && ex.response.status === 404) this.props.history.replace('/not-found');
@@ -66,7 +65,7 @@ class UserForm extends Form {
   render(){
     return (
     <div>
-      <h3> Users </h3>
+      <h4>System user</h4>
       <form onSubmit={this.handleSubmit}>
         {this.renderInput('username', 'Username')}
         {this.renderInput('password', 'Password')}
@@ -76,7 +75,6 @@ class UserForm extends Form {
       </form>
     </div>
     )
-    
   }
 }
 

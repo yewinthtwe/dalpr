@@ -3,76 +3,33 @@ const router = express.Router();
 const _ = require("lodash");
 const logger = require("../middleware/logger");
 const playAdam = require("../relayPlayer");
-const { GateUser } = require("../models/gateUserModel");
 const validateUser = require('../validateUser');
+const { validateTicket, saveInOutRecord } = require("../validateUser");
+// const { saveTrafficHistory } = require("../validateUser");
 
 //const { Member } = require("../models/memberModel");
 //const {TrafficHistory} = require("../models/trafficHistoryModel");
 //const { find } = require("lodash");
 
+// Process Camera feed posted by Alpr daemon
 router.post("/", async (req, res) => {
 
-  const pickedObj = _.pick(req.body, '_id', 'epoch_time', 'processing_time_ms', 'uuid', 'site_id', 'camera_id', 'results');
-  const { _id, epoch_time, uuid, camera_id, results } = pickedObj;
+  const cameraFeed = _.pick(req.body, 'epoch_time', 'uuid', 'site_id', 'camera_id', 'results');
+  const { results } = cameraFeed;
   const licensePlate = _.map(results, 'plate');
-  const photo = `${uuid}.jpg`;
  
-  let isInBoundLane = false;
-  if (camera_id % 2 != 0) isInBoundLane = true;
-   //mgw-cam1-1604313143228.jpg
-
-   const gateUserDoc =  new GateUser ({
-    licensePlate: licensePlate,
-    photo: photo,
-    inTime: '',
-    outTime: '',
-    isMember: false,
-    markToDelete: false
-  });
-
- const gateusers = await validateUser.getGateUsers();
- //console.log(gateusers);
-
- const member = await validateUser.validateMember(licensePlate);
- if (member) gateUserDoc.isMember = true;
-  if (isInBoundLane) {
-    gateUserDoc.inTime = epoch_time;
-    if( member ) {
-      console.log('Entry lane >>> Member >>> Auto Open');
-      //const relayId = camera_id - 1;
-      // const relayValue = '1';
-      //playAdam.setDO(relayId, relayValue);
-    } else {
-      console.log('Entry lane >>> Visitor >>> Manual open');
-    }
-    await gateUserDoc.save();
-    res.status(200).send('Success');
-  } else {
-      console.log('Exit lane >>> Auto open');
-      await GateUser.updateOne({'licensePlate': licensePlate}, {
-        "outTime" : epoch_time,
-        "markToDelete" : true
-      });
-
+const member = await validateUser.validateMember(licensePlate);
+    if(!member) {
+      const validTicket = await validateTicket(cameraFeed);
+      if(!validTicket) return res.status(200).send('You have no valid ticket or Already Checkout - pls use Entry lane');
+      const savedRecord = await saveInOutRecord(cameraFeed);
+      console.log(`${licensePlate} is Not member >>> Valid Ticket: ${validTicket.ticketId} >>> Auto Open`);
       res.status(200).send('Success');
-  }
+    } else {
+      const savedRecord = await saveInOutRecord(cameraFeed);
+      console.log(`${licensePlate} is member >>> Auto Open`);
+      res.status(200).send('Success');
+    }
 }); // routing post block End
-
-// router.get("/", async (req, res) => {
-//   if(!req.body.selectedDate) req.body.selectedDate = 7; 
-//     const byToday = new Date();
-//     const speficiedDate = subDays(parseJSON(byToday), req.body.selectedDate);
-//     const trafficHistory = await TrafficHistory.find()
-//     //.find({"epoch_time":{ '$lte': byToday , '$gte': speficiedDate }})
-//     //.find({"epoch_time": byToday})
-//     .limit(50);
-//     res.status(200).send(trafficHistory);
-// });
-
-// router.get("/:id", async (req, res) => {
-//     const trafficHistory = await TrafficHistory.findById({_id: req.params.id });
-//     const result =_.pick(trafficHistory, 'licensePlate', 'photo', 'inTime', 'outTime', 'isMember');
-//      res.status(200).send(result);
-// });
 
 module.exports = router;

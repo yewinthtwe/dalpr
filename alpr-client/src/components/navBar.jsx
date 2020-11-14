@@ -21,23 +21,26 @@ const NavBar = ({user}) => {
       </button>
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div className="navbar-nav">
+          <NavLink className="nav-item nav-link" to="/inOutRecord">
+            <i className="fa fa-car" aria-hidden="true"></i> InOut Record
+          </NavLink>
+
           <NavLink className="nav-item nav-link" to="/members">
-          <i className="fa fa-users" aria-hidden="true"></i> Members
+            <i className="fa fa-users" aria-hidden="true"></i> Members
           </NavLink>
-          <NavLink className="nav-item nav-link" to="/lanes">
-          <i class="fa fa-microchip" aria-hidden="true"></i> IO Module
-          </NavLink>
-          <NavLink className="nav-item nav-link" to="/gateUsers">
-          <i class="fa fa-car" aria-hidden="true"></i> Gate users
-          </NavLink>
+          
           <NavLink className="nav-item nav-link" to="/users">
-          <i class="fa fa-user-circle" aria-hidden="true"></i> System users
+            <i className="fa fa-user-circle" aria-hidden="true"></i> System users
+          </NavLink>
+
+          <NavLink className="nav-item nav-link" to="/lanes">
+            <i className="fa fa-microchip" aria-hidden="true"></i> IO Module
           </NavLink>
 
           { !user &&
           <React.Fragment>
           <NavLink className="nav-item nav-link" to="/login">
-          <i class="fa fa-sign-in" aria-hidden="true"></i> Login
+            <i className="fa fa-sign-in" aria-hidden="true"></i> Login
           </NavLink>
           </React.Fragment>
           }
@@ -47,14 +50,14 @@ const NavBar = ({user}) => {
             {user.username}
           </NavLink>
           <NavLink className="nav-item nav-link" to="/logout">
-          <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+          <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
           </NavLink>
 
           </React.Fragment>
           }
         </div>
       </div>
-      <span class="navbar-text">
+      <span className="navbar-text">
       - Dalpr - Build.20200923001
     </span>
     </nav>

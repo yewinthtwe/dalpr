@@ -32,10 +32,7 @@ handleOnToggle = async (relay) => {
   {
 
     const { length: count } = this.state.relays;
-    if (count === 0) return toast.error("IO module controllers are offline! Please check network connection.", {
-      position: toast.POSITION.BOTTOM_LEFT
-    });
-
+    if (count === 0) toast('IO module controllers are offline! Please check network connection.');
     //console.log('this.state', this.state.relays);
     return ( 
         <div className="row">

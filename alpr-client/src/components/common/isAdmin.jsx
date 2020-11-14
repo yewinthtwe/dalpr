@@ -5,7 +5,7 @@ const isAdmin = props => {
   if (!props.isAdmin) classes = "fa fa-times";
   return (
     <i
-      onClick={props.onClick}
+      //onClick={props.onClick}
       // style={{ cursor: "pointer" }}
       className={classes}
       aria-hidden="true"

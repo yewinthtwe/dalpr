@@ -4,7 +4,7 @@ import React from "react";
 const BottomNavBar = ({user}) => {
   
   return (
-    <nav class="navbar fixed-bottom navbar-light bg-light justify-content-end">
+    <nav className="navbar fixed-bottom navbar-light bg-light justify-content-end">
  Q-Free ASA. &#169; 2020
 </nav>
   );

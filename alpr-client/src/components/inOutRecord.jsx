@@ -1,24 +1,24 @@
 import React, { Component } from "react";
-import GateUserTable from "./GateUserTable";
+import InOutRecordTable from "./InOutRecordTable";
 import Pagination from "./common/pagination";
-import { getGateUsers } from "../services/gateUserServices";
+import { getInOutRecords } from "../services/inOutRecordServices";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import SearchBox from "./searchBox";
 
 
-class GateUser extends Component {
+class InOutRecord extends Component {
   state = {
-    gateusers: [],
+    inOutRecords: [],
     currentPage: 1,
     pageSize: 10,
     searchQuery: "",
-    sortColumn: { path: "epoch_time", order: "desc" }
+    sortColumn: { path: "Time", order: "desc" }
   };
 
   async componentDidMount() {
-    const { data: gateusers } = await getGateUsers();
-    this.setState({ gateusers });
+    const { data: inOutRecords } = await getInOutRecords();
+    this.setState({ inOutRecords });
   }
 
   handlePageChange = page => {
@@ -40,39 +40,39 @@ class GateUser extends Component {
       currentPage,
       sortColumn,
       searchQuery,
-      gateusers: allGateUsers
+      inOutRecords: allInOutRecords
     } = this.state;
 
-    let filtered = allGateUsers;
+    let filtered = allInOutRecords;
     if (searchQuery)
-    filtered = allGateUsers.filter(m =>
+    filtered = allInOutRecords.filter(m =>
       m.licensePlate.toString().toLowerCase().startsWith(searchQuery.toLowerCase())
     );
   
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-    const gateusers = paginate(sorted, currentPage, pageSize);
+    const inOutRecords = paginate(sorted, currentPage, pageSize);
 
-    return { totalCount: filtered.length, data: gateusers };
+    return { totalCount: filtered.length, data: inOutRecords };
   };
 
   render() {
-    const { length: count } = this.state.gateusers;
+    const { length: count } = this.state.inOutRecords;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
-    if (count === 0) return <p>There is no gateuser data found in the database.</p>;
+    if (count === 0) return <p>There is no inOutRecord data found in the database.</p>;
 
-    const { totalCount, data: gateusers } = this.getPagedData();
+    const { totalCount, data: inOutRecords } = this.getPagedData();
 
     return (
       <div className="row">
         <div className="col">
           <br></br>
-        <h4> Gate users record</h4>
-          <p> Total number of gateuser is {totalCount} currently.</p>
+        <h4> InOut records</h4>
+          <p> Total number of InOut record {totalCount} currently.</p>
             <SearchBox value={searchQuery} onChange={this.handleSearch} />
-          <GateUserTable
-            gateusers={gateusers}
+          <InOutRecordTable
+            inOutRecords={inOutRecords}
             sortColumn={sortColumn}
             onSort={this.handleSort}
           />
@@ -88,5 +88,5 @@ class GateUser extends Component {
   }
 }
 
-export default GateUser;
+export default InOutRecord;
 

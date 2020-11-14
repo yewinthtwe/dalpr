@@ -1,5 +1,7 @@
 {
     "apiUrl": "http://localhost:30000/api",
+
+    "imageUrl" : "http://localhost:30000/plateimages/",
     
     "xmlOptions": {
         "object": true,

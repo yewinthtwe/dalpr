@@ -7,12 +7,9 @@ import Table from "./common/table";
 class MembersTable extends Component {
   columns = [
     { path: "licensePlate", label: "License Plate", content: member => <Link to={`/members/${member._id}`}>{member.licensePlate}</Link> },
-    {
-      path: "owner_name",
-      label: "Owner Name",
-    },
+    { path: "memberName", label: "Member Name" },
     { path: "address", label: "Address" },
-    { path: "reg_date", label: "Registration Date" },
+    { path: "registrationDate", label: "Registration Date" },
     { path: "obuId", label: "OBU" },
   ];
 

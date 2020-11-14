@@ -78,9 +78,17 @@ class Members extends Component {
   render() {
     const { length: count } = this.state.members;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
-   const { user } = this.props;
+    const { user } = this.props;
 
-    if (count === 0) return <p>There is no registered member in the database.</p>;
+    if (count === 0) return <div>
+    <h6>There is no registered member in the database.</h6>
+    <Link 
+          to='/members/new' className='btn btn-primary m-2'
+          style={{marginBottom:20}}>
+            New Member <i className="fa fa-plus-circle" aria-hidden="true"></i>
+          </Link>
+      
+    </div>;
 
     const { totalCount, data: members } = this.getPagedData();
 
@@ -89,7 +97,7 @@ class Members extends Component {
         <div className="col">
           <br></br>
           <h4> Registered Members </h4>
-          <h5> Search License Plate</h5>
+          <h6> Search License Plate</h6>
           <p> Total {totalCount} member.</p>
           <SearchBox value={searchQuery} onChange={this.handleSearch}/>
           <MembersTable
@@ -99,11 +107,11 @@ class Members extends Component {
             onSort={this.handleSort}
           />
           
-          {user && (
+          { user && (
           <Link 
           to='/members/new' className='btn btn-primary m-2'
           style={{marginBottom:20}}>
-            New Member
+            New Member <i className="fa fa-plus-circle" aria-hidden="true"></i>
           </Link>
           )}
           
