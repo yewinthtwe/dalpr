@@ -15,7 +15,8 @@ const auth = require("./routes/auth");
 
 
 process.on('uncaughtException', (ex) => {
- console.log('We got Uncaught exception error');
+ console.log('We got Uncaught exception error', ex);
+
   logger.log({
     level: 'error',
     message: 'We got Uncaught exception error' 

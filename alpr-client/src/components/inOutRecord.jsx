@@ -5,7 +5,8 @@ import { getInOutRecords } from "../services/inOutRecordServices";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import SearchBox from "./searchBox";
-
+import Typography from '@material-ui/core/Typography';
+import { utcToZonedTime, format } from 'date-fns-tz'
 
 class InOutRecord extends Component {
   state = {
@@ -16,8 +17,20 @@ class InOutRecord extends Component {
     sortColumn: { path: "Time", order: "desc" }
   };
 
+ convertTimezone (inOutRecords) {
+  const timeZone = 'Asia/Yangon';
+
+   _.forEach(inOutRecords, function (key,value) {
+    let mmTime = utcToZonedTime(key.Time, timeZone);
+    mmTime = format(mmTime, 'yyyy-MM-dd HH:mm:ss', { timeZone: timeZone }) 
+    key.Time = mmTime;
+  });
+  return inOutRecords;
+ }
+
   async componentDidMount() {
-    const { data: inOutRecords } = await getInOutRecords();
+    let { data: inOutRecords } = await getInOutRecords();
+    inOutRecords = this.convertTimezone(inOutRecords);
     this.setState({ inOutRecords });
   }
 
@@ -60,16 +73,19 @@ class InOutRecord extends Component {
     const { length: count } = this.state.inOutRecords;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
-    if (count === 0) return <p>There is no inOutRecord data found in the database.</p>;
+    if (count === 0) return <Typography component="p">There is no InOut record.</Typography>;
 
     const { totalCount, data: inOutRecords } = this.getPagedData();
 
     return (
       <div className="row">
         <div className="col">
-          <br></br>
-        <h4> InOut records</h4>
-          <p> Total number of InOut record {totalCount} currently.</p>
+          <Typography variant="h5" component="h5">
+            InOut records
+          </Typography>
+          <Typography component="p">
+            Showing {totalCount} InOut record.
+          </Typography>
             <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <InOutRecordTable
             inOutRecords={inOutRecords}

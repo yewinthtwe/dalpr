@@ -2,37 +2,28 @@ const config = require('config');
 const axios = require("axios");
 const xmlParser = require("xml2json");
 const _ = require('lodash');
-//const { flatten } = require('lodash');
 
-async function showDO() {
-  const response = await axios.get(config.get('adamURL'), config.get('adamConfig'));
-  const myjson = xmlParser.toJson(response.data, config.get('xmlOptions'));
-  Object.keys(myjson).forEach(function (key) {
-    myjson["adam_6060"] = myjson[key];
-    
-});
-  const relays = myjson.adam_6060.DO;
-  return relays;
+async function showDO( ioModuleId ) {
+  const { data } = await axios.get(config.get(`adamURL.${ioModuleId}`), config.get('adamConfig'));
+  let moduleStatus = xmlParser.toJson(data, config.get('xmlOptions'));
+  moduleStatus = moduleStatus['ADAM-6060'];
+  return moduleStatus;
 }
 
-async function setDO( relayId, setValue) {
-  const relays = await showDO();
- 
+async function setDO( ioModuleId, relayId, setValue) {
+  const relays = await showDO( ioModuleId );
   const relayONcollection=[];
-_.find(relays, function (o) {
-  if(o.ID == relayId )
-   o.VALUE = setValue;
-   relayONcollection.push(`DO${o.ID}=${o.VALUE}&`);
-  });
-
+  _.find(relays.DO, function (o) {
+    if( o.ID == relayId )
+    o.VALUE = setValue;
+    relayONcollection.push(`DO${o.ID}=${o.VALUE}&`);
+});
  const removedComma =  _.replace(relayONcollection, /,/g,"");
  const datastring = _.toString(removedComma);
- const response = await axios.post ( config.get('adamURL'), datastring, config.get('adamConfig') );
-  return relays;
-//console.log(relays);
-//console.log(datastring);
+ const { data } = await axios.post( config.get(`adamURL.${ioModuleId}`), datastring, config.get('adamConfig') );
+ return data;
 }
-//showDO();
-//setDO(0, '0');
+//showDO('1');
+//setDO('2', 5, '0');
 module.exports.showDO = showDO;
 module.exports.setDO = setDO;

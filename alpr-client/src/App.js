@@ -2,19 +2,20 @@ import React, {Component} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
 import NavBar from "./components/navBar";
-import BottomNavBar from './components/BottomNavBar';
 import Members from "./components/members";
 import MemberForm from './components/memberForm';
 import Users from "./components/users";
 import UserForm from "./components/userForm";
 import LoginForm from "./components/loginForm";
 import Logout from './components/logout';
-import Relays from "./components/relays";
+//import Relays from "./components/relays";
 import InOutRecord from "./components/inOutRecord";
 import auth from './services/authService';
 import NotFound from "./components/notFound";
 import ProtectedRoute from './components/common/protectedRoute';
 import InOutRecordCard from "./components/inOutRecordCard";
+//import MyCards from './components/Cards';
+import Lanes from './components/lanes';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -41,7 +42,7 @@ class App extends Component {
             <Route path="/users" component={Users} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
-            <Route path="/lanes" component={Relays} />
+            <Route path="/lanes" component={Lanes} />
 
             <ProtectedRoute path="/members/:id" component={MemberForm} />
             <Route path="/members" render={props => <Members {...props} user={this.state.user} 
@@ -53,7 +54,6 @@ class App extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </main>
-        <BottomNavBar></BottomNavBar>
       </React.Fragment>
     );
   }

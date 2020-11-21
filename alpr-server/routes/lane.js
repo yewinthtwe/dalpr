@@ -4,26 +4,32 @@ const playAdam = require("../relayPlayer");
 
 
 router.post("/", async (req, res) => {
-    
+  if(!req.body.ioModuleId) return res.status(200).send( 'Invalid IO Module ID.' );
   try {
-    let relayId =  req.body.relayId;
+    const statusOfDO = [];
+    const ioModuleId = req.body.ioModuleId;
+    const relayId =  req.body.relayId;
     const relayValue = req.body.relayValue;
-    const relays = await playAdam.setDO(relayId, relayValue);
-    res.status(200).send(relays);
+    const relay = await playAdam.setDO( ioModuleId, relayId, relayValue );
+    statusOfDO.push(relay);
+    res.status(200).send( statusOfDO );
 
   } catch (err) {
-    console.log("Unexpected error occured while retriving data", err);
+    console.log("Unexpected error occured while retriving data. IO modules may be offline.", err);
   }
   });
 
-
-router.get("/", async (req, res) => {
+router.get("/:ioModuleId", async (req, res) => {
+  if(!req.params.ioModuleId) return res.status(200).send( 'Invalid IO Module ID.');
   try {
-    const lanes = await playAdam.showDO();
-    res.status(200).send(lanes);
+    const ioModuleId = req.params.ioModuleId;
+    const relaysStatus = await playAdam.showDO( ioModuleId );
+    const statusOfDO = [];
+    statusOfDO.push(relaysStatus);
+    res.status(200).send( statusOfDO );
 
   } catch (err) {
-    console.log("Unexpected error occured while retriving data", err);
+    console.log("Unexpected error occured while retriving data. IO modules may be offline.", err);
   }
 });
 

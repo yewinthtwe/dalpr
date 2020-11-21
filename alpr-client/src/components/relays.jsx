@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 //import { toast } from 'react-toastify';
 import Relay from "./common/relay";
 import { getLaneStatus, setLaneValue } from "../services/laneServices";
-
+import Cards from './Cards';
 
 class Relays extends Component
 {
@@ -38,12 +38,21 @@ handleOnToggle = async (relay) => {
         <div className="row">
         <div className="col">
           <h5> Automatic Lane Barrier - ALB </h5>
-          { this.state.relays.map( relay => (
+
+          {/* { this.state.relays.map( relay => (
           <Relay
             key={relay.ID}
             relay={relay}
             onToggle={this.handleOnToggle}
+          /> )) } */}
+
+{ this.state.relays.map( relay => (
+          <Cards
+            key={relay.ID}
+            relay={relay}
+            onToggle={this.handleOnToggle}
           /> )) }
+          
           
         </div>
       </div>

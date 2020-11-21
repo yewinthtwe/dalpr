@@ -24,7 +24,9 @@ async function saveInOutRecord (cameraFeed) {
 }
 
 async function getInOutRecords() {
-     const inOutRecords = await InOutRecord.find()
+     const inOutRecords = await InOutRecord
+     .find({})
+     .sort({Time: 'descending'})
      .limit(50);
      return inOutRecords;
 }
@@ -33,7 +35,6 @@ async function getInOutRecord(id) {
   const inOutRecords = await InOutRecord.findById({'_id': id});
   return inOutRecords;
 }
-
 
 async function validateTicket (cameraFeed) {
   const { epoch_time, uuid, camera_id, results } = cameraFeed;

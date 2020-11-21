@@ -7,6 +7,7 @@ import { getUsers, deleteUser, saveUser } from "../services/userServices";
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import SearchBox from "./searchBox";
+import Typography from '@material-ui/core/Typography';
 
 class Users extends Component {
   state = {
@@ -88,7 +89,7 @@ class Users extends Component {
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
     //const { user } = this.props;
     
-    if (count === 0) return <div> <h6>There is no system user</h6> <Link 
+    if (count === 0) return <div> <Typography component="p">There is no System user.</Typography>; <Link 
     to='/users/new' className='btn btn-primary m-2'
     style={{marginBottom:20}}>
       New User <i className="fa fa-plus-circle" aria-hidden="true"></i>
@@ -100,9 +101,12 @@ class Users extends Component {
     return (
       <div className="row">
         <div className="col">
-          <h4> System Users </h4>
-          <h5> Search System user</h5>
-          <p> Total { totalCount } user.</p>
+           <Typography variant="h5" component="h5">
+             System Users
+           </Typography>
+           <Typography component="p">
+            Total {totalCount} system user.
+          </Typography>
           <SearchBox value={ searchQuery } onChange={ this.handleSearch }/>
           
           <UserTable

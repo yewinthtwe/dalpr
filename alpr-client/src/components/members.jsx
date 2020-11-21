@@ -7,6 +7,7 @@ import { getMembers, deleteMember, saveMember } from "../services/memberServices
 import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import SearchBox from "./searchBox";
+import Typography from '@material-ui/core/Typography';
 
 class Members extends Component {
   state = {
@@ -81,7 +82,7 @@ class Members extends Component {
     const { user } = this.props;
 
     if (count === 0) return <div>
-    <h6>There is no registered member in the database.</h6>
+    <Typography component="p">There is no member registered.</Typography>;
     <Link 
           to='/members/new' className='btn btn-primary m-2'
           style={{marginBottom:20}}>
@@ -95,10 +96,12 @@ class Members extends Component {
     return (
       <div className="row">
         <div className="col">
-          <br></br>
-          <h4> Registered Members </h4>
-          <h6> Search License Plate</h6>
-          <p> Total {totalCount} member.</p>
+          <Typography variant="h5" component="h5">
+            Registered Members
+          </Typography>
+          <Typography component="p">
+            Total {totalCount} member.
+          </Typography>
           <SearchBox value={searchQuery} onChange={this.handleSearch}/>
           <MembersTable
             members={members}

@@ -1,12 +1,22 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import CopyrightIcon from '@material-ui/icons/Copyright';
+import TrafficIcon from '@material-ui/icons/Traffic';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import EmojiTransportationIcon from '@material-ui/icons/EmojiTransportation';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import FaceIcon from '@material-ui/icons/Face';
+import Chip from '@material-ui/core/Chip';
+import Typography from '@material-ui/core/Typography';
 
 const NavBar = ({user}) => {
   
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link className="navbar-brand" to="/">
-       <span className="material-icons" >control_camera</span>dalrp
+       <span className="material-icons" >control_camera</span>dalpr
       </Link>
       <button
         className="navbar-toggler"
@@ -21,36 +31,40 @@ const NavBar = ({user}) => {
       </button>
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div className="navbar-nav">
+        
+        
           <NavLink className="nav-item nav-link" to="/inOutRecord">
-            <i className="fa fa-car" aria-hidden="true"></i> InOut Record
+          <Chip icon={<EmojiTransportationIcon />} label="InOut" clickable />
           </NavLink>
 
           <NavLink className="nav-item nav-link" to="/members">
-            <i className="fa fa-users" aria-hidden="true"></i> Members
+          <Chip icon={<AssignmentIndIcon />} label="Member" clickable />
           </NavLink>
           
           <NavLink className="nav-item nav-link" to="/users">
-            <i className="fa fa-user-circle" aria-hidden="true"></i> System users
+          <Chip icon={<AccountBoxIcon />} label="SystemUser" clickable />
+          
           </NavLink>
 
           <NavLink className="nav-item nav-link" to="/lanes">
-            <i className="fa fa-microchip" aria-hidden="true"></i> IO Module
+          <Chip icon={<TrafficIcon />} label="LaneControl" clickable />
+          
           </NavLink>
 
           { !user &&
           <React.Fragment>
           <NavLink className="nav-item nav-link" to="/login">
-            <i className="fa fa-sign-in" aria-hidden="true"></i> Login
+          <Chip icon={<ExitToAppIcon />} label="Login" clickable />
           </NavLink>
           </React.Fragment>
           }
           { user &&
           <React.Fragment>
           <NavLink className="nav-item nav-link" to={`/users/${user._id}`}>
-            {user.username}
+            <Chip icon={<FaceIcon />} label={user.username} clickable />
           </NavLink>
           <NavLink className="nav-item nav-link" to="/logout">
-          <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
+            <Chip icon={<MeetingRoomIcon />} label="Logout" clickable />
           </NavLink>
 
           </React.Fragment>
@@ -58,7 +72,9 @@ const NavBar = ({user}) => {
         </div>
       </div>
       <span className="navbar-text">
-      - Dalpr - Build.20200923001
+      <Typography style={{fontSize: 10}} component="p">
+       Evaluation Copy. Build.20200923002 | <CopyrightIcon fontSize="small"> </CopyrightIcon> 2020 | Q-Free ASA
+      </Typography>
     </span>
     </nav>
   );
