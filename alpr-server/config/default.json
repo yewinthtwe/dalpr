@@ -10,8 +10,8 @@
     "apiURL" : "http://localhost:30000/api",
 
     "adamURL" : {
-      "1" : "http://192.168.11.151/digitaloutput/all/value",
-      "2" : "http://192.168.11.81/digitaloutput/all/value" 
+      "1" : "http://192.168.11.81/digitaloutput/all/value",
+      "2" : "http://192.168.11.81/digitaloutput/all/value"
     },
 
     "adamConfig": {

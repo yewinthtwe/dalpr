@@ -4,11 +4,14 @@ const { Member } = require("./models/memberModel");
 const { Ticket } = require("./models/ticketModel");
 const _ = require('lodash');
 const { v4: uuidv4 } = require('uuid');
+const { AlprCamera } = require('./models/alprCameraModel');
 
 async function saveInOutRecord (cameraFeed) {
   const { epoch_time, uuid, camera_id, results } = cameraFeed;
   const licensePlate = _.map(results, 'plate');
   const photo = `${uuid}.jpg`;
+  
+  const alprCamera = await AlprCamera.findOne({'camera_id': camera_id});
   
   const inOutRecord = new InOutRecord ({
     licensePlate: licensePlate,
@@ -18,9 +21,10 @@ async function saveInOutRecord (cameraFeed) {
       CameraId: camera_id,
       Direction: 'IN',
   });
-  if(camera_id % 2 == 0) { inOutRecord.Direction = 'OUT' };
-     const savedRecord = await inOutRecord.save();
-     return savedRecord;
+
+  if(alprCamera.isExitLane) { inOutRecord.Direction = 'OUT' };
+  const savedRecord = await inOutRecord.save();
+  return savedRecord;
 }
 
 async function getInOutRecords() {
@@ -39,15 +43,17 @@ async function getInOutRecord(id) {
 async function validateTicket (cameraFeed) {
   const { epoch_time, uuid, camera_id, results } = cameraFeed;
   const licensePlate = _.map(results, 'plate');
-  if(camera_id % 2 == 0) {
-    const update = {
+  const alprCamera = await AlprCamera.findOne({'camera_id': camera_id});
+  
+  if(alprCamera.isExitLane) {
+    const updateTicket = {
       isUsed : true,
       outTime : epoch_time,
     };
-    const validTicket = await Ticket.findOneAndUpdate({'licensePlate': licensePlate, 'isUsed': false}, update,{ new: true});
-    console.log(`OUT lane >>> ${licensePlate} >>> Camera Id: ${camera_id} >>> Ticket: ${validTicket.ticketId}`);
+    const validTicket = await Ticket.findOneAndUpdate({'licensePlate': licensePlate, 'isUsed': false}, updateTicket,{ new: true});
+    //console.log(`OUT lane >>> ${licensePlate} >>> Camera Id: ${camera_id} >>> Ticket: ${validTicket.ticketId}`);
     return validTicket;
-  } else {
+  } else { // If Entry Lane
         const ticket = new Ticket ({
         ticketId: uuidv4(),
         licensePlate: licensePlate,
@@ -58,34 +64,32 @@ async function validateTicket (cameraFeed) {
         isPaid: true,
         isUsed: false
       });
-      console.log(`IN lane >>> ${licensePlate} >>> Camera Id: ${camera_id} >>> Ticket: ${ticket.ticketId}`);
+      //console.log(`IN lane >>> ${licensePlate} >>> Camera Id: ${camera_id} >>> Ticket: ${ticket.ticketId}`);
       const ticketForGateuser = await ticket.save();
       return ticketForGateuser;
     }
 }
 
-async function updateTicket (ticketId) {
-  const update = {
-    outTime: Date(),
-    parkingFee: 0,
-    isPaid: true,
-    isUsed: true
-  };
-  const usedTicket = await Ticket.findOneAndUpdate({'ticketId': ticketId}, update, { new: true} );
-  return usedTicket;
-}
- 
 async function validateMember (licensePlate) {
-    const member = await Member.findOne({'licensePlate': licensePlate})
-    .select('memberId');
-    //console.log(member);
-    return member;
-  }
-
+  const member = await Member.findOne({'licensePlate': licensePlate})
+  .select('memberId');
+  //console.log(member);
+  return member;
+}
+// async function updateTicket (ticketId) {
+//   const update = {
+//     outTime: Date(),
+//     parkingFee: 0,
+//     isPaid: true,
+//     isUsed: true
+//   };
+//   const usedTicket = await Ticket.findOneAndUpdate({'ticketId': ticketId}, update, { new: true} );
+//   return usedTicket;
+// }
+ 
   module.exports = {
     validateMember,
     validateTicket,
-    updateTicket,
     saveInOutRecord,
     getInOutRecords,
     getInOutRecord

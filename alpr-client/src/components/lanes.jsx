@@ -16,11 +16,15 @@ class Lanes extends Component {
   state = {
     gate1lanes: [],
     gate2lanes: [],
-    camera1_url: "http://192.168.100.101/video.mjpg?user=root&pw=koye6477",
-    camera2_url: "http://192.168.100.103/video.mjpg?user=root&pw=koye6477",
-    camera3_url: "http://192.168.100.110/video.mjpg?user=root&pw=koye6477",
-    camera4_url: "http://192.168.100.101/video.mjpg?user=root&pw=koye6477",
-  
+    camera1_url: "http://192.168.100.101/video.mjpg?user=root&pw=koye56477",
+    camera2_url: "http://192.168.100.101/video.mjpg?user=root&pw=koye56477",
+    camera3_url: "http://192.168.100.101/video.mjpg?user=root&pw=koye56477",
+    camera4_url: "http://192.168.100.101/video.mjpg?user=root&pw=koye56477",
+
+    // camera1_url: "http://172.16.22.220/video3.mjpg?user=root&pw=Le7me1n3ide",
+    // camera2_url: "http://172.16.22.221/video3.mjpg?user=root&pw=Le7me1n3ide",
+    // camera3_url: "http://172.16.22.222/video3.mjpg?user=root&pw=Le7me1n3ide",
+    // camera4_url: "http://172.16.22.223/video3.mjpg?user=root&pw=Le7me1n3ide",
   };
 
   async componentDidMount() {
