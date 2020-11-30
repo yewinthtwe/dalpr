@@ -9,7 +9,9 @@ lerna-debug.log*
 desktop.ini
 alpr-server/public/plateimages/
 alpr-server/node_modules/
+alpr-server/config/default.json
 alpr-client/node_modules/
+alpr-client/src/config.json
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json

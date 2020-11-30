@@ -1,0 +1,6 @@
+[{
+    "username" : "qfreeadmin",
+    "password" : "qfreeadmin",
+    "name"		: "System Admin",
+    "isAdmin"	: true
+}]

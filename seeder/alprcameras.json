@@ -1,0 +1,40 @@
+[ { 
+    "camera_id":1,
+    "cameraUrl":"http://192.168.100.101/video.mjpg",
+    "laneId":1,
+    "isExitLane":false,
+    "gateName":"East Gate",
+    "gateId":1,
+    "ioModuleId":"1",
+    "upRelayId":"0" 
+},
+{ 
+    "camera_id":2,
+    "cameraUrl":"http://192.168.100.102/video.mjpg",
+    "laneId":2,
+    "isExitLane":true,
+    "gateName":"East Gate",
+    "gateId":1,
+    "ioModuleId":"1",
+    "upRelayId":"1" 
+},
+{ 
+    "camera_id":3,
+    "cameraUrl":"http://192.168.100.103/video.mjpg",
+    "laneId":1,
+    "isExitLane":false,
+    "gateName":"West Gate",
+    "gateId":2,
+    "ioModuleId":"1",
+    "upRelayId":"0" 
+},
+{ 
+    "camera_id":4,
+    "cameraUrl":"http://192.168.100.104/video.mjpg",
+    "laneId":2,
+    "isExitLane":true,
+    "gateName":"West Gate",
+    "gateId":2,
+    "ioModuleId":"2",
+    "upRelayId":"1" 
+} ]

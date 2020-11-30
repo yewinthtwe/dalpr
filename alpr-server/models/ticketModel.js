@@ -7,18 +7,21 @@ mongoose.set("useCreateIndex", true);
 const Schema = mongoose.Schema;
 // const Traffic = mongoose.model(
 //   "Traffic",
+
+
 const TicketSchema = new Schema ({
-    ticketId: { type: String, required: true },
     licensePlate: { type: Array, required: true },
-    inTime: { type: Date },
-    outTime: { type: Date },
+    ticketId: { type: String, required: true },
+    inTime: { type: Number },
+    outTime: { type: Number },
     InvitedBy: { type: String },
     parkingFee: { type: Number },
+    parkedMinutes: { type: Number},
     isPaid: { type: Boolean },
     isUsed: { type: Boolean }
   });
 
-const Ticket = mongoose.model("Ticket", TicketSchema);
+const Ticket = mongoose.model( "Ticket", TicketSchema);
 
 const schema = Joi.object({
   ticketId: Joi.string().required(),

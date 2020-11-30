@@ -10,7 +10,7 @@ const { AlprCamera } = require("../models/alprCameraModel");
 router.post("/", async (req, res) => {
 
   const cameraFeed = _.pick(req.body, 'epoch_time', 'uuid', 'site_id', 'camera_id', 'results');
-  const { results } = cameraFeed;
+  const { results, epoch_time } = cameraFeed;
   const licensePlate = _.map(results, 'plate');
 
 const alprCamera = await AlprCamera.findOne({'camera_id': cameraFeed.camera_id});
@@ -22,17 +22,17 @@ const member = await validateUser.validateMember(licensePlate);
         const validTicket = await validateTicket(cameraFeed);
         if(!validTicket) return res.status(200).send('You have no valid ticket or Already Checkout - pls use Entry lane');
         await saveInOutRecord(cameraFeed); // Found valid ticket
-        console.log(`${licensePlate} is Not member >>>Valid Ticket Found: ${validTicket.ticketId} >>> AUTO Open at Exit`);
+        console.log(`${licensePlate} Not member>> Valid Ticket: ${validTicket.ticketId} >> AUTO Open at Exit>> ${epoch_time}`);
         playAdam.setDO(ioModuleId, upRelayId,'1');
       } else {
         const validTicket = await validateTicket(cameraFeed); //Issue new ticket
         await saveInOutRecord(cameraFeed);
-        console.log(`${licensePlate} is Not member >>> Issuing Ticket: ${validTicket.ticketId} >>> MANUAL Open at Entry`);
+        console.log(`${licensePlate} Not member>> Issuing Ticket: ${validTicket.ticketId} >> MANUAL Open at Entry >> ${epoch_time}`);
       }
       res.status(200).send('Success');
     } else {
       await saveInOutRecord(cameraFeed);
-      console.log(`${licensePlate} is Member >>> AUTO Open`);
+      console.log(`${licensePlate} Member>> AUTO Open`);
       playAdam.setDO(ioModuleId, upRelayId,'1');
       res.status(200).send('Success');
     }

@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 
 const inOutRecordSchema = new Schema ({
     licensePlate: { type: Array, required: true },
-    Time: { type: Date },
+    Time: { type: Number },
     TrafficId: { type: String },
     Photo: { type: String },
     CameraId: { type: Number },
