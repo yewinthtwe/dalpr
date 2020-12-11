@@ -6,7 +6,8 @@ import { paginate } from "../utils/paginate";
 import _ from "lodash";
 import SearchBox from "./searchBox";
 import Typography from '@material-ui/core/Typography';
-import { utcToZonedTime, format } from 'date-fns-tz'
+import { format } from 'date-fns-tz';
+import { toDate } from 'date-fns';
 
 class InOutRecord extends Component {
   state = {
@@ -18,12 +19,25 @@ class InOutRecord extends Component {
   };
 
  convertTimezone (inOutRecords) {
-  const timeZone = 'Asia/Yangon';
+  //const timeZone = 'Asia/Yangon';
 
    _.forEach(inOutRecords, function (key,value) {
-    let mmTime = utcToZonedTime(key.Time, timeZone);
-    mmTime = format(mmTime, 'yyyy-MM-dd HH:mm:ss', { timeZone: timeZone }) 
-    key.Time = mmTime;
+    //let Time = utcToZonedTime(key.Time, timeZone);
+     //let inTime = utcToZonedTime(key.ticket.inTime);
+    let inTime = key.ticket.inTime;
+    let outTime = toDate(key.ticket.outTime);
+    outTime = format(outTime, 'yyyy-MM-dd HH:mm:ss', outTime);
+      if(key.ticket.inTime){
+        inTime = toDate(key.ticket.inTime);
+        inTime = format(inTime, 'yyyy-MM-dd HH:mm:ss', inTime);
+      }
+    
+    // Time = format(Time, 'yyyy-MM-dd HH:mm:ss', { timeZone: timeZone })
+    //console.log(outTime);
+    // key.Time = Time;
+    key.ticket.inTime = inTime;
+    key.ticket.outTime = outTime;
+    
   });
   return inOutRecords;
  }

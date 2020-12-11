@@ -31,16 +31,13 @@ const inOutRecordSchema = new Schema ({
     Direction: { type: String },
     ticket: TicketSchema
   }, { timestamps: true });
-
   
-  const InOutRecord = mongoose.model("InOutRecord", inOutRecordSchema);
-  //const TrafficHistory = mongoose.model("TrafficHistory", inOutRecordSchema);
+  const TrafficHistory = mongoose.model("TrafficHistory", inOutRecordSchema);
   //const Ticket = mongoose.model( "Ticket", TicketSchema);
 
 const schema = Joi.object({
   licensePlate: Joi.array().required()
 });
 
-exports.InOutRecord = InOutRecord;
-//exports.TrafficHistory = TrafficHistory;
+exports.TrafficHistory = TrafficHistory;
 exports.schema = schema;

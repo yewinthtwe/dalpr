@@ -4,6 +4,7 @@ const config = require('config');
 const { InOutRecord } = require("./models/inOutRecordModel");
 const { Ticket } = require("./models/ticketModel");
 const subDays = require('date-fns/subDays');
+const logger = require("./middleware/logger");
 
 const photoStore = config.get('photoStore');
 const currentTime = Math.floor(new Date().getTime());
@@ -24,13 +25,23 @@ mongoose
     Ticket.db.close();
     InOutRecord.db.close();
   }
-  cleanRecords();
+  //cleanRecords();
 
 async function deletePhoto (path) {
     try{
         await fs.unlink(path);
-        console.log(`successfully deleted ${path}`);
+        logger.log({
+          level: 'info',
+          message: `successfully deleted ${path}`,
+        });
     } catch (error) {
-        console.error('there was an error deleting photo:', error.message);
+      logger.error({
+        level: 'error',
+        message: 'there was an error deleting photo',
+      });
     }
 }
+
+module.exports = {
+  cleanRecords,
+};

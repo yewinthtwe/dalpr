@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Table from "./common/table";
-import {Img} from 'react-image'
-import { imageUrl } from '../config.json';
+//import {Img} from 'react-image'
+//import { imageUrl } from '../config.json';
 
 class InOutRecordTable extends Component {
   columns = [
@@ -11,17 +11,24 @@ class InOutRecordTable extends Component {
       label: "License Plate",
       content: inOutRecord => <Link to={`/inOutRecord/${inOutRecord._id}`}> {inOutRecord.licensePlate} </Link>
     },
-
-    { path: "Time", label: "Time" },
-    { 
-      path: "Photo", 
-      label: "Photo",
-      content: p => <Img  alt="" 
-                          src={`${imageUrl}${p.Photo}`} 
-                          width="80" 
-                          height="50"/>
-    },
-    { path: "CameraId", label: "Camera ID" },
+    { path: "ticket.inTime", label: "In Time" },
+    // { 
+    //   path: "inPhoto", 
+    //   label: "InPhoto",
+    //   // content: p => <Img  alt="" 
+    //   //                     src={`${imageUrl}${p.Photo}`} 
+    //   //                     width="80" 
+    //   //                     height="50"/>
+    // },
+    { path: "ticket.outTime", label: "Out Time" },
+    // { 
+    //   path: "outPhoto", 
+    //   label: "OutPhoto",
+    //   // content: p => <Img  alt="" 
+    //   //                     src={`${imageUrl}${p.Photo}`} 
+    //   //                     width="80" 
+    //   //                     height="50"/>
+    // },
     { path: "Direction", label: "Direction"}
 ];
 

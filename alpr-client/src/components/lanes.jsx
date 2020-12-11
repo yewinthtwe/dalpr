@@ -9,7 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 //import Relays from './lanes';
 //import { toast } from 'react-toastify';
-import { getLaneStatus } from "../services/laneServices";
+//import { getLaneStatus } from "../services/laneServices";
 
 class Lanes extends Component {
   
@@ -28,17 +28,17 @@ class Lanes extends Component {
   };
 
   async componentDidMount() {
-    const { data: gate1lanes } = await getLaneStatus("1");
-    const { data: gate2lanes } = await getLaneStatus("2");
-    gate1lanes[0].DO.length = 2;
-    gate2lanes[0].DO.length = 2;
+    // const { data: gate1lanes } = await getLaneStatus("1");
+    // const { data: gate2lanes } = await getLaneStatus("2");
+    // gate1lanes[0].DO.length = 2;
+    // gate2lanes[0].DO.length = 2;
     
-    this.setState({ gate1lanes, gate2lanes });
+    // this.setState({ gate1lanes, gate2lanes });
   }
 
   handleClick = () => {
-    const data = this.state.gate1lanes[0].DO;
-    data.map( relay => ( relay.VLAUE ));
+    // const data = this.state.gate1lanes[0].DO;
+    // data.map( relay => ( relay.VLAUE ));
   }
  
   render()  {

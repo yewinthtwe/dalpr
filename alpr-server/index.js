@@ -1,4 +1,5 @@
 require('express-async-errors');
+const cron = require('node-cron');
 const error = require("./middleware/error");
 const config = require('config');
 //const Joi = require("joi");
@@ -12,6 +13,7 @@ const alprd = require("./routes/alprd");
 const lane = require('./routes/lane');
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+//const { cleanRecords } = require('./dataCleaner');
 
 
 process.on('uncaughtException', (ex) => {
@@ -62,3 +64,16 @@ logger.log({
   message: `Server is listening on port ${port}`,
 });
 
+// // Schedule tasks to be run on the server.
+// cron.schedule('* * * * 7', async function() {
+//   await cleanRecords();
+// });
+
+// Remove the error.log file every twenty-first day of the month.
+// cron.schedule('0 0 21 * *', function() {
+//   console.log('Running Cron Job');
+//   fs.unlink('./error.log', err => {
+//     if (err) throw err;
+//     console.log('Error file successfully deleted');
+//   });
+// });

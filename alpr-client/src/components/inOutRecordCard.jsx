@@ -9,9 +9,12 @@ class InOutRecordCard extends Component {
     data: {
         _id: "",
         licensePlate: "",
-        photo: "",
-        Time: "",
-        CameraId: 0,
+        inPhoto: "",
+        inTime: "",
+        outPhoto: "",
+        outTime: "",
+        Direction: "",
+        
     },
     errors: {}
   };
@@ -31,9 +34,11 @@ class InOutRecordCard extends Component {
     return {
       _id: inOutRecord._id,
       licensePlate: inOutRecord.licensePlate,
-      Photo: inOutRecord.Photo,
-      Time: inOutRecord.Time,
-      CameraId: inOutRecord.CameraId,
+      inPhoto: inOutRecord.inPhoto,
+      outPhoto: inOutRecord.outPhoto,
+      inTime: inOutRecord.ticket.inTime,
+      outTime: inOutRecord.ticket.outTime,
+      Direction: inOutRecord.Direction
     };
   }
 
@@ -44,8 +49,11 @@ class InOutRecordCard extends Component {
   
   render(){
 
-      const imgFilename = this.state.data.Photo;
-      const imgsrc = `${imageUrl}${imgFilename}`;
+      const inPhoto = this.state.data.inPhoto;
+      const outPhoto = this.state.data.outPhoto;
+      // const inTime = this.state.data.inTime;
+      // const outTime = this.state.data.outTime;
+      const imgsrc = [ `${imageUrl}${inPhoto}`, `${imageUrl}${outPhoto}` ];
       //console.log(this.props);
     
     return (
