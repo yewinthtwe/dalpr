@@ -1,8 +1,9 @@
 import React, { Component }  from "react";
+import {imageUrl} from '../config.json';
 import { getInOutRecord } from '../services/inOutRecordServices';
-import Card from './CardUI';
+//import Card from './CardUI';
+import MuCard from './muCard';
 
-const imageUrl = "http://localhost:30000/plateimages/";
 
 class InOutRecordCard extends Component {
   state = {
@@ -49,21 +50,21 @@ class InOutRecordCard extends Component {
   
   render(){
 
-      const inPhoto = this.state.data.inPhoto;
-      const outPhoto = this.state.data.outPhoto;
+      // const inPhoto = this.state.data.inPhoto;
+      // const outPhoto = this.state.data.outPhoto;
       // const inTime = this.state.data.inTime;
       // const outTime = this.state.data.outTime;
-      const imgsrc = [ `${imageUrl}${inPhoto}`, `${imageUrl}${outPhoto}` ];
-      //console.log(this.props);
+    const imgsrc = imageUrl;
+    //console.log(imgsrc);
     
     return (
     <div>
-      <Card
+      <MuCard
         data={this.state.data}
-        imgsrc={imgsrc}
+        imgsrc={ imgsrc }
         title={this.state.data.licensePlate}
         onSubmit={this.doSubmit} > 
-      </Card>
+      </MuCard>
     </div>
     )
     

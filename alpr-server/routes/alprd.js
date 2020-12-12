@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
   
   const matchedRecord = await searchLicensePlate(cameraFeed);
   if(matchedRecord) {
-    timeOK = getTime(addSeconds(matchedRecord.updatedAt, 30));
+    timeOK = getTime(addSeconds(matchedRecord.updatedAt, 10));
     afterTimeOK = isAfter(epoch_time, timeOK); // true or false
   };
   console.log(`ALB status : ${relayStatus.DO[upRelayId].VALUE}`);

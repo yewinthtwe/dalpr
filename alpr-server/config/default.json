@@ -18,6 +18,10 @@
       "location": "/home/alprsvr/plateimages"
     },
 
+    "photoStoreTemp" : {
+      "location": "/home/alprsvr/plateimagesTemp"
+    },
+
     "adamConfig": {
         "headers" : {
           "Content-Length": 0,
