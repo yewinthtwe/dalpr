@@ -38,7 +38,7 @@ const app = express();
 app.use(cors());
 
 app.use(express.static(__dirname + '/public'));
-app.use(express.static('/plateimages'));
+app.use(express.static('/home/alprsvr/plateimagesTemp'));
 app.get('/:photo', (req, res) => {
  });
 

@@ -11,7 +11,7 @@ class InOutRecordTable extends Component {
       label: "License Plate",
       content: inOutRecord => <Link to={`/inOutRecord/${inOutRecord._id}`}> {inOutRecord.licensePlate} </Link>
     },
-    { path: "ticket.inTime", label: "In Time" },
+    { path: "inTime", label: "In Time" },
     // { 
     //   path: "inPhoto", 
     //   label: "InPhoto",
@@ -20,7 +20,7 @@ class InOutRecordTable extends Component {
     //   //                     width="80" 
     //   //                     height="50"/>
     // },
-    { path: "ticket.outTime", label: "Out Time" },
+    { path: "outTime", label: "Out Time" },
     // { 
     //   path: "outPhoto", 
     //   label: "OutPhoto",

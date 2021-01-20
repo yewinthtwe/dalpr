@@ -1,5 +1,8 @@
 import React, { Component }  from "react";
-import {imageUrl} from '../config.json';
+import { imageUrl } from '../config.json';
+//import _ from "lodash";
+//import { format } from 'date-fns-tz';
+//import { toDate } from 'date-fns';
 import { getInOutRecord } from '../services/inOutRecordServices';
 //import Card from './CardUI';
 import MuCard from './muCard';
@@ -11,10 +14,12 @@ class InOutRecordCard extends Component {
         _id: "",
         licensePlate: "",
         inPhoto: "",
-        inTime: "",
+        inTime: 0,
         outPhoto: "",
-        outTime: "",
+        outTime: 0,
         Direction: "",
+        isMember: false,
+        scanCameraId: 0
         
     },
     errors: {}
@@ -23,7 +28,7 @@ class InOutRecordCard extends Component {
   async populateInOutRecord(){
       const inOutRecordId = this.props.match.params.id;
       const { data: inOutRecord } = await getInOutRecord(inOutRecordId);
-      //console.log(inOutRecord);
+      //inOutRecord = this.convertTimezone(inOutRecord);
       this.setState({ data: this.mapToViewModel( inOutRecord ) });
   }
 
@@ -32,14 +37,17 @@ class InOutRecordCard extends Component {
   }
   
   mapToViewModel(inOutRecord) {
+//console.log(inOutRecord);
     return {
       _id: inOutRecord._id,
       licensePlate: inOutRecord.licensePlate,
       inPhoto: inOutRecord.inPhoto,
       outPhoto: inOutRecord.outPhoto,
-      inTime: inOutRecord.ticket.inTime,
-      outTime: inOutRecord.ticket.outTime,
-      Direction: inOutRecord.Direction
+      inTime: inOutRecord.inTime,
+      outTime: inOutRecord.outTime,
+      Direction: inOutRecord.Direction,
+      isMember: inOutRecord.isMember,
+      scanCameraId: inOutRecord.scanCameraId,
     };
   }
 

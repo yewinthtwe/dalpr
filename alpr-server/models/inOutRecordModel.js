@@ -21,17 +21,22 @@ const TicketSchema = new Schema ({
 const inOutRecordSchema = new Schema ({
     licensePlate: { type: Array, required: true },
     isMember: { type: Boolean },
-    Time: { type: Date },
+    candidates: { type: Array },
+    Direction: { type: String },
+    scanCameraId: { type: Number },
+
+    inTime: { type: Date },
     inTrafficId: { type: String },
     inPhoto: { type: String },
-    inCameraId: { type: Number },
+    
+    
+    outTime: { type: Date },
     outTrafficId: { type: String },
     outPhoto: { type: String },
-    outCameraId: { type: Number },
-    Direction: { type: String },
+    
+
     ticket: TicketSchema
   }, { timestamps: true });
-
   
   const InOutRecord = mongoose.model("InOutRecord", inOutRecordSchema);
   //const TrafficHistory = mongoose.model("TrafficHistory", inOutRecordSchema);

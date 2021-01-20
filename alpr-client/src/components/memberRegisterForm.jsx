@@ -5,22 +5,19 @@ import { saveMember } from '../services/memberServices';
 
 class MemberRegisterForm extends Form {
   state = {
-    data: { licensePlate: "2D9802", owner_name: "yewint", address: "ABX road, WDC" },
+    data: { licensePlate: ["2D9802","1M2233"], owner_name: "yewint", address: "ABX road, WDC" },
     errors: {}
   };
 
   schema = {
-    licensePlate: Joi.string()
+    licensePlate: Joi.array()
       .required()
-      .min(4)
       .label("License Plate"),
     owner_name: Joi.string()
       .required()
-      .min(6)
       .label("Owner Name"),
     address: Joi.string()
       .required()
-      .min(10)
       .label("Address"),
  };
 

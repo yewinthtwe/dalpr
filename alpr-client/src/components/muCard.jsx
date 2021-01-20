@@ -49,13 +49,15 @@ const MuCard = (props) => {
     setExpanded(!expanded);
   };
 
-  const { licensePlate, Direction, outTime, outPhoto, inTime, inPhoto } = props.data;
-  console.log(`${props.imgsrc}${outPhoto}`);
+  const { licensePlate, outTime, outPhoto, inTime, inPhoto } = props.data;
+  //console.log(`${props.imgsrc}${outPhoto}`);
+
+
   return (     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            {Direction}
+            IN
           </Avatar>
         }
         // action={
@@ -64,16 +66,16 @@ const MuCard = (props) => {
         //   </IconButton>
         // }
         title={licensePlate}
-        subheader={outTime}
+        subheader={inTime}
       />
       <CardMedia
         className={classes.media}
-        image= {`${props.imgsrc}${outPhoto}`}
-        title="Out Photo"
+        image= {`${props.imgsrc}${inPhoto}`}
+        title="In Photo"
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          Exit Time is {outTime}
+          ENTRY Time is {inTime}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -96,20 +98,20 @@ const MuCard = (props) => {
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            IN
+            OUT
           </Avatar>
         }
         title={licensePlate}
-        subheader={inTime}
+        subheader={outTime}
       />
         <CardContent>
         <CardMedia
         className={classes.media}
-        image= {`${props.imgsrc}${inPhoto}`}
-        title="In Photo"
+        image= {`${props.imgsrc}${outPhoto}`}
+        title="Out Photo"
         />
           <Typography variant="body2" color="textSecondary" component="p">
-          Entry Time is {inTime}
+          EXIT Time is {outTime}
         </Typography>
         </CardContent>
       </Collapse>
