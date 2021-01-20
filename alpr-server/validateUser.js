@@ -18,14 +18,19 @@ async function getInOutRecord(id) {
   return inOutRecord;
 }
 
-async function validateMember (licensePlate) {
-  console.log(`validateMember: Searching ${licensePlate} in Member database.....`);
-  const member = await Member.findOne({'licensePlate': { $in: licensePlate }});
+async function validateMember (candidates) {
+
+  console.log(`validateMember: Searching in Member database.....`);
+  //const member = await Member.findOne({ $or: [{'licensePlate': { $in: licensePlate }}, {'candidates.plate': { $in: licensePlate }}] });
+  const member = await Member.findOne( { "isActive": true, $or: [
+    {'licensePlate': { $in: candidates.map( l => l.plate ) }}, 
+    {'candidates.plate': { $in: candidates.map( c => c.plate) }}] });
+  console.log(member);
   if (!member) { 
-    console.log(`validateMember: ${licensePlate} was NOT found in Member database.`);
+    console.log(`validateMember: NOT found in member database.`);
     return false;
   } else {
-    console.log(`validateMember: ${licensePlate} FOUND in member database.`);
+    console.log(`validateMember: FOUND in member database.`);
     return true;
   }
  

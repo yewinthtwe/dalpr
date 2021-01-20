@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
 
   const relayStatus = await playAdam.showDO(ioModuleId);
   //relayStatus.DO[upRelayId].VALUE == 0;
-  const isMember = await validateMember(licensePlate); // return true or false
+  const isMember = await validateMember(candidates); // return true or false
   const inOutRecord = await searchLicensePlate(licensePlate); // return a Document
   
   

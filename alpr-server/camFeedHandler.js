@@ -152,36 +152,21 @@ async function updateInOutRecordById ( trafficToken ) {
 }
 
 
-
 async function searchLicensePlate(licensePlate) {
   console.log(`searchLicensePlate: ${licensePlate} > Searching in temporary database (InOutRecords).`);
 
   try {
-    const lpDoc = await InOutRecord.findOne( { $or: [ {'licensePlate':{$in: licensePlate} } , {'candidates': {$in: licensePlate} } ], 'ticket.isUsed': false } ).sort({'updatedAt': -1}).limit(1);
+    //const lpDoc = await InOutRecord.findOne( { $or: [ {'licensePlate':{$in: licensePlate} } , {'candidates': {$in: licensePlate} } ], 'ticket.isUsed': false } ).sort({'updatedAt': -1}).limit(1);
+    const lpDoc = await InOutRecord.findOne({'candidates.plate': {$in: licensePlate}, 'ticket.isUsed': false } ).sort({'updatedAt': -1}).limit(1);
+    //console.log(lpDoc);
     if( !lpDoc ) {
       console.log(`searchLicensePlate: ${licensePlate} > No matching record found in temporary database: (InOutRecords).`);
-      // const result = {
-      //   _id: 0,
-      //   scanCameraId: 0,
-      //   updatedAt: 0,
-      //   candidates: null,
-      //   inTime: 0,
-      //   outTime: 0,
-      //   inPhoto: null,
-      //   outPhoto: null,
-      // };
+
       return lpDoc;
 
     } else {
       console.log(`searchLicensePlate: ${licensePlate} > Found document ID: ${lpDoc._id} in temporaty database.` );
-      // const result = {
-      //   _id: lpDoc._id,
-      //   scanCameraId: lpDoc.scanCameraId,
-      //   updatedAt: lpDoc.updatedAt,
-      //   candidates: lpDoc.candidates,
-      //   inTime: lpDoc.inTime,
-      //   outTime: lpDoc.outTime
-      // };
+
       return lpDoc; 
     }
   } catch (error) {

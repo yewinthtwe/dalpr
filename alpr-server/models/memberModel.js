@@ -12,9 +12,11 @@ const MemberSchema = new Schema({
     memberId: { type: String, default: uuidv4() },
     registrationDate: { type: Date, default: Date.now },
     licensePlate: { type: Array, required: true },
+    candidates: { type: Array },
     memberName: { type: String, required: true, trim: true },
     address: { type: String, required: true },
     obuId: { type: Number, required: true },
+    isActive: { type: Boolean }
   });
 
 const Member = mongoose.model("Member", MemberSchema);
