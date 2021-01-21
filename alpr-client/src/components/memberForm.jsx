@@ -9,7 +9,6 @@ class MemberForm extends Form {
       licensePlate: "",
       memberName: "",
       address:"",
-      obuId: 123456789012,
     },
     errors: {}
   };
@@ -28,9 +27,6 @@ class MemberForm extends Form {
       .required()
       .min(6)
       .label("Address"),
-    obuId: Joi.number()
-      .required()
-      .label("OBU")
   };
 
   async populateMember(){
@@ -55,7 +51,6 @@ class MemberForm extends Form {
       licensePlate: member.licensePlate,
       memberName: member.memberName,
       address: member.address,
-      obuId: member.obuId
     };
   }
 
@@ -67,12 +62,12 @@ class MemberForm extends Form {
   render(){
     return (
     <div>
-      <h4> Member </h4>
+      <h4> New Member </h4>
+      <h6> OBU number will be automatically assigned from the OBU database.</h6>
       <form onSubmit={this.handleSubmit}>
         {this.renderInput('licensePlate', 'License Plate')}
         {this.renderInput('memberName', 'Member Name')}
         {this.renderInput('address', 'Address')}
-        {this.renderInput('obuId', 'OBU')}
         {this.renderButton('Save')}
       </form>
     </div>

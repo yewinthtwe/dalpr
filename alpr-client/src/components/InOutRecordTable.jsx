@@ -11,6 +11,7 @@ class InOutRecordTable extends Component {
       label: "License Plate",
       content: inOutRecord => <Link to={`/inOutRecord/${inOutRecord._id}`}> {inOutRecord.licensePlate} </Link>
     },
+    { path: "obu", label: "OBU" },
     { path: "inTime", label: "In Time" },
     // { 
     //   path: "inPhoto", 

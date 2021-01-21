@@ -5,7 +5,7 @@ import { saveMember } from '../services/memberServices';
 
 class MemberRegisterForm extends Form {
   state = {
-    data: { licensePlate: ["2D9802","1M2233"], owner_name: "yewint", address: "ABX road, WDC" },
+    data: { licensePlate: ["2D9802"], owner_name: "yewint", address: "ABX road, WDC" },
     errors: {}
   };
 

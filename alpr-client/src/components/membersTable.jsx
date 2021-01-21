@@ -10,7 +10,7 @@ class MembersTable extends Component {
     { path: "memberName", label: "Member Name" },
     { path: "address", label: "Address" },
     { path: "registrationDate", label: "Registration Date" },
-    { path: "obuId", label: "OBU" },
+    { path: "obu", label: "OBU" },
   ];
 
   deleteColumn =  {

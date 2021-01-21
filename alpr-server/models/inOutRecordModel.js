@@ -24,6 +24,7 @@ const inOutRecordSchema = new Schema ({
     candidates: { type: Array },
     Direction: { type: String },
     scanCameraId: { type: Number },
+    obu: { type: String },
 
     inTime: { type: Date },
     inTrafficId: { type: String },

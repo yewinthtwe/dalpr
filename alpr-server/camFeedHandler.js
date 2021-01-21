@@ -21,11 +21,13 @@ async function saveInOutRecord (trafficToken) {
     currentDirection,
     isExitLane,
     isMember,
+    obu,
    } = trafficToken;
 
   const inOutRecord = new InOutRecord ({
     licensePlate: null,
     isMember: false,
+    obu: 0,
     Direction: null,
     scanCameraId: 0,
     candidates: null,
@@ -55,6 +57,7 @@ async function saveInOutRecord (trafficToken) {
 
     inOutRecord.licensePlate = currentLicensePlate;
     inOutRecord.isMember = isMember;
+    inOutRecord.obu = obu;
     inOutRecord.Direction = currentDirection;
     inOutRecord.scanCameraId = currentScanCameraId;
     inOutRecord.candidates = currentCandidates;
@@ -70,6 +73,7 @@ async function saveInOutRecord (trafficToken) {
 
   inOutRecord.licensePlate = currentLicensePlate;
   inOutRecord.isMember = isMember;
+  inOutRecord.obu = obu;
   inOutRecord.Direction = currentDirection;
   inOutRecord.scanCameraId = currentScanCameraId;
   inOutRecord.candidates = currentCandidates;

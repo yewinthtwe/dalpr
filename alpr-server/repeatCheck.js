@@ -4,7 +4,7 @@ let timeOK = 0;
 let afterTimeOK = false;
 let waitTime = 10;
 
-async function repeatCheck (trafficToken) {
+function repeatCheck (trafficToken) {
   console.log(`Repe-Check: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>`);
   console.log(`Repe-Check: ${trafficToken.currentLicensePlate} > Performing Repe-Check....`);
 
@@ -26,6 +26,7 @@ async function repeatCheck (trafficToken) {
 
   if (isMember) {
     console.log(`Repe-Check: ${currentLicensePlate} > MEMBER.`);
+    console.log(`Repe-Check: ${currentLicensePlate} > Checking if document already existed in temporary database.`);
     if(oldId) { 
 
       console.log(`Repe-Check: ${currentLicensePlate} > Found existing document.`);
@@ -43,6 +44,7 @@ async function repeatCheck (trafficToken) {
             console.log(`Repe-Check: ${currentLicensePlate} > Seen by different scan Camera. Create NEW document.`);
             return true;
           }
+          console.log(`Repe-Check: ${currentLicensePlate} > Seen by SAME camera.`);
           console.log(`Repe-Check: ${currentLicensePlate} > UPDATE existing document.`);
           return false;
         } else {
@@ -93,6 +95,7 @@ async function repeatCheck (trafficToken) {
             console.log(`Repe-Check: ${currentLicensePlate} > Seen by different scan Camera. Create NEW document.`);
             return true;
           }
+          console.log(`Repe-Check: ${currentLicensePlate} > Seen by SAME Camera.`);
           console.log(`Repe-Check: ${currentLicensePlate} > Time NOT OK. UPDATE existing document.`);
           return false;
         } else {

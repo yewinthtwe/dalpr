@@ -25,13 +25,15 @@ async function validateMember (candidates) {
   const member = await Member.findOne( { "isActive": true, $or: [
     {'licensePlate': { $in: candidates.map( l => l.plate ) }}, 
     {'candidates.plate': { $in: candidates.map( c => c.plate) }}] });
-  console.log(member);
+    //.populate('obu');
+
+  //console.log(member);
   if (!member) { 
     console.log(`validateMember: NOT found in member database.`);
-    return false;
+    return member;
   } else {
     console.log(`validateMember: FOUND in member database.`);
-    return true;
+    return member;
   }
  
 

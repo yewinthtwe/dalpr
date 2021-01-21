@@ -1,6 +1,6 @@
 const auth = require('../middleware/auth');
 const isAdmin = require('../middleware/isAdmin');
-const { Member, schema } = require("../models/memberModel");
+const { Member, schema, Obu } = require("../models/memberModel");
 //const validateObjectId = require("../middleware/validateObjectId");
 
 const express = require("express");
@@ -38,11 +38,23 @@ router.put("/:id", [auth], async (req, res) => {
 router.post("/", auth, async (req, res) => {
   const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+  let obu = await Obu.findOne({'inUsed': false});
+  console.log(`Picking random OBU : ${obu}`);
   let member = await Member.findOne({ licensePlate: req.body.licensePlate });
   if (member) return res.status(400).send("Car number already registered.");
-  member = new Member(_.pick(req.body, ["memberName", "address", "licensePlate", "obuId"]));
+  member = new Member(_.pick(req.body, ["memberName", "address", "licensePlate" ]));
+  member.obu = obu._id;
+  member.isActive = true;
+  //console.log(member);
   await member.save();
-  res.status(200).send(_.pick(member, ["memberName", "address", "licensePlate", "registrationDate", "obuId"]));
+  const updatedRecord = await Obu.updateOne({'_id': obu._id }, { 
+    $set : {
+      'inUsed' : true,
+      'memberId' : member._id
+    }
+  });
+
+  res.status(200).send(_.pick(member, ["memberName", "address", "licensePlate", "registrationDate" ]));
 });
 
 router.delete("/:id", [auth, isAdmin], async (req, res) => {

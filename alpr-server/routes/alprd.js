@@ -3,14 +3,13 @@ const router = express.Router();
 const _ = require("lodash");
 const playAdam = require("../DummyRelayPlayer");
 const { validateMember } = require("../validateUser");
-const { searchLicensePlate, saveInOutRecord, updateInOutRecordById, verifyTicket, deleteOldPhoto } = require("../camFeedHandler");
+const { searchLicensePlate, saveInOutRecord, updateInOutRecordById, deleteOldPhoto } = require("../camFeedHandler");
 const { repeatCheck } = require("../repeatCheck");
 const { AlprCamera } = require("../models/alprCameraModel");
 const { getTime, isAfter, toDate, addSeconds } = require("date-fns");
 const { docSaver } = require('../saveDocument');
 const config = require("config");
 // const { is } = require("date-fns/locale");
-
 
 
 // Process Camera feed posted by Alpr daemon
@@ -31,7 +30,7 @@ router.post("/", async (req, res) => {
 
   const relayStatus = await playAdam.showDO(ioModuleId);
   //relayStatus.DO[upRelayId].VALUE == 0;
-  const isMember = await validateMember(candidates); // return true or false
+  const member = await validateMember(candidates); 
   const inOutRecord = await searchLicensePlate(licensePlate); // return a Document
   
   
@@ -44,9 +43,10 @@ router.post("/", async (req, res) => {
     currentLicensePlate: licensePlate,
     currentCandidates: candidates,
     currentDirection: Direction,
-
+    
     isExitLane: isExitLane,
-    isMember: isMember,
+    isMember: false,
+    obu: '',
     ioModuleId: ioModuleId,
     upRelayId: upRelayId,
     albStatus: relayStatus.DO[upRelayId].VALUE,
@@ -62,6 +62,12 @@ router.post("/", async (req, res) => {
     oldDirection: '',
 
   };
+
+  console.log(member);
+  if(member) {
+    trafficToken.isMember = true;
+    trafficToken.obu = member.obu;
+  }
 
   if(inOutRecord) {
     trafficToken.oldId= inOutRecord._id;
