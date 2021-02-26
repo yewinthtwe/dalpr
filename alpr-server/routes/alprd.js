@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
-const playAdam = require("../DummyRelayPlayer");
+//const playAdam = require("../DummyRelayPlayer");
+const playAdam = require("../relayPlayer");
 const { validateMember } = require("../validateUser");
 const { searchLicensePlate, saveInOutRecord, updateInOutRecordById, deleteOldPhoto } = require("../camFeedHandler");
 const { repeatCheck } = require("../repeatCheck");

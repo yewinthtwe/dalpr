@@ -53,7 +53,9 @@ const MuCard = (props) => {
   //console.log(`${props.imgsrc}${outPhoto}`);
 
 
-  return (     <Card className={classes.root}>
+  return (     
+  
+  <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>

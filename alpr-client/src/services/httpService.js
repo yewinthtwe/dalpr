@@ -6,6 +6,11 @@ function setJwt(jwt){
   axios.defaults.headers.common['x-auth-token'] = jwt;
 }
 
+function getCancelToken() {
+  const source = axios.CancelToken.source();
+  return source;
+}
+
 axios.interceptors.response.use(null, error => {
     const expectedError =
     error.response &&
@@ -25,5 +30,7 @@ axios.interceptors.response.use(null, error => {
     post: axios.post,
     put: axios.put,
     delete: axios.delete,
-    setJwt
+    isCancel: axios.isCancel,
+    getCancelToken,
+    setJwt,
   };

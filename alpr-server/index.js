@@ -8,11 +8,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("./middleware/logger");
 const members = require("./routes/members");
+const obus = require("./routes/obus");
 const inOutRecord = require("./routes/inOutRecord");
 const alprd = require("./routes/alprd");
 const lane = require('./routes/lane');
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+const configAlpr = require("./routes/configAlpr");
 //const { cleanRecords } = require('./dataCleaner');
 
 
@@ -50,11 +52,13 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/members", members);
+app.use("/api/obus", obus);
 app.use("/api/users", users);
 app.use("/api/inOutRecord", inOutRecord);
 app.use("/api/alprd", alprd);
 app.use("/api/lane", lane);
 app.use("/api/auth", auth);
+app.use("/api/configAlpr", configAlpr);
 app.use(error);
 
 const port = process.env.PORT || 30000;

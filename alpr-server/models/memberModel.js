@@ -9,12 +9,15 @@ const Schema = mongoose.Schema;
 // const Traffic = mongoose.model(
 //   "Traffic",
 const MemberSchema = new Schema({
+
     memberId: { type: String, default: uuidv4() },
-    registrationDate: { type: Date, default: Date.now },
-    licensePlate: { type: Array, required: true },
-    candidates: { type: Array },
     memberName: { type: String, required: true, trim: true },
+    licensePlate: { type: Array, required: true },
     address: { type: String, required: true },
+    mobile: { type: Number },
+    email: { type: String },
+    registrationDate: { type: Date, default: Date.now },
+    candidates: { type: Array },
     isActive: { type: Boolean },
     obu: { type: mongoose.Schema.Types.ObjectId, ref: "Obu" },
   });
@@ -34,6 +37,9 @@ const schema = Joi.object({
   licensePlate: Joi.string().required(),
   memberName: Joi.string().min(6).max(100).required(),
   address: Joi.string().min(6).max(254).required(),
+  mobile: Joi.number().min(9).required(),
+  email: Joi.string(),
+  isActive: Joi.boolean()
 });
 
 exports.Member = Member;

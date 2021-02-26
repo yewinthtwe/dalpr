@@ -9,6 +9,7 @@ class MemberForm extends Form {
       licensePlate: "",
       memberName: "",
       address:"",
+      isActive: true
     },
     errors: {}
   };
@@ -26,7 +27,8 @@ class MemberForm extends Form {
     address: Joi.string()
       .required()
       .min(6)
-      .label("Address"),
+      .label("Address")
+
   };
 
   async populateMember(){
@@ -51,6 +53,7 @@ class MemberForm extends Form {
       licensePlate: member.licensePlate,
       memberName: member.memberName,
       address: member.address,
+      isActive: member.isActive
     };
   }
 

@@ -9,7 +9,6 @@ mongoose.set("useCreateIndex", true);
 
 const userSchema = new mongoose.Schema({
   reg_date: { type: Date, default: Date.now },
-  
   name: {
     type: String,
     unique: true,
@@ -33,7 +32,13 @@ const userSchema = new mongoose.Schema({
     minlength: 4,
     maxlength: 1024,
   },
+  email: {
+    type: String,
+    unique: true,
+    trim: true,
+  },
   isAdmin: Boolean,
+  isActive: Boolean,
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -47,7 +52,9 @@ const schema = Joi.object({
   name: Joi.string(),
   username: Joi.string().min(4).max(30).required(),
   password: Joi.string().min(4).required(),
+  email: Joi.string(),
   isAdmin: Joi.boolean().invalid(),
+  isActive: Joi.boolean().invalid()
 });
 
 exports.User = User;

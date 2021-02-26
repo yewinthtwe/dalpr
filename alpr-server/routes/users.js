@@ -5,17 +5,25 @@ const router = express.Router();
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const { User, schema } = require("../models/userModel");
+// const { exist } = require('joi');
 
 
 router.post("/", auth, async (req, res) => {
+  
+  console.log('usersJS:',req.body);
   const { error } = schema.validate(req.body);
-  console.log(error);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) {
+    console.log(`usersJs: Validation error: ${error}`);
+    return res.status(400).send(error.details[0].message);
+  }
 
   let user = await User.findOne({ username: req.body.username });
-  if (user) return res.status(400).send("User already registered.");
+  if (user) {
+    console.log(`usersJs: Error adding user. ${req.body.username} already registered.`);
+    return res.status(400).send(error.details[0].message);
+  }
 
-  user = new User(_.pick(req.body, ["_id", "username", "password", "isAdmin","name" ]));
+  user = new User(_.pick(req.body, ["_id", "username", "password", "name", "email" , "isAdmin", "isActive" ]));
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
@@ -25,7 +33,7 @@ router.post("/", auth, async (req, res) => {
   res
   .header('x-auth-token', token)
   .header('access-control-expose-headers', "x-auth-token")
-  .status(200).send(_.pick(user, ["_id", "username", "isAdmin", "reg_date", "name"]));
+  .status(200).send(_.pick(user, ["_id", "username", "email", "isAdmin", "reg_date", "name", "isActive"]));
 });
 
 router.get("/me", auth, async (req, res) => {
@@ -39,7 +47,7 @@ router.get("/", async (req, res) => {
     res.status(200).send(users);
   } catch (err) {
     res.status(500).send('Unexpected error');
-    console.log("unexpected error retriving data", err);
+    console.log("usersJs: Unexpected error while retriving data.", err);
   }
 });
 
@@ -61,7 +69,9 @@ router.put("/:id", [auth], async (req, res) => {
       username: req.body.username,
       password: newPassword,
       name: req.body.name,
-      isAdmin: req.body.isAdmin
+      email: req.body.email,
+      isAdmin: req.body.isAdmin,
+      isActive: req.body.isActive
     },
   );
   if (!user)

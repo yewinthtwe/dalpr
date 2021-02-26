@@ -16,6 +16,7 @@ import NotFound from "./components/notFound";
 import ProtectedRoute from './components/common/protectedRoute';
 import InOutRecordCard from "./components/inOutRecordCard";
 import Lanes from './components/lanes';
+import MuSwitch from './components/common/switch';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -43,6 +44,7 @@ class App extends Component {
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
             <Route path="/lanes" component={Lanes} />
+            <Route path="/switch" component={MuSwitch} />
 
             <ProtectedRoute path="/members/:id" component={MemberForm} />
             <Route path="/members" render={props => <Members {...props} user={this.state.user} 

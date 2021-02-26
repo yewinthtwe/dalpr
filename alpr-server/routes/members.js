@@ -26,7 +26,9 @@ router.put("/:id", [auth], async (req, res) => {
         licensePlate: req.body.licensePlate,
         memberName: req.body.memberName,
         address: req.body.address,
-        obuId: req.body.obuId
+        mobile: req.body.mobile,
+        email: req.body.email,
+        isActive: req.body.isActive
       },
       {new: true}
     );
@@ -36,13 +38,18 @@ router.put("/:id", [auth], async (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
+
+
+  
   const { error } = schema.validate(req.body);
+  console.log('membersJS:', req.body, error );
   if (error) return res.status(400).send(error.details[0].message);
+  
   let obu = await Obu.findOne({'inUsed': false});
-  console.log(`Picking random OBU : ${obu}`);
+  // console.log(`Picking random OBU : ${obu}`);
   let member = await Member.findOne({ licensePlate: req.body.licensePlate });
   if (member) return res.status(400).send("Car number already registered.");
-  member = new Member(_.pick(req.body, ["memberName", "address", "licensePlate" ]));
+  member = new Member(_.pick(req.body, ["memberName", "address", "licensePlate", "mobile", "email", "isActive" ]));
   member.obu = obu._id;
   member.isActive = true;
   //console.log(member);
@@ -54,7 +61,7 @@ router.post("/", auth, async (req, res) => {
     }
   });
 
-  res.status(200).send(_.pick(member, ["memberName", "address", "licensePlate", "registrationDate" ]));
+  res.status(200).send(_.pick(member, ["memberName", "address", "licensePlate", "registrationDate", "mobile", "email", "isActive" ]));
 });
 
 router.delete("/:id", [auth, isAdmin], async (req, res) => {
