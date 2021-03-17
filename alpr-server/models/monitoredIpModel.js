@@ -10,6 +10,7 @@ const MonitoredIpSchema = new Schema({
 	name: { type: String },
 	ip: { type: String, required: true, unique: true },
 	status: { type: String, default: "unknown" },
+	message: { type: String },
 	isMonitored: { type: Boolean },
 });
 const MonitoredIp = mongoose.model("MonitoredIp", MonitoredIpSchema);

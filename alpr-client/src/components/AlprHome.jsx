@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
@@ -13,7 +13,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import MenuBookIcon from "@material-ui/icons/MenuBook";
@@ -23,16 +22,14 @@ import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-// import StarBorder from '@material-ui/icons/StarBorder';
 import CameraIcon from "@material-ui/icons/Camera";
-//import VerticalAlignCenterIcon from "@material-ui/icons/VerticalAlignCenter";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 import MemoryIcon from "@material-ui/icons/Memory";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import EmojiTransportationIcon from "@material-ui/icons/EmojiTransportation";
 import AddToQueueIcon from "@material-ui/icons/AddToQueue";
-
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 import ProtectedRoute from "./common/protectedRoute";
 import AlprMembers from "./AlprMembers";
@@ -52,14 +49,15 @@ import AlprGeneralSetting from "./AlprGeneralSetting";
 import AlprPrice from "./AlprPrice";
 import AlprAiLane from "./AlprAiLane";
 import AlprMonitoredIp from "./AlprMonitoredIp";
+import * as monitoredIpService from "../services/AlprMonitoredIpService";
+import http from "../services/httpService";
+import AlprNotification from "./AlprNotification";
 import { Badge, Grid, IconButton, Tooltip } from "@material-ui/core";
+import _ from "lodash";
 
 // import AlprConfigFormik from './_AlprConfigFormik';
-//import Badge from '@material-ui/core/Badge';
-//import Divider from '@material-ui/core/Divider';
-//import IconButton from '@material-ui/core/IconButton';
 //import MenuItem from '@material-ui/core/MenuItem';
-//import AlprMemberForm from '../components/AlprMemberForm';
+
 //import AlprInOutRecord from "../components/AlprInOutRecord";
 ///services/authService';
 
@@ -118,17 +116,55 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function PermanentDrawerLeft(props) {
+function AlprHome(props) {
 	const [openCollapse, setOpenCollapse] = React.useState(false);
+	const [monitoredIp, setMonitoredIp] = React.useState([]);
+	const [alerts, setAlerts] = React.useState([]);
+	const [notify, setNotify] = React.useState({
+		isOpen: false,
+		message: "",
+		type: "",
+	});
+
+	React.useEffect(() => {
+		const source = http.getCancelToken();
+		async function fetchMonitoredIps() {
+			try {
+				const ips = await monitoredIpService.getMonitoredIps(source);
+				setMonitoredIp(ips);
+				const offLineAlert = _.filter(ips, { status: "offline" });
+				setAlerts(offLineAlert);
+				//setPageRefresh(true);
+			} catch (error) {
+				if (http.isCancel(error)) {
+				} else {
+					throw error;
+				}
+			}
+		}
+		fetchMonitoredIps();
+	}, [monitoredIp]);
 
 	function handleOpenSettings() {
 		setOpenCollapse(!openCollapse);
-		console.log("handleOpenSettings: triggered.");
+		//console.log("handleOpenSettings: triggered.");
 	}
 
+	const handleAlertMessage = () => {
+		if (alerts) {
+			_.forEach(alerts, (alr) => {
+				setNotify({
+					isOpen: true,
+					message: alr.message,
+					type: "error",
+				});
+			});
+		}
+	};
+
 	const { history } = props;
-	const [user, setUser] = useState("");
-	useEffect(() => {
+	const [user, setUser] = React.useState("");
+	React.useEffect(() => {
 		setUser(auth.getCurrentUser());
 	}, []);
 
@@ -245,6 +281,13 @@ function PermanentDrawerLeft(props) {
 						</Grid>
 						<Grid item xs></Grid>
 						<Grid item>
+							<Tooltip title='Alert'>
+								<IconButton onClick={handleAlertMessage}>
+									<Badge badgeContent={alerts.length} color='secondary'>
+										<NotificationsIcon />
+									</Badge>
+								</IconButton>
+							</Tooltip>
 							<Tooltip title='Logout'>
 								<IconButton onClick={() => history.push("/logout")}>
 									<PowerSettingsNewIcon />
@@ -346,9 +389,10 @@ function PermanentDrawerLeft(props) {
 					<Redirect from='/' exact to='/inOutRecord' />
 					<Redirect to='/not-found' />
 				</Switch>
+				<AlprNotification notify={notify} setNotify={setNotify} />
 			</main>
 		</div>
 	);
 }
 
-export default withRouter(PermanentDrawerLeft);
+export default withRouter(AlprHome);

@@ -12,6 +12,7 @@ import {
 	Grid,
 	Chip,
 	Toolbar,
+	InputAdornment,
 } from "@material-ui/core";
 import AlprControls from "./AlprControls";
 import AlprMemberForm from "./AlprMemberForm";
@@ -134,10 +135,10 @@ function AlprObus(props) {
 		let target = e.target;
 		setFilterFn({
 			fn: (obus) => {
-				if (target.value == "") return obus;
+				if (target.value === "") return obus;
 				else
 					return _.filter(obus, (p) => {
-						return p.obuId.includes(target.value);
+						return p.obuId.toLowerCase().includes(target.value);
 					});
 			},
 		});

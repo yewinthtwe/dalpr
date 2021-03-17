@@ -9,7 +9,6 @@ const _ = require("lodash");
 router.get("/", async (req, res) => {
 	try {
 		const monitoredIp = await MonitoredIp.find();
-		await setStatus();
 		res.status(200).send(monitoredIp);
 	} catch (ex) {
 		console.log("monitoredIpJS: Error.", ex);
@@ -73,7 +72,7 @@ async function setStatus() {
 		ping.sys.probe(host.ip, async function (isAlive) {
 			let msg = isAlive
 				? "Host " + host.ip + " is alive."
-				: "Host " + host.ip + " is dead.";
+				: "Host " + host.ip + " is dead or unreachable.";
 			console.log("monitoredIpJS:", msg);
 			if (isAlive) {
 				await MonitoredIp.updateOne(
@@ -81,6 +80,7 @@ async function setStatus() {
 					{
 						$set: {
 							status: "online",
+							message: msg,
 						},
 					}
 				);
@@ -90,6 +90,7 @@ async function setStatus() {
 					{
 						$set: {
 							status: "offline",
+							message: msg,
 						},
 					}
 				);

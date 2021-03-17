@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 
 const ObuSchema = new Schema({
 	srNo: { type: Number },
-	obuId: { type: Number },
+	obuId: { type: String },
 	inUsed: { type: Boolean },
 	memberId: { type: mongoose.Schema.Types.ObjectId, ref: "Member" },
 });

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 const headCells = [
 	{ id: "memberName", label: "Member Name" },
 	{ id: "licensePlate", label: "License Plate" },
-	{ id: "obu", label: "OBU Tag" },
+	{ id: "obu", label: "OBU Number" },
 	{ id: "address", label: "Address" },
 	{ id: "mobile", label: "Mobile" },
 	{ id: "email", label: "Email" },
