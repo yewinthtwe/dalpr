@@ -1,7 +1,7 @@
 {
-    "apiUrl": "http://192.168.11.66:30000/api",
+    "apiUrl": "http://192.168.11.247:30000/api",
 
-    "imageUrl" : "http://192.168.11.66:30000/",
+    "imageUrl" : "http://192.168.11.247:30000/",
     
     "xmlOptions": {
         "object": true,

@@ -1,21 +1,30 @@
 import React, {useState, useEffect} from 'react';
+import { withRouter } from 'react-router-dom';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import { Paper, makeStyles, TableBody, TableRow,TableCell, Toolbar, InputAdornment } from '@material-ui/core';
+import { 
+    Paper, 
+    makeStyles, 
+    TableBody, 
+    TableRow,
+    TableCell, 
+    Toolbar, 
+    InputAdornment 
+} from '@material-ui/core';
 import AlprControls from './AlprControls';
 import AlprPageHeader from './AlprPageHeader';
 import AlprConfigForm from './AlprConfigForm';
-//import AlprConfigFormik from './AlprConfigFormik';
 import useAlprTable from './useAlprTable';
 import * as configService from '../services/AlprConfigService';
 import http from '../services/httpService';
 import AlprPopup from './AlprPopup';
 import AlprNotification from './AlprNotification';
 import AlprConfirmDialog from './AlprConfirmDialog';
-import { withRouter } from 'react-router-dom';
+
+//import AlprConfigFormik from './AlprConfigFormik';
 
 
 const useStyles = makeStyles( theme => ({

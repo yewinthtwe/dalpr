@@ -29,7 +29,10 @@
     "mongoose": "^5.10.5",
     "mongoose-auto-increment": "^5.0.1",
     "node-cron": "^2.0.3",
+    "ping": "^0.4.0",
     "react-router-dom": "^5.2.0",
+    "socket-io": "^1.0.0",
+    "socket.io": "^3.1.2",
     "uuid": "^8.3.1",
     "winston": "^3.3.3",
     "xml2json": "^0.12.0"

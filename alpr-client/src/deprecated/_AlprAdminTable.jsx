@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Role from "./common/isAdmin";
-import Table from "./common/table";
+import Role from "../components/common/isAdmin";
+import Table from "../components/common/table";
 
 class UsersTable extends Component {
 

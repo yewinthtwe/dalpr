@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { getCurrentUser } from '../../services/authService';
+//import { getCurrentUser } from '../../services/oldServices/authService';
+import { getCurrentUser } from '../../services/AlprAuthService';
 
 const ProtectedRoute = ({ path, component: Component, render, ...rest }) => {
     return(

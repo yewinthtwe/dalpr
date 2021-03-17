@@ -2,14 +2,14 @@
 import React from 'react';
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import Textfield from "./FormUI/Textfield";
-import Select from "./FormUI/Select";
+import Textfield from "../components/FormUI/Textfield";
+import Select from "../components/FormUI/Select";
 // import countries from "./countries.json";
 // import * as configService from '../services/AlprConfigService';
 // import http from '../services/httpService';
 
 import { withRouter } from 'react-router-dom';
-import MyTable from './MyTable';
+import MyTable from '../components/MyTable';
 //import RadioButtonsGroup from './RadioGroup';
 
 import {

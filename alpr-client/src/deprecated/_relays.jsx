@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 //import { toast } from 'react-toastify';
 import Relay from "./common/relay";
 import { getLaneStatus, setLaneValue } from "../services/laneServices";
-import Cards from './Cards';
+import Cards from './_Cards';
 
 class Relays extends Component
 {

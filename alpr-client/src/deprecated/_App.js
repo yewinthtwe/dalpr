@@ -11,12 +11,12 @@ import LoginForm from "./components/loginForm";
 import Logout from './components/logout';
 //import Relays from "./components/relays";
 import InOutRecord from "./components/inOutRecord";
-import auth from './services/authService';
-import NotFound from "./components/notFound";
-import ProtectedRoute from './components/common/protectedRoute';
+import auth from '../services/authService';
+import NotFound from "../components/notFound";
+import ProtectedRoute from '../components/common/protectedRoute';
 import InOutRecordCard from "./components/inOutRecordCard";
 import Lanes from './components/lanes';
-import MuSwitch from './components/common/switch';
+import MuSwitch from '../components/common/switch';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 

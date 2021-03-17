@@ -1,36 +1,50 @@
+const auth = require('../middleware/auth');
+const isAdmin = require('../middleware/isAdmin');
+const { Lane } = require("../models/laneModel");
 const express = require("express");
 const router = express.Router();
-const playAdam = require("../relayPlayer");
+const _ = require("lodash");
 
-
-router.post("/", async (req, res) => {
-  if(!req.body.ioModuleId) return res.status(200).send( 'Invalid IO Module ID.' );
+router.get("/", async (req, res ) => {
   try {
-    const statusOfDO = [];
-    const ioModuleId = req.body.ioModuleId;
-    const relayId =  req.body.relayId;
-    const relayValue = req.body.relayValue;
-    const relay = await playAdam.setDO( ioModuleId, relayId, relayValue );
-    statusOfDO.push(relay);
-    res.status(200).send( statusOfDO );
-
-  } catch (err) {
-    console.log("Unexpected error occured while retriving data. IO modules may be offline.", err);
+      const lane = await Lane.find();
+      res.status(200).send(lane);
+  } catch (ex) {
+      console.log('laneJS: Error.', ex);
   }
-  });
+});
 
-router.get("/:ioModuleId", async (req, res) => {
-  if(!req.params.ioModuleId) return res.status(200).send( 'Invalid IO Module ID.');
-  try {
-    const ioModuleId = req.params.ioModuleId;
-    const relaysStatus = await playAdam.showDO( ioModuleId );
-    const statusOfDO = [];
-    statusOfDO.push(relaysStatus);
-    res.status(200).send( statusOfDO );
+router.put("/:id", [auth], async (req, res) => {
+  console.log('laneJS: update lane:', req.body);
+    const lane = await Lane.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        description: req.body.description,
+        isExitLane: req.body.isExitLane,
+      },
+      {new: true}
+    );
+    if (!lane)
+      return res.status(404).send("laneJS: The lane with the given ID was not found.");
+    res.send(lane);
+});
 
-  } catch (err) {
-    console.log("Unexpected error occured while retriving data. IO modules may be offline.", err);
-  }
+router.post("/", auth, async (req, res) => {
+  console.log('laneJS: Add lane:', req.body );
+  let lane = await Lane.findOne({ name: req.body.name });
+  if (lane) return res.status(400).send("laneJS: Lane name already registered.");
+  lane = new Lane(_.pick(req.body, ["name", "description", "isExitLane" ]));
+  await lane.save();
+  res.status(200).send(_.pick(lane, ["name", "description", "isExitLane" ]));
+});
+
+router.delete("/:id", [auth, isAdmin],async (req, res) => {
+  console.log('laneJS: Delete lane:', req.body );
+  const lane = await Lane.findByIdAndRemove(req.params.id);
+  if(!lane)
+  return res.status(404).send("The give id was not found.");
+  res.send(lane);
 });
 
 module.exports = router;

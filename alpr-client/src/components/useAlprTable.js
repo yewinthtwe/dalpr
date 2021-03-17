@@ -7,7 +7,8 @@ const useStyles = makeStyles(theme=>({
         '& thead th': {
             fontWeight: '600',
             color: theme.palette.primary.main,
-            backgroundColor: theme.palette.primary.light,
+            //backgroundColor: theme.palette.primary.light,
+            backgroundColor: '#F5F5F3',
         },
         '& tbody td': {
             fontWeight: '300',
@@ -19,10 +20,9 @@ const useStyles = makeStyles(theme=>({
     },
 }))
 
-export default function useTable(members, headCells, filterFn) {
+export default function useTable(items, headCells, filterFn) {
 
     const classes = useStyles();
-
     const pages = [ 5, 10, 25 ];
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage]= useState(pages[page]);
@@ -66,9 +66,7 @@ export default function useTable(members, headCells, filterFn) {
                             )
                         )
                     }
-
                 </TableRow>
-
             </TableHead>
         )
     }
@@ -84,13 +82,13 @@ export default function useTable(members, headCells, filterFn) {
 
     const TblPagination = () => (
         <TablePagination 
-        component = "div"
-        page = { page }
-        rowsPerPageOptions = { pages }
-        rowsPerPage = { rowsPerPage }
-        count = { members.length }
-        onChangePage = { handleChangePage }
-        onChangeRowsPerPage = { handleChangeRowsPerPage } 
+            component = "div"
+            page = { page }
+            rowsPerPageOptions = { pages }
+            rowsPerPage = { rowsPerPage }
+            count = { items.length }
+            onChangePage = { handleChangePage }
+            onChangeRowsPerPage = { handleChangeRowsPerPage } 
         />
     )
 
@@ -123,14 +121,13 @@ export default function useTable(members, headCells, filterFn) {
     }
 
     const recordsAfterPagingAndSorting = () => {
-        return stableSort(filterFn.fn(members), getComparator(order, orderBy)).slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+        return stableSort(filterFn.fn(items), getComparator(order, orderBy)).slice(page * rowsPerPage, (page + 1) * rowsPerPage);
     }
-
-    return {
-        TblContainer,
-        TblHead,
-        TblPagination,
-        recordsAfterPagingAndSorting
-    }
+    
+        return {
+            TblContainer,
+            TblHead,
+            TblPagination,
+            recordsAfterPagingAndSorting
+        }
 }
-
