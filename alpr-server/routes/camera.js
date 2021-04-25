@@ -38,7 +38,15 @@ router.put("/:id", [auth], async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
 	console.log("cameraJS: Add camera:", req.body);
-	let camera = await Camera.findOne({ cameraName: req.body.cameraName });
+	const addedCamera = await Camera.findOne({ camera_id: { $gte: 4 } });
+	if (addedCamera) {
+		await Camera.counterReset("camera_id", function (err) {
+			console.log("cameraJs: resetting camera counter.");
+		});
+	}
+
+	let camera = await Camera.findOne({ name: req.body.name });
+
 	if (camera)
 		return res.status(400).send("cameraJS: Camera name already registered.");
 	camera = new Camera(
@@ -48,11 +56,10 @@ router.post("/", auth, async (req, res) => {
 			"ip",
 			"username",
 			"password",
-
 			"status",
-			"camera_id",
 		])
 	);
+	console.log("cameraJs: camera object:", camera);
 	await camera.save();
 	res
 		.status(200)
@@ -63,7 +70,6 @@ router.post("/", auth, async (req, res) => {
 				"ip",
 				"username",
 				"password",
-
 				"status",
 				"camera_id",
 			])

@@ -18,11 +18,11 @@ async function getInOutRecord(id) {
 
 async function validateMember(candidates) {
 	console.log(`validateMember: Searching in Member database.....`);
-	//const member = await Member.findOne({ $or: [{'licensePlate': { $in: licensePlate }}, {'candidates.plate': { $in: licensePlate }}] });
+	//const member = await Member.findOne({ $or: [{'lp': { $in: lp }}, {'candidates.plate': { $in: lp }}] });
 	const member = await Member.findOne({
 		isActive: true,
 		$or: [
-			{ licensePlate: { $in: candidates.map((l) => l.plate) } },
+			{ lp: { $in: candidates.map((l) => l.plate) } },
 			{ "candidates.plate": { $in: candidates.map((c) => c.plate) } },
 		],
 	}).populate("obu");

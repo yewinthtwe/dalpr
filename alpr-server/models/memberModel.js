@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
 const MemberSchema = new Schema({
 	memberId: { type: String, default: uuidv4() },
 	memberName: { type: String, required: true, trim: true },
-	licensePlate: { type: Array, required: true },
+	lp: { type: Array, required: true },
 	address: { type: String, required: true },
 	mobile: { type: Number },
 	email: { type: String },
@@ -23,7 +23,7 @@ const MemberSchema = new Schema({
 const Member = mongoose.model("Member", MemberSchema);
 
 const schema = Joi.object({
-	licensePlate: Joi.string().required(),
+	lp: Joi.array().required(),
 	memberName: Joi.string().min(6).max(100).required(),
 	address: Joi.string().min(6).max(254).required(),
 	mobile: Joi.number().min(9).required(),

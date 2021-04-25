@@ -4,6 +4,7 @@ const error = require("./middleware/error");
 const config = require("config");
 const cors = require("cors");
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const logger = require("./middleware/logger");
 const members = require("./routes/members");
@@ -11,7 +12,9 @@ const obus = require("./routes/obus");
 const inOutRecord = require("./routes/inOutRecord");
 const alprd = require("./routes/alprd");
 const users = require("./routes/users");
-const auth = require("./routes/auth");
+const login = require("./routes/login");
+const logout = require("./routes/logout");
+// const cookieAuth = require("./routes/cookieAuth");
 const configAlpr = require("./routes/configAlpr");
 const camera = require("./routes/camera");
 const relay = require("./routes/relay");
@@ -22,6 +25,8 @@ const generalSetting = require("./routes/generalSetting");
 const price = require("./routes/price");
 const monitoredIp = require("./routes/monitoredIp");
 const aiLane = require("./routes/aiLane");
+const report = require("./routes/report");
+const kiosk = require("./routes/kiosk");
 const digitaloutput = require("./routes/digitaloutput"); // Dummy Relay
 
 process.on("uncaughtException", (ex) => {
@@ -43,8 +48,9 @@ if (!config.get("jwtPrivateKey")) {
 }
 
 const app = express();
-app.use(cors());
 
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 app.use(express.static("/home/alprsvr/plateimagesTemp"));
 app.get("/:photo", (req, res) => {});
@@ -61,7 +67,9 @@ app.use("/api/obus", obus);
 app.use("/api/users", users);
 app.use("/api/inOutRecord", inOutRecord);
 app.use("/api/alprd", alprd);
-app.use("/api/auth", auth);
+app.use("/api/login", login);
+app.use("/api/logout", logout);
+// app.use("/api/cookieAuth", cookieAuth);
 app.use("/api/configAlpr", configAlpr);
 app.use("/api/camera", camera);
 app.use("/api/relay", relay);
@@ -71,6 +79,8 @@ app.use("/api/generalSetting", generalSetting);
 app.use("/api/price", price);
 app.use("/api/monitoredIp", monitoredIp);
 app.use("/api/aiLane", aiLane);
+app.use("/api/report", report);
+app.use("/api/kiosk", kiosk);
 
 app.use("/api/digitaloutput", digitaloutput);
 

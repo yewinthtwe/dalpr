@@ -20,24 +20,48 @@ async function showDO(axiosUrl, axiosConfig) {
 
 async function setRelayValue(relay) {
 	const { ioModule, axiosUrl, axiosConfig, relayId, relayValue } = relay;
-	if (ioModule != "dummyModule") {
-		try {
-			await Relay.updateOne(
-				{ relayId: relayId },
-				{
-					$set: {
-						relayValue: relayValue,
-						VALUE: relayValue,
-					},
-				}
-			);
-		} catch (error) {
-			console.error(
-				"unable to connect to IOmodule, maybe offline.",
-				error.message
-			);
-		}
+	try {
+		await Relay.updateOne(
+			{ relayId: relayId },
+			{
+				$set: {
+					relayValue: relayValue,
+					VALUE: relayValue,
+				},
+			}
+		);
+		console.log("setRelayValue: Turn-On fake relay.");
+	} catch (error) {
+		console.error(
+			"setRelayValue: unable to connect to database.",
+			error.message
+		);
+	}
+	if (ioModule !== "dummyModule") {
 		setDO(axiosUrl, axiosConfig, relayId, relayValue);
+	} else {
+		//await fakeRelayOff(relayId);
+		console.log("setRelayValue: NOT trun-off as it is fake relay.");
+	}
+}
+
+async function fakeRelayOff(relayId) {
+	console.log("setRelayValue: Turn-Off fake relay.");
+	try {
+		await Relay.updateOne(
+			{ relayId: relayId },
+			{
+				$set: {
+					relayValue: 0,
+					VALUE: 0,
+				},
+			}
+		);
+	} catch (error) {
+		console.error(
+			"fakeRelayOff: unable to connect to database.",
+			error.message
+		);
 	}
 }
 
@@ -55,10 +79,7 @@ async function setDO(axiosUrl, axiosConfig, relayId, relayValue) {
 		let relayStatus = xmlParser.toJson(data, config.get("xmlOptions"));
 		return relayStatus;
 	} catch (error) {
-		console.error(
-			"unable to connect to IOmodule, maybe offline.",
-			error.message
-		);
+		console.error("setDO: unable to connect to database.", error.message);
 	}
 }
 

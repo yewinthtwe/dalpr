@@ -8,7 +8,7 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
 	const members = await Member.find().populate("obu");
 	res.status(200).send(members);
 });
@@ -23,7 +23,7 @@ router.put("/:id", [auth], async (req, res) => {
 	const member = await Member.findByIdAndUpdate(
 		req.params.id,
 		{
-			licensePlate: req.body.licensePlate,
+			lp: req.body.lp,
 			memberName: req.body.memberName,
 			address: req.body.address,
 			mobile: req.body.mobile,
@@ -39,18 +39,18 @@ router.put("/:id", [auth], async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
 	const { error } = schema.validate(req.body);
-	console.log("membersJS:", req.body, error);
+	console.log("membersJS:", req.body, error?.details[0].message);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	let obu = await Obu.findOne({ inUsed: false });
 	// console.log(`Picking random OBU : ${obu}`);
-	let member = await Member.findOne({ licensePlate: req.body.licensePlate });
+	let member = await Member.findOne({ lp: req.body.lp });
 	if (member) return res.status(400).send("Car number already registered.");
 	member = new Member(
 		_.pick(req.body, [
 			"memberName",
 			"address",
-			"licensePlate",
+			"lp",
 			"mobile",
 			"email",
 			"isActive",
@@ -78,7 +78,7 @@ router.post("/", auth, async (req, res) => {
 			_.pick(member, [
 				"memberName",
 				"address",
-				"licensePlate",
+				"lp",
 				"registrationDate",
 				"mobile",
 				"email",

@@ -1,53 +1,51 @@
 {
-    "jwtPrivateKey": "",
-    "dbURL" : "mongodb://localhost:27017/alpr",
-   
-    "mongooseConfig" : {
-      "useNewUrlParser": true,
-      "useUnifiedTopology": true
-  },
-    
-    "apiURL" : "http://localhost:30000/api",
+	"jwtPrivateKey": "",
+	"dbURL": "mongodb://localhost:27017/alpr",
 
-    "adamURL" : {
-      "1" : "http://192.168.11.151/digitaloutput/all/value",
-      "2" : "http://192.168.11.151/digitaloutput/all/value"
-    },
+	"mongooseConfig": {
+		"useNewUrlParser": true,
+		"useUnifiedTopology": true,
+		"useCreateIndex": true
+	},
 
-    "dummyAdam" : {
-      "1" : "<?xml version=\"1.0\" ?><ADAM-6060 status=\"OK\"><DO> <ID>0</ID> <VALUE>0</VALUE> </DO><DO> <ID>1</ID> <VALUE>0</VALUE> </DO><DO> <ID>2</ID> <VALUE>0</VALUE> </DO><DO> <ID>3</ID> <VALUE>0</VALUE> </DO><DO> <ID>4</ID> <VALUE>0</VALUE> </DO><DO> <ID>5</ID> <VALUE>0</VALUE> </DO></ADAM-6060>",
-      "2" : "<?xml version=\"1.0\" ?><ADAM-6060 status=\"OK\"><DO> <ID>0</ID> <VALUE>0</VALUE> </DO><DO> <ID>1</ID> <VALUE>0</VALUE> </DO><DO> <ID>2</ID> <VALUE>0</VALUE> </DO><DO> <ID>3</ID> <VALUE>0</VALUE> </DO><DO> <ID>4</ID> <VALUE>0</VALUE> </DO><DO> <ID>5</ID> <VALUE>0</VALUE> </DO></ADAM-6060>"
-    },
-    
-    "photoStore" :{
-      "location": "/home/alprsvr/plateimages"
-    },
+	"apiURL": "http://localhost:30000/api",
 
-    "photoStoreTemp" : {
-      "location": "/home/alprsvr/plateimagesTemp"
-    },
+	"adamURL": {
+		"1": "http://192.168.11.151/digitaloutput/all/value",
+		"2": "http://192.168.11.151/digitaloutput/all/value"
+	},
 
-    "adamConfig": {
-        "headers" : {
-          "Content-Length": 0,
-          "Content-Type": "text/plain"
-        },
-        "auth" : {
-          "username" : "root",
-          "password": "00000000"
-        }
-    },
+	"dummyAdam": {
+		"1": "<?xml version=\"1.0\" ?><ADAM-6060 status=\"OK\"><DO> <ID>0</ID> <VALUE>0</VALUE> </DO><DO> <ID>1</ID> <VALUE>0</VALUE> </DO><DO> <ID>2</ID> <VALUE>0</VALUE> </DO><DO> <ID>3</ID> <VALUE>0</VALUE> </DO><DO> <ID>4</ID> <VALUE>0</VALUE> </DO><DO> <ID>5</ID> <VALUE>0</VALUE> </DO></ADAM-6060>",
+		"2": "<?xml version=\"1.0\" ?><ADAM-6060 status=\"OK\"><DO> <ID>0</ID> <VALUE>0</VALUE> </DO><DO> <ID>1</ID> <VALUE>0</VALUE> </DO><DO> <ID>2</ID> <VALUE>0</VALUE> </DO><DO> <ID>3</ID> <VALUE>0</VALUE> </DO><DO> <ID>4</ID> <VALUE>0</VALUE> </DO><DO> <ID>5</ID> <VALUE>0</VALUE> </DO></ADAM-6060>"
+	},
 
-    "xmlOptions": {
-        "object": true,
-        "reversible": false,
-        "coerce": false,
-        "sanitize": true,
-        "trim": true,
-        "arrayNotation": false,
-        "alternateTextNode": false
-    }
-   
+	"photoStore": {
+		"location": "/home/alprsvr/plateimages"
+	},
+
+	"photoStoreTemp": {
+		"location": "/home/alprsvr/plateimagesTemp"
+	},
+
+	"adamConfig": {
+		"headers": {
+			"Content-Length": 0,
+			"Content-Type": "text/plain"
+		},
+		"auth": {
+			"username": "root",
+			"password": "00000000"
+		}
+	},
+
+	"xmlOptions": {
+		"object": true,
+		"reversible": false,
+		"coerce": false,
+		"sanitize": true,
+		"trim": true,
+		"arrayNotation": false,
+		"alternateTextNode": false
+	}
 }
-
-

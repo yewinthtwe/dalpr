@@ -2,13 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import "fontsource-roboto";
-import AlprHome from "./components/AlprHome";
+// import Home from "./components/Home";
+import App from "./components/App";
 import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(
 	<BrowserRouter>
-		<AlprHome />
+		<App />
 	</BrowserRouter>,
 
 	document.getElementById("root")

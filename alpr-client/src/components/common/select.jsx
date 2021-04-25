@@ -1,20 +1,30 @@
 import React from "react";
+import {
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select as MuiSelect,
+} from "@material-ui/core";
+// import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+// import CheckBoxIcon from "@material-ui/icons/CheckBox";
+// const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
+// const checkedIcon = <CheckBoxIcon fontSize='small' />;
 
-const Select = ({ name, label, options, error, ...rest }) => {
-  return (
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
-      <select name={name} id={name} {...rest} className="form-control">
-        <option value="" />
-        {options.map(option => (
-          <option key={option._id} value={option._id}>
-            {option.name}
-          </option>
-        ))}
-      </select>
-      {error && <div className="alert alert-danger">{error}</div>}
-    </div>
-  );
-};
+export default function Select(props) {
+	const { name, label, value, onChange, options } = props;
 
-export default Select;
+	// console.log("AlprSelect: options:", options);
+	return (
+		<FormControl variant='outlined'>
+			<InputLabel> {label} </InputLabel>
+			<MuiSelect label={label} name={name} value={value} onChange={onChange}>
+				{/* <MenuItem value=''>None</MenuItem> */}
+				{options.map((item) => (
+					<MenuItem key={item._id} value={item.name}>
+						{item.name}
+					</MenuItem>
+				))}
+			</MuiSelect>
+		</FormControl>
+	);
+}

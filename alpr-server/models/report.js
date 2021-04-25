@@ -6,22 +6,22 @@ mongoose.set("useCreateIndex", true);
 
 const Schema = mongoose.Schema;
 
-const ReportSchema = new Schema ({
-    totalTickets: { type: Number },
-    visitorCount: { type: Number },
-    memberCount: { type: Number },
-    avgParkedMinutes: { type: Number },
-    freeTickets: { type: Number},
-    paidTickets: { type: Number },
-    totalSalesAmount: { type: Number},
-    totalParkedMinutes: { type: Number},
-  });
+const ReportSchema = new Schema({
+	totalTickets: { type: Number },
+	visitorCount: { type: Number },
+	memberCount: { type: Number },
+	avgParkedMinutes: { type: Number },
+	freeTickets: { type: Number },
+	paidTickets: { type: Number },
+	totalSalesAmount: { type: Number },
+	totalParkedMinutes: { type: Number },
+});
 
-const Report = mongoose.model( "Report", ReportSchema);
+const Report = mongoose.model("Report", ReportSchema);
 
 // const schema = Joi.object({
 //   ticketId: Joi.string().required(),
-//   licensePlate: Joi.array().required(),
+//   lp: Joi.array().required(),
 // });
 
 exports.Report = Report;

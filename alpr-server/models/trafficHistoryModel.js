@@ -6,37 +6,40 @@ mongoose.set("useCreateIndex", true);
 
 const Schema = mongoose.Schema;
 
-const TicketSchema = new Schema ({
-  licensePlate: { type: Array, required: true },
-  ticketId: { type: String, required: true },
-  inTime: { type: Number },
-  outTime: { type: Number },
-  InvitedBy: { type: String },
-  parkingFee: { type: Number },
-  parkedMinutes: { type: Number},
-  isPaid: { type: Boolean },
-  isUsed: { type: Boolean }
+const TicketSchema = new Schema({
+	lp: { type: Array, required: true },
+	ticketId: { type: String, required: true },
+	inTime: { type: Number },
+	outTime: { type: Number },
+	InvitedBy: { type: String },
+	parkingFee: { type: Number },
+	parkedMinutes: { type: Number },
+	isPaid: { type: Boolean },
+	isUsed: { type: Boolean },
 });
 
-const inOutRecordSchema = new Schema ({
-    licensePlate: { type: Array, required: true },
-    isMember: { type: Boolean },
-    Time: { type: Date },
-    inTrafficId: { type: String },
-    inPhoto: { type: String },
-    inCameraId: { type: Number },
-    outTrafficId: { type: String },
-    outPhoto: { type: String },
-    outCameraId: { type: Number },
-    Direction: { type: String },
-    ticket: TicketSchema
-  }, { timestamps: true });
-  
-  const TrafficHistory = mongoose.model("TrafficHistory", inOutRecordSchema);
-  //const Ticket = mongoose.model( "Ticket", TicketSchema);
+const inOutRecordSchema = new Schema(
+	{
+		lp: { type: Array, required: true },
+		isMember: { type: Boolean },
+		Time: { type: Date },
+		inTrafficId: { type: String },
+		inPhoto: { type: String },
+		inCameraId: { type: Number },
+		outTrafficId: { type: String },
+		outPhoto: { type: String },
+		outCameraId: { type: Number },
+		Direction: { type: String },
+		ticket: TicketSchema,
+	},
+	{ timestamps: true }
+);
+
+const TrafficHistory = mongoose.model("TrafficHistory", inOutRecordSchema);
+//const Ticket = mongoose.model( "Ticket", TicketSchema);
 
 const schema = Joi.object({
-  licensePlate: Joi.array().required()
+	lp: Joi.array().required(),
 });
 
 exports.TrafficHistory = TrafficHistory;

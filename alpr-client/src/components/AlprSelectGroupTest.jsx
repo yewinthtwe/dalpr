@@ -7,7 +7,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import _ from "lodash";
-import * as ioModuleService from "../services/AlprIoModuleService";
+import * as ioModuleService from "../services/ioModuleService";
 import http from "../services/httpService";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
@@ -23,25 +23,16 @@ export default function CheckboxesTags() {
 		},
 	]);
 	React.useEffect(() => {
-		const source = http.getCancelToken();
-
 		async function fetchConfig() {
 			try {
-				const ioModules = await ioModuleService.getIoModules(source);
+				const ioModules = await ioModuleService.getIoModules();
 				setIoModuleItems(ioModules);
 				setPageRefresh(true);
 			} catch (error) {
-				if (http.isCancel(error)) {
-				} else {
-					throw error;
-				}
+				console.log("SelectGroupTest:", error);
 			}
 		}
 		fetchConfig();
-
-		return () => {
-			source.cancel();
-		};
 	}, [pageRefresh]);
 
 	_.forEach(ioModuleItems, (o) => {
