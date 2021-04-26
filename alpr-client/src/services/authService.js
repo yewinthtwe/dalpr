@@ -10,6 +10,7 @@ export function login(data) {
 }
 
 export function logout(id) {
+	//console.log("authService: logout:", id);
 	return http.get(apiUrl + `/logout/${id}`);
 }
 

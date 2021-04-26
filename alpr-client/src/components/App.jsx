@@ -28,6 +28,7 @@ import ProtectedRoute from "./common/ProtectedRoute";
 import HomeDrawer from "./HomeDrawer";
 import { InOutRecord } from "./InOutRecord";
 import { makeStyles } from "@material-ui/core";
+import LoginMe from "./LoginMe";
 
 const drawerWidth = 220;
 
@@ -102,6 +103,9 @@ export default function App() {
 					<main className={classes.content}>
 						<div className={classes.toolbar} />
 						<Switch>
+							<Route exact path='/loginMe'>
+								<LoginMe />
+							</Route>
 							<Route exact path='/login'>
 								<Login />
 							</Route>

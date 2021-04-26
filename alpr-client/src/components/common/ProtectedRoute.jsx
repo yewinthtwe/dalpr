@@ -6,7 +6,7 @@ import AuthApi from "./AuthApi";
 export default function ProtectedRoute({ children, ...rest }) {
 	const { authUser } = React.useContext(AuthApi);
 	//let history = useHistory();
-	console.log("ProtectedRoute: authUser:", authUser);
+	//console.log("ProtectedRoute: authUser:", authUser);
 	//console.log("ProtectedRoute: history:", history);
 
 	return (

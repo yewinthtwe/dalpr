@@ -45,22 +45,17 @@ export default function Login() {
 		password: "",
 	};
 
-	if (authUser?.username) {
-		console.log("Login: Current login user:", authUser.username);
-		return <Redirect to={state?.from || "/inOutRecord"} />;
-	}
-
-	const onSubmit = async (data, props) => {
+	const handleSubmit = async (data, props) => {
 		//console.log("Login: props:", props);
 		const { resetForm, setSubmitting } = props;
 		setSubmitting(true);
 		const resp = await auth.login(data, {
 			cancelToken: source.token,
 		});
+		setSubmitting(false);
 		console.log("LoginJsx: resp:", resp);
 		setAuthUser(resp.data);
 		setGoToOrigin(true);
-		setSubmitting(false);
 		resetForm();
 	};
 
@@ -70,12 +65,12 @@ export default function Login() {
 	}
 
 	return (
-		<div>
+		<>
 			<Grid container style={{ minHeight: "100vh" }}>
 				<Grid item xs={12} sm={6}>
 					<img
 						src={lobby2}
-						style={{ width: "100%", height: "100%", objectFit: "cover" }}
+						style={{ width: "100%", height: "100%", objectFit: "fill" }}
 						alt='diamond inya login'
 					/>
 				</Grid>
@@ -99,66 +94,65 @@ export default function Login() {
 						}}
 					>
 						<Grid container justify='center'>
-							<img src={dipLogo} alt='dip logo' height={80} width={100} />
+							<img src={dipLogo} alt='dip logo' width={170} />
+							<Grid item xs={12}>
+								<Formik initialValues={initialValues} onSubmit={handleSubmit}>
+									{({ isSubmitting }) => (
+										<Form>
+											<Field
+												as={TextField}
+												// value={values.username}
+												// onChange={handleChange}
+												// onBlur={handleBlur}
+												name='username'
+												label='Username'
+												margin='normal'
+												required
+												fullWidth
+												InputProps={{
+													startAdornment: (
+														<InputAdornment position='start'>
+															<AccountCircle />
+														</InputAdornment>
+													),
+												}}
+											/>
+											<Field
+												as={TextField}
+												// value={values.password}
+												// onChange={handleChange}
+												// onBlur={handleBlur}
+												name='password'
+												type='password'
+												label='Password'
+												margin='normal'
+												fullWidth
+												required
+												InputProps={{
+													startAdornment: (
+														<InputAdornment position='start'>
+															<LockRounded />
+														</InputAdornment>
+													),
+												}}
+											/>
+											<div style={{ height: 20 }} />
+											<Button
+												type='submit'
+												color='primary'
+												variant='contained'
+												fullWidth
+												disabled={isSubmitting}
+											>
+												Login
+											</Button>
+										</Form>
+									)}
+								</Formik>
+							</Grid>
 						</Grid>
-
-						<Grid item>
-							<Formik initialValues={initialValues} onSubmit={onSubmit}>
-								{({ values, isSubmitting, handleSubmit }) => (
-									<Form>
-										<Field
-											as={TextField}
-											// value={values.username}
-											// onChange={handleChange}
-											// onBlur={handleBlur}
-											name='username'
-											label='Username'
-											margin='normal'
-											required
-											fullWidth
-											InputProps={{
-												startAdornment: (
-													<InputAdornment position='start'>
-														<AccountCircle />
-													</InputAdornment>
-												),
-											}}
-										/>
-										<Field
-											as={TextField}
-											// value={values.password}
-											// onChange={handleChange}
-											// onBlur={handleBlur}
-											name='password'
-											type='password'
-											label='Password'
-											margin='normal'
-											fullWidth
-											required
-											InputProps={{
-												startAdornment: (
-													<InputAdornment position='start'>
-														<LockRounded />
-													</InputAdornment>
-												),
-											}}
-										/>
-										<div style={{ height: 20 }} />
-										<Button
-											type='submit'
-											color='primary'
-											variant='contained'
-											fullWidth
-											disabled={isSubmitting}
-										>
-											Login
-										</Button>
-									</Form>
-								)}
-							</Formik>
-						</Grid>
-						<div style={{ height: 20 }} />
 					</div>
+					<div style={{ height: 20 }} />
 					<Grid container justify='center' spacing={3}>
 						<Grid item>
 							<Typography variant='caption'>
@@ -169,6 +163,6 @@ export default function Login() {
 					<div />
 				</Grid>
 			</Grid>
-		</div>
+		</>
 	);
 }
