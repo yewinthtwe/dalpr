@@ -150,7 +150,7 @@ function Camera(props) {
 		<>
 			<PageHeader
 				title='Camera Configuration'
-				subTitle='CameraId is automatically assigned. Max. camera limit is 4.'
+				subTitle='camera_id must be matched with alpr input camera configured.'
 				icon={<CameraIcon fontSize='large' />}
 			/>
 

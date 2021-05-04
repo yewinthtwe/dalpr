@@ -12,7 +12,10 @@ const {
 	// isTimeCheckOk,
 	makeRecordUsed,
 } = require("../camFeedHandler");
-const { Camera } = require("../models/cameraModel");
+//const { Camera } = require("../models/cameraModel");
+const { AiLane } = require("../models/aiLaneModel");
+//const { Lane } = require("../models/laneModel");
+const { IoModule } = require("../models/ioModuleModel");
 // const { isNewDoc } = require("../isNewDoc");
 // const config = require("config");
 //const playAdam = require("../DummyRelayPlayer");
@@ -40,18 +43,22 @@ router.post("/", async (req, res) => {
 	const isMember = member ? true : false;
 	const obu = member ? member.obu.obuId : "0000000000000000";
 
-	const camera = await Camera.findOne({ camera_id: camera_id })
-		.populate("laneId")
-		.populate({ path: "relayId", populate: { path: "ioModule" } });
-	const isExitLane = camera.laneId.isExitLane;
-	const { ID: relayId, VALUE: albStatus } = camera.relayId;
+	const alprLane = await AiLane.findOne({ "camera.camera_id": camera_id });
+	console.log("aprd: alprLane:", alprLane);
+
+	const { isExitLane } = alprLane?.lane;
+	console.log("aprd: isExitLane:", isExitLane);
+	const { inUsed, ID: relayId, VALUE: albStatus, parentName } = alprLane?.relay;
+
+	const ioModuleDb = await IoModule.findOne({ name: parentName });
+	console.log("aprd: ioModule:", ioModuleDb);
 	const {
 		ip,
 		port,
 		url,
 		configParam: axiosConfig,
 		name: ioModule,
-	} = camera.relayId.ioModule;
+	} = ioModuleDb;
 	const axiosUrl = `http://${ip}:${port}/${url}`;
 
 	//console.log("alprdJS: :", axiosUrl);
@@ -59,7 +66,7 @@ router.post("/", async (req, res) => {
 	//relayStatus.DO[relayId].VALUE == 0;
 
 	let searchResult = await lpSearchForUpdate(lp, isExitLane, candidates); // return a matchedDoc in InOutRecord
-
+	console.log("aprd: searchResult:", searchResult);
 	const tkn = {
 		newDocData: {
 			lp: lp,
@@ -125,7 +132,7 @@ router.post("/", async (req, res) => {
 			axiosUrl: axiosUrl,
 			axiosConfig: axiosConfig,
 			relayId: relayId,
-			relayValue: "",
+			relayValue: albStatus,
 		},
 	};
 
@@ -256,7 +263,7 @@ async function updateDoc(_id, newUpdateData) {
 
 async function openAlb(relay) {
 	relay.relayValue = 1;
-	relay.VALUE = 1;
+	// relay.VALUE = 1;
 	await playAdam.setRelayValue(relay);
 }
 

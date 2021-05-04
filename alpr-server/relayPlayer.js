@@ -4,6 +4,17 @@ const xmlParser = require("xml2json");
 const _ = require("lodash");
 const { Relay } = require("./models/relayModel");
 
+// "adamConfig": {
+// 	"headers": {
+// 		"Content-Length": 0,
+// 		"Content-Type": "text/plain"
+// 	},
+// 	"auth": {
+// 		"username": "root",
+// 		"password": "00000000"
+// 	}
+// },
+
 async function showDO(axiosUrl, axiosConfig) {
 	try {
 		const { data } = await axios.get(axiosUrl, axiosConfig);

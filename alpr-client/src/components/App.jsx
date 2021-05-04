@@ -21,14 +21,14 @@ import GeneralSetting from "./GeneralSetting";
 import Price from "./Price";
 import Obu from "./Obu";
 import SystemControl from "./SystemControl";
-import AiLane from "./AiLane";
+import AlprLane from "./AlprLane";
 import Lane from "./Lane";
 import NotFound from "./notFound";
 import ProtectedRoute from "./common/ProtectedRoute";
 import HomeDrawer from "./HomeDrawer";
 import { InOutRecord } from "./InOutRecord";
 import { makeStyles } from "@material-ui/core";
-import LoginMe from "./LoginMe";
+import Relay from "./Relay";
 
 const drawerWidth = 220;
 
@@ -103,9 +103,6 @@ export default function App() {
 					<main className={classes.content}>
 						<div className={classes.toolbar} />
 						<Switch>
-							<Route exact path='/loginMe'>
-								<LoginMe />
-							</Route>
 							<Route exact path='/login'>
 								<Login />
 							</Route>
@@ -139,11 +136,14 @@ export default function App() {
 							<ProtectedRoute exact path='/camera'>
 								<Camera />
 							</ProtectedRoute>
-							<ProtectedRoute exact path='/aiLane'>
-								<AiLane />
+							<ProtectedRoute exact path='/alprLane'>
+								<AlprLane />
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/ioModule'>
 								<IoModule />
+							</ProtectedRoute>
+							<ProtectedRoute exact path='/relay'>
+								<Relay />
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/lane'>
 								<Lane />

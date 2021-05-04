@@ -20,9 +20,9 @@ function RadioGroup(props) {
 						<FormControlLabel
 							key={item._id}
 							control={<Radio />}
-							label={item.name + ": " + item.description}
+							label={item.name}
 							value={item.name}
-							disabled={item.status === "online" ? false : true}
+							//disabled={item.status === "online" ? false : true}
 						/>
 					))}
 				</MuiRadioGroup>

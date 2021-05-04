@@ -21,15 +21,9 @@ router.put("/:id", [auth], async (req, res) => {
 		{
 			name: req.body.name,
 			description: req.body.description,
-			lane: req.body.lane,
-			laneId: req.body.laneId,
-			laneType: req.body.laneType,
 			camera: req.body.camera,
-			cameraId: req.body.cameraId,
-			ioModule: req.body.ioModule,
-			ioModuleId: req.body.ioModuleId,
 			relay: req.body.relay,
-			relayId: req.body.relayId,
+			lane: req.body.lane,
 			status: req.body.status,
 		},
 		{ new: true }
@@ -51,14 +45,8 @@ router.post("/", auth, async (req, res) => {
 			"name",
 			"description",
 			"camera",
-			"cameraId",
-			"ioModule",
-			"ioModuleId",
 			"relay",
-			"relayId",
 			"lane",
-			"laneId",
-			"laneType",
 			"status",
 		])
 	);
@@ -70,14 +58,8 @@ router.post("/", auth, async (req, res) => {
 				"name",
 				"description",
 				"camera",
-				"cameraId",
-				"ioModule",
-				"ioModuleId",
 				"relay",
-				"relayId",
 				"lane",
-				"laneId",
-				"laneType",
 				"status",
 			])
 		);

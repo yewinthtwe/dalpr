@@ -238,19 +238,25 @@ function HomeDrawer() {
 		},
 		{
 			icon: <CameraIcon />,
-			text: "Camera",
+			text: "ALPR Camera",
 			onClick: () => history.push("/camera"),
 		},
-		{
-			icon: <EmojiTransportationIcon />,
-			text: "Auto Lane",
-			onClick: () => history.push("/aiLane"),
-		},
+		// {
+		// 	icon: <MemoryIcon />,
+		// 	text: "IO Relay",
+		// 	onClick: () => history.push("/relay"),
+		// },
 		{
 			icon: <MemoryIcon />,
 			text: "ioModule",
 			onClick: () => history.push("/ioModule"),
 		},
+		{
+			icon: <EmojiTransportationIcon />,
+			text: "ALPR Lane",
+			onClick: () => history.push("/alprLane"),
+		},
+
 		{
 			icon: <MonetizationOnIcon />,
 			text: "Parking Fee",

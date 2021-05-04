@@ -14,6 +14,7 @@ export default function CameraForm(props) {
 		id: 0,
 		name: "",
 		description: "",
+		camera_id: 1,
 		ip: "",
 		username: "",
 		password: "",
@@ -26,6 +27,8 @@ export default function CameraForm(props) {
 			temp.name = fieldValues.name ? "" : "Camera name is required";
 		if ("ip" in fieldValues)
 			temp.ip = fieldValues.ip ? "" : "IP Address is required.";
+		if ("camera_id" in fieldValues)
+			temp.camera_id = fieldValues.camera_id ? "" : "camera_id is required.";
 		if ("username" in fieldValues)
 			temp.username = fieldValues.username ? "" : "login user name is required";
 		if ("password" in fieldValues)
@@ -95,6 +98,13 @@ export default function CameraForm(props) {
 						value={values.description}
 						onChange={handleInputChange}
 						error={errors.description}
+					/>
+					<Controls.Input
+						label='Camera ID'
+						name='camera_id'
+						value={values.camera_id}
+						onChange={handleInputChange}
+						error={errors.camera_id}
 					/>
 					<Controls.Input
 						label='IP Address'

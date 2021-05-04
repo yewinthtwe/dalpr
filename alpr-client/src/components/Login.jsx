@@ -14,7 +14,7 @@ import lobby2 from "../images/dip_lobby2.jpeg";
 import { Formik, Form, Field } from "formik";
 import { Redirect, useLocation } from "react-router-dom";
 import AuthApi from "../components/common/AuthApi";
-import http from "../services/httpService";
+// import http from "../services/httpService";
 
 // const useStyles = makeStyles( (theme) => ({
 //  baseCard: {
@@ -29,12 +29,12 @@ import http from "../services/httpService";
 // }));
 
 export default function Login() {
-	let source = http.getCancelToken();
+	//let source = http.getCancelToken();
 	//const { history } = props;
 	//const classes = useStyles();
 	//console.log("Login: props:", history.location);
 	//window.location = history.location.pathname ? history.location.pathname : "/";
-	const { authUser, setAuthUser } = React.useContext(AuthApi);
+	const { setAuthUser } = React.useContext(AuthApi);
 	const [goToOrigin, setGoToOrigin] = React.useState(false);
 	const { state } = useLocation();
 	//const history = useHistory();
@@ -45,16 +45,16 @@ export default function Login() {
 		password: "",
 	};
 
-	const handleSubmit = async (data, props) => {
-		//console.log("Login: props:", props);
+	const handleOnSubmit = async (data, props) => {
+		console.log("Login: props:", data);
 		const { resetForm, setSubmitting } = props;
 		setSubmitting(true);
-		const resp = await auth.login(data, {
-			cancelToken: source.token,
-		});
-		setSubmitting(false);
-		console.log("LoginJsx: resp:", resp);
-		setAuthUser(resp.data);
+		const resp = await auth.login(data);
+		if (resp.data.isLoggedIn) {
+			setAuthUser(resp.data);
+			setSubmitting(false);
+			console.log("LoginJsx: resp:", resp);
+		}
 		setGoToOrigin(true);
 		resetForm();
 	};
@@ -63,7 +63,6 @@ export default function Login() {
 		//console.log("Login: goToOrigin:", goToOrigin);
 		return <Redirect to={state?.from || "/inOutRecord"} />;
 	}
-
 	return (
 		<>
 			<Grid container style={{ minHeight: "100vh" }}>
@@ -96,9 +95,9 @@ export default function Login() {
 						<Grid container justify='center'>
 							<img src={dipLogo} alt='dip logo' width={170} />
 							<Grid item xs={12}>
-								<Formik initialValues={initialValues} onSubmit={handleSubmit}>
-									{({ isSubmitting }) => (
-										<Form>
+								<Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
+									{({ isSubmitting, handleSubmit }) => (
+										<Form onSubmit={handleSubmit}>
 											<Field
 												as={TextField}
 												// value={values.username}

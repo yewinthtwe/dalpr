@@ -2,6 +2,7 @@ const fs = require("fs/promises");
 const mongoose = require("mongoose");
 const config = require("config");
 const { InOutRecord } = require("./models/inOutRecordModel");
+const { IoModule } = require("./models/ioModuleModel");
 const subDays = require("date-fns/subDays");
 const logger = require("./middleware/logger");
 const photoStore = config.get("photoStore");
@@ -14,23 +15,11 @@ mongoose
 
 async function dbTest() {
 	const query = {
-		//_id: "6066241b8617733fc7749156",
-		$not: {
-			$and: [
-				{
-					inTrafficId: { $ne: "" },
-					outTrafficId: { $ne: "" },
-				},
-			],
-		},
+		//$and: [{ name: "dummyModule", relays: { $elemMatch: { name: "relay0" } } }],
+		relays: { $elemMatch: { name: "relay0" } },
 	};
-	const update = {
-		"ticket.isUsed": true,
-	};
-	const result = await InOutRecord.findOneAndUpdate(query, update, {
-		new: true,
-	});
-	console.log("dbTestJs:", result);
+	const ioModuleDb = await IoModule.findOne(query);
+	console.log("dbTestJs:", ioModuleDb);
 }
 dbTest();
 //   async function dbTest() {

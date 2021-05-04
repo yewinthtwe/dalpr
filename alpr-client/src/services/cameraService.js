@@ -11,10 +11,10 @@ export function saveCamera(camera) {
 	if (camera._id) {
 		const body = { ...camera };
 		delete body._id;
-		console.log("cameraService: Update:", body);
+		//console.log("cameraService: Update:", body);
 		return http.put(`${cameraApiEndPoint}/${camera._id}`, body);
 	} else {
-		console.log("cameraService: Save new:", camera);
+		//console.log("cameraService: Save new:", camera);
 		return http.post(`${cameraApiEndPoint}`, camera);
 	}
 }

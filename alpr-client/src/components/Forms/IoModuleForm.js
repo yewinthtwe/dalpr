@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Grid } from "@material-ui/core";
 import { useForm, Form } from "../common/useForm";
 import Controls from "../common/Controls";
@@ -6,30 +6,26 @@ import Controls from "../common/Controls";
 const initialValues = {
 	id: 0,
 	name: "",
-	description: "",
 	ip: "",
 	username: "",
 	password: "",
+	numberOfRelays: 0,
+	status: null,
 };
 
-export default function AlprUserForm(props) {
+export default function IoModuleForm(props) {
 	const { addOrEdit, recordForEdit } = props;
 
 	const validate = (fieldValues = values) => {
 		let temp = { ...errors };
-
 		if ("name" in fieldValues)
-			temp.name = fieldValues.name ? "" : "Full Name is required";
-		if ("description" in fieldValues)
-			temp.description = fieldValues.description
-				? ""
-				: "Description is required";
+			temp.name = fieldValues.name ? "" : "IO Module Name is required.";
 		if ("ip" in fieldValues)
-			temp.ip = fieldValues.ip ? "" : "Valid ip is required";
+			temp.ip = fieldValues.ip ? "" : "Password is required.";
 		if ("username" in fieldValues)
-			temp.username = fieldValues.username ? "" : "User Name is required.";
+			temp.username = fieldValues.username ? "" : "User Name is required";
 		if ("password" in fieldValues)
-			temp.password = fieldValues.password ? "" : "Password is required.";
+			temp.password = fieldValues.password ? "" : "Valid password is required";
 
 		setErrors({ ...temp });
 
@@ -53,7 +49,7 @@ export default function AlprUserForm(props) {
 		}
 	};
 
-	useEffect(() => {
+	React.useEffect(() => {
 		if (recordForEdit != null)
 			setValues({
 				...recordForEdit,
@@ -66,7 +62,7 @@ export default function AlprUserForm(props) {
 			<Grid container>
 				<Grid item xs={6}>
 					<Controls.Input
-						label='Module Name'
+						label='IO Module Name'
 						name='name'
 						value={values.name}
 						onChange={handleInputChange}
@@ -74,13 +70,6 @@ export default function AlprUserForm(props) {
 					/>
 					<Controls.Input
 						variant='outlined'
-						label='Description'
-						name='description'
-						value={values.description}
-						onChange={handleInputChange}
-						error={errors.description}
-					/>
-					<Controls.Input
 						label='IP Address'
 						name='ip'
 						value={values.ip}
@@ -88,8 +77,7 @@ export default function AlprUserForm(props) {
 						error={errors.ip}
 					/>
 					<Controls.Input
-						variant='outlined'
-						label='Login Name'
+						label='Login user'
 						name='username'
 						value={values.username}
 						onChange={handleInputChange}
@@ -103,13 +91,19 @@ export default function AlprUserForm(props) {
 						onChange={handleInputChange}
 						error={errors.password}
 					/>
+					<Controls.Input
+						variant='outlined'
+						label='Number of Relays'
+						name='numberOfRelays'
+						value={values.numberOfRelays}
+						onChange={handleInputChange}
+						error={errors.numberOfRelays}
+					/>
 				</Grid>
-				<Grid item xs={6}>
-					<div>
-						<Controls.Button type='submit' text='Submit' />
-						<Controls.Button text='Reset' color='default' onClick={resetForm} />
-					</div>
-				</Grid>
+				<div>
+					<Controls.Button type='submit' text='Submit' />
+					<Controls.Button text='Reset' color='default' onClick={resetForm} />
+				</div>
 			</Grid>
 		</Form>
 	);

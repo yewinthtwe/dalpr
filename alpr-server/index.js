@@ -19,7 +19,7 @@ const configAlpr = require("./routes/configAlpr");
 const camera = require("./routes/camera");
 const relay = require("./routes/relay");
 const ioModule = require("./routes/ioModule");
-const oldlane = require("./routes/Old_lane");
+// const oldlane = require("./routes/Old_lane");
 const lane = require("./routes/lane");
 const generalSetting = require("./routes/generalSetting");
 const price = require("./routes/price");
@@ -27,7 +27,7 @@ const monitoredIp = require("./routes/monitoredIp");
 const aiLane = require("./routes/aiLane");
 const report = require("./routes/report");
 const kiosk = require("./routes/kiosk");
-const digitaloutput = require("./routes/digitaloutput"); // Dummy Relay
+// const digitaloutput = require("./routes/digitaloutput"); // Dummy Relay
 
 process.on("uncaughtException", (ex) => {
 	console.log("We got Uncaught exception error", ex);
@@ -49,7 +49,44 @@ if (!config.get("jwtPrivateKey")) {
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// app.use(
+// 	cors(function (req, res, next) {
+// 		res.header("Access-Control-Allow-Origin", "*");
+// 		res.header(
+// 			"Access-Control-Allow-Headers",
+// 			"Origin, X-Requested-With, Content-Type, Accept"
+// 		);
+// 		res.header("Access-Control-Allow-Credentials", true);
+// 		next();
+// 	})
+// );
+// app.use((req, res, next) => {
+// 	const allowedOrigins = [
+// 		"http://127.0.0.1:3000",
+// 		"http://localhost:3000",
+// 		"http://192.168.11.247:3000",
+// 		"http://192.168.11.67:3000",
+// 	];
+// 	const origin = req.headers.origin;
+// 	if (allowedOrigins.includes(origin)) {
+// 		res.setHeader("Access-Control-Allow-Origin", origin);
+// 	}
+// 	res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+// 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+// 	res.header("Access-Control-Allow-Credentials", true);
+// 	return next();
+// });
+
+app.use(
+	cors({
+		origin: [
+			"http://localhost:3000",
+			"http://127.0.0.1:3000",
+			"http://192.168.11.247:3000",
+		],
+		credentials: true,
+	})
+);
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 app.use(express.static("/home/alprsvr/plateimagesTemp"));
@@ -82,7 +119,7 @@ app.use("/api/aiLane", aiLane);
 app.use("/api/report", report);
 app.use("/api/kiosk", kiosk);
 
-app.use("/api/digitaloutput", digitaloutput);
+//app.use("/api/digitaloutput", digitaloutput);
 
 app.use(error);
 

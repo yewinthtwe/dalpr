@@ -66,7 +66,7 @@ import {
 	ListItemText,
 	CssBaseline,
 } from "@material-ui/core";
-import ProtectedRoute from "../components/common/ProtectedRoute";
+import ProtectedRoute from "./common/ProtectedRoute";
 
 const drawerWidth = 220;
 

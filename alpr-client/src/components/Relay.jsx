@@ -1,4 +1,4 @@
-import React, { useState as React.useEffect, useEffect } from "react";
+import React from "react";
 import VerticalAlignCenterIcon from "@material-ui/icons/VerticalAlignCenter";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
@@ -13,16 +13,17 @@ import {
 	Toolbar,
 	InputAdornment,
 } from "@material-ui/core";
-import Controls from "./Controls";
-import PageHeader from "./PageHeader";
-import RelayForm from "./relayForm";
-import useTable from "./useTable";
+import Controls from "./common/Controls";
+import PageHeader from "./common/PageHeader";
+import RelayForm from "./Forms/RelayForm";
+import useTable from "./common/useTable";
 import * as relayService from "../services/relayService";
-import http from "../services/httpService";
-import Popup from "./Popup";
-import Notification from "./Notification";
-import ConfirmDialog from "./ConfirmDialog";
-import { withRouter } from "react-router-dom";
+// import http from "../services/httpService";
+import Popup from "./common/Popup";
+import Notification from "./common/Notification";
+import ConfirmDialog from "./common/ConfirmDialog";
+import _ from "lodash";
+// import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	pageContent: {
@@ -39,31 +40,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
-	{ id: "rlId", label: "Relay ID" },
+	{ id: "relayId", label: "Relay ID" },
 	{ id: "name", label: "Relay Name" },
-	{ id: "value", label: "Value" },
+	{ id: "relayValue", label: "Value" },
 	{ id: "ioModule", label: "IO Module" },
 	{ id: "actions", label: "Actions", disableSorting: true },
 ];
 
 function Relay(props) {
-	const { history } = props;
+	// const { history } = props;
 	const classes = useStyles();
-	const [recordForEdit, setRecordForEdit] = React.useEffect(null);
-	const [relays, setRelays] = React.useEffect([]);
-	const [filterFn, setFilterFn] = React.useEffect({
+	const [recordForEdit, setRecordForEdit] = React.useState(null);
+	const [relays, setRelays] = React.useState([]);
+	const [filterFn, setFilterFn] = React.useState({
 		fn: (items) => {
 			return items;
 		},
 	});
-	const [openPopup, setOpenPopup] = React.useEffect(false);
-	const [pageRefresh, setPageRefresh] = React.useEffect(false);
-	const [notify, setNotify] = React.useEffect({
+	const [openPopup, setOpenPopup] = React.useState(false);
+	const [pageRefresh, setPageRefresh] = React.useState(false);
+	const [notify, setNotify] = React.useState({
 		isOpen: false,
 		message: "",
 		type: "",
 	});
-	const [confirmDialog, setConfirmDialog] = React.useEffect({
+	const [confirmDialog, setConfirmDialog] = React.useState({
 		isOpen: false,
 		title: "",
 		subTitle: "",
@@ -92,10 +93,19 @@ function Relay(props) {
 	const addOrEdit = async (relay, resetForm) => {
 		if (relay.id === 0) {
 			delete relay.id;
-			await relayService.saveRelay(relay);
+			const resp = await relayService.saveRelay(relay);
+			let filteredRelays = _.pick(
+				resp.data,
+				"relayId",
+				"relayValue",
+				"description",
+				"name"
+			);
+			setRelays(filteredRelays);
 			setPageRefresh(true);
 		} else {
-			await relayService.saveRelay(relay);
+			const resp = await relayService.saveRelay(relay);
+			setRelays(resp.data);
 			setPageRefresh(true);
 		}
 		resetForm();
@@ -127,13 +137,16 @@ function Relay(props) {
 			message: "Deleted Successfully.",
 			type: "error",
 		});
+		setPageRefresh(false);
 	};
 
 	React.useEffect(() => {
 		async function fetchRelays() {
 			try {
-				let relays = await relayService.getRelays();
-				setRelays(relays);
+				let resp = await relayService.getRelays();
+				let filteredRelays = _.map(resp.data, "name");
+				console.log(filteredRelays);
+				setRelays(filteredRelays);
 				setPageRefresh(true);
 			} catch (error) {
 				console.log("Relay:", error);
@@ -224,7 +237,11 @@ function Relay(props) {
 				openPopup={openPopup}
 				setOpenPopup={setOpenPopup}
 			>
-				<RelayForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+				<RelayForm
+					recordForEdit={recordForEdit}
+					addOrEdit={addOrEdit}
+					relays={relays}
+				/>
 			</Popup>
 
 			<Notification notify={notify} setNotify={setNotify} />
@@ -236,4 +253,4 @@ function Relay(props) {
 	);
 }
 
-export default withRouter(Relay);
+export default Relay;

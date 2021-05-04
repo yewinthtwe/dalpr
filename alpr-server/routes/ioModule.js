@@ -1,14 +1,27 @@
 const auth = require("../middleware/auth");
 const isAdmin = require("../middleware/isAdmin");
 const { IoModule } = require("../models/ioModuleModel");
+const { relayData } = require("../models/relayData");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 
 router.get("/", async (req, res) => {
 	try {
-		const ioModule = await IoModule.find().populate("relays");
-		//console.log("ioModuleJS:", ioModule);
+		// const ioModule = await IoModule.find().populate("relays");
+		const ioModule = await IoModule.find();
+		console.log("ioModuleJS:", ioModule);
+		res.status(200).send(ioModule);
+	} catch (ex) {
+		console.log("ioModuleJS: Error.", ex);
+	}
+});
+
+router.get("/relays", async (req, res) => {
+	try {
+		// const ioModule = await IoModule.find().populate("relays");
+		const ioModule = await IoModule.find();
+		console.log("ioModuleJS:", ioModule);
 		res.status(200).send(ioModule);
 	} catch (ex) {
 		console.log("ioModuleJS: Error.", ex);
@@ -17,7 +30,8 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
 	try {
-		const ioModule = await IoModule.findById(req.params.id).populate("relays");
+		// const ioModule = await IoModule.findById(req.params.id).populate("relays");
+		const ioModule = await IoModule.findById(req.params.id);
 		//console.log("ioModuleJS:", ioModule);
 		res.status(200).send(ioModule);
 	} catch (ex) {
@@ -26,7 +40,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", [auth], async (req, res) => {
-	//console.log("ioModuleJS: update ioModule:", req.body);
+	console.log("ioModuleJS: update ioModule:", req.body);
 	const ioModule = await IoModule.findByIdAndUpdate(
 		req.params.id,
 		{
@@ -38,10 +52,11 @@ router.put("/:id", [auth], async (req, res) => {
 			password: req.body.password,
 			configParam: req.body.configParam,
 			url: req.body.url,
-			relays: req.body.relays,
+			numberOfRelays: req.body.numberOfRelays,
 		},
 		{ new: true }
 	);
+	await createRelays(req.body.name, req.body.numberOfRelays);
 	if (!ioModule)
 		return res
 			.status(404)
@@ -50,7 +65,7 @@ router.put("/:id", [auth], async (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
-	//console.log("ioModuleJS: Add ioModule:", req.body);
+	console.log("ioModuleJS: Add ioModule:", req.body);
 	let ioModule = await IoModule.findOne({ name: req.body.name });
 	if (ioModule)
 		return res
@@ -64,12 +79,13 @@ router.post("/", auth, async (req, res) => {
 			"port",
 			"username",
 			"password",
-			"relays",
+			"numberOfRelays",
 			"url",
 			"configParam",
 		])
 	);
 	await ioModule.save();
+	await createRelays(req.body.name, req.body.numberOfRelays);
 	res
 		.status(200)
 		.send(
@@ -80,16 +96,29 @@ router.post("/", auth, async (req, res) => {
 				"port",
 				"username",
 				"password",
-				"relays",
+				"numberOfRelays",
 				"url",
 				"configParam",
 			])
 		);
 });
 
+async function createRelays(ioModuleName, numberOfRelays) {
+	_.map(relayData, (rl) => {
+		rl.parentName = ioModuleName;
+	});
+	const relay = await IoModule.findOneAndUpdate(
+		{ name: ioModuleName },
+		{ relays: _.slice(relayData, 0, numberOfRelays) },
+		{ new: true }
+	);
+}
+
 router.delete("/:id", [auth, isAdmin], async (req, res) => {
-	//console.log("ioModuleJS: Delete ioModule:", req.body);
-	const ioModule = await IoModule.findByIdAndRemove(req.params.id);
+	console.log("ioModuleJS: Delete ioModule:", req.body);
+	const ioModule = await IoModule.findByIdAndRemove(req.params.id).select(
+		"-relays"
+	);
 	if (!ioModule) return res.status(404).send("The give id was not found.");
 	res.send(ioModule);
 });

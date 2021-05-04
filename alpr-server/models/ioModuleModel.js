@@ -16,12 +16,23 @@ const IoModuleSchema = new Schema({
 	Status: { type: String, default: "OK" },
 	configParam: { type: Object },
 	url: { type: String },
+	numberOfRelays: { type: Number, default: 6 },
 	relays: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Relay",
+			name: { type: String },
+			description: { type: String },
+			inUsed: { type: Boolean, default: false },
+			ID: { type: Number },
+			VALUE: { type: Number, default: 0 },
+			parentName: { type: String },
 		},
 	],
+	// relays: [
+	// 	{
+	// 		type: mongoose.Schema.Types.ObjectId,
+	// 		ref: "Relay",
+	// 	},
+	// ],
 });
 const IoModule = mongoose.model("IoModule", IoModuleSchema);
 

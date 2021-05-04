@@ -8,6 +8,7 @@ import {
 	TableSortLabel,
 	makeStyles,
 } from "@material-ui/core";
+//import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
 	table: {
@@ -97,7 +98,7 @@ export default function useTable(items, headCells, filterFn) {
 	);
 
 	function stableSort(array, comparator) {
-		// const array = _.toArray(Objarray);
+		//console.log("useTable: stablesort: array:", array);
 		const stablizedThis = array.map((el, index) => [el, index]);
 		stablizedThis.sort((a, b) => {
 			const order = comparator(a[0], b[0]);

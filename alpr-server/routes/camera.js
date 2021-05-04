@@ -38,12 +38,12 @@ router.put("/:id", [auth], async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
 	console.log("cameraJS: Add camera:", req.body);
-	const addedCamera = await Camera.findOne({ camera_id: { $gte: 4 } });
-	if (addedCamera) {
-		await Camera.counterReset("camera_id", function (err) {
-			console.log("cameraJs: resetting camera counter.");
-		});
-	}
+	// const addedCamera = await Camera.findOne({ camera_id: { $gte: 8 } });
+	// if (addedCamera) {
+	// 	await Camera.counterReset("camera_id", function (err) {
+	// 		console.log("cameraJs: resetting camera counter.");
+	// 	});
+	// }
 
 	let camera = await Camera.findOne({ name: req.body.name });
 
@@ -54,6 +54,7 @@ router.post("/", auth, async (req, res) => {
 			"name",
 			"description",
 			"ip",
+			"camera_id",
 			"username",
 			"password",
 			"status",
@@ -67,6 +68,7 @@ router.post("/", auth, async (req, res) => {
 			_.pick(camera, [
 				"name",
 				"description",
+				"camera_id",
 				"ip",
 				"username",
 				"password",
