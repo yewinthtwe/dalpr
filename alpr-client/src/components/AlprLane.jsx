@@ -20,9 +20,6 @@ import PageHeader from "./common/PageHeader";
 import useTable from "./common/useTable";
 import AlprLaneForm from "./Forms/AlprLaneForm";
 import * as alprLaneService from "../services/alprLaneService";
-import * as cameraService from "../services/cameraService";
-import * as ioModuleService from "../services/ioModuleService";
-import * as laneService from "../services/laneService";
 import Popup from "./common/Popup";
 import Notification from "./common/Notification";
 import ConfirmDialog from "./common/ConfirmDialog";
@@ -31,6 +28,9 @@ import _ from "lodash";
 // import { withRouter } from "react-router-dom";
 // import * as relayService from "../services/relayService";
 // import http from "../services/httpService";
+import * as ioModuleService from "../services/ioModuleService";
+import * as laneService from "../services/laneService";
+import * as cameraService from "../services/cameraService";
 
 const useStyles = makeStyles((theme) => ({
 	pageContent: {
@@ -70,6 +70,7 @@ function AlprLane() {
 	const [cameraOptions, setCameraOptions] = React.useState([]);
 	const [ioModuleOptions, setIoModuleOptions] = React.useState([]);
 	const [relayOptions, setRelayOptions] = React.useState([]);
+	const [relays, setRelays] = React.useState([]);
 	const [laneOptions, setLaneOptions] = React.useState([]);
 
 	const [filterFn, setFilterFn] = React.useState({
@@ -151,21 +152,49 @@ function AlprLane() {
 		setPageRefresh(false);
 	};
 
+	const getRelayName = (relayObjectId) => {
+		let relayName = "";
+		_.map(alprLanes, (param) => {
+			console.log(_.filter(param.ioModule.relays, ["_id", relayObjectId]));
+			let rl = _.filter(param.ioModule.relays, ["_id", relayObjectId]);
+			console.log("Relay name:", _.toString(_.map(rl, "name")));
+			relayName = _.toString(_.map(rl, "name"));
+		});
+		return relayName;
+	};
+
 	React.useEffect(() => {
 		async function fetchAiLanes() {
 			try {
 				const alprLanes = await alprLaneService.getAiLanes();
-				//console.log("AlprLaneJsx:", alprLanes.data);
 				setAlprLanes(alprLanes.data);
 
-				const lanes = await laneService.getLanes();
-				setLaneOptions(lanes.data);
+				const phyLanes = await laneService.getLanes();
+				setLaneOptions(phyLanes.data);
 
-				const cameras = await cameraService.getCameras();
-				setCameraOptions(cameras.data);
+				const cam = await cameraService.getCameras();
+				setCameraOptions(cam.data);
 
 				const ioMod = await ioModuleService.getIoModules();
 				setIoModuleOptions(ioMod.data);
+				setRelayOptions(ioMod.data.relays);
+
+				// _.map(alprLanes.data, (o) => {
+				// 	let rel = _.find(o.ioModule.relays, (relObj) => {
+				// 		return _.isEqual(o.relay, relObj._id);
+				// 	});
+				// 	console.log("matching result of a relay in IoModule:", rel);
+
+				// });
+				// const lanes = await laneService.getLanes();
+				// setLaneOptions(lanes.data);
+
+				// const cameras = await cameraService.getCameras();
+				// setCameraOptions(cameras.data);
+
+				//const ioMod = await ioModuleService.getIoModules();
+				//setIoModuleOptions(ioMod.data);
+				//console.log("AlprLaneJsx: ioModuleOptions:", ioModuleOptions);
 
 				// const response = await ioModuleService.getRelays();
 				// let rl = _.map(response.data, (modu) => {
@@ -190,11 +219,11 @@ function AlprLane() {
 				// 		//console.log("AlprAiLane: Relay Available.", availableRelays);
 				// 	}
 				// });
-				setPageRefresh(true);
+				//setPageRefresh(true);
 			} catch (error) {}
 		}
 		fetchAiLanes();
-	}, [pageRefresh]);
+	}, []);
 
 	return (
 		<>
@@ -240,8 +269,8 @@ function AlprLane() {
 								<TableCell> {item.description} </TableCell>
 								<TableCell> {item.lane.name} </TableCell>
 								<TableCell> {item.camera.name} </TableCell>
-								<TableCell> {item.relay.name} </TableCell>
-								<TableCell> {item.relay.parentName} </TableCell>
+								<TableCell> {getRelayName(item.relay)}</TableCell>
+								<TableCell> {item.ioModule.name} </TableCell>
 								<TableCell>
 									{" "}
 									{item.status === true ? "Enable" : "Disabled"}{" "}
@@ -288,7 +317,7 @@ function AlprLane() {
 					recordForEdit={recordForEdit}
 					addOrEdit={addOrEdit}
 					cameraOptions={cameraOptions}
-					relayOptions={relayOptions}
+					//relayOptions={relayOptions}
 					laneOptions={laneOptions}
 					ioModuleOptions={ioModuleOptions}
 				/>

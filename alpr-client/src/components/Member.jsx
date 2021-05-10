@@ -15,13 +15,14 @@ import {
 } from "@material-ui/core";
 import Controls from "./common/Controls";
 import PageHeader from "./common/PageHeader";
-import MemberForm from "./Forms/MemberForm";
+//import MemberForm from "./Forms/MemberForm";
+import MemberFormV2 from "./Forms/MemberFormV2";
 import useTable from "./common/useTable";
 import * as memberService from "../services/memberService";
 import Popup from "./common/Popup";
 import Notification from "./common/Notification";
 import ConfirmDialog from "./common/ConfirmDialog";
-// import _ from "lodash";
+import _ from "lodash";
 // import http from "../services/httpService";
 // import { withRouter } from "react-router-dom";
 
@@ -41,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
 
 const headCells = [
 	{ id: "memberName", label: "Member Name" },
+	{ id: "memberType", label: "Member Type" },
+	{ id: "registrationDate", label: "Reg. Date" },
+	{ id: "expireDate", label: "Expire Date" },
 	{ id: "lp", label: "License Plate" },
 	{ id: "obu", label: "OBU Number" },
 	{ id: "address", label: "Address" },
@@ -98,12 +102,12 @@ function Member(props) {
 
 	const addOrEdit = async (member, resetForm) => {
 		if (member.id === 0) {
-			delete member.id;
-			member.lp = member.lp.split();
-			console.log("addOrEdit: new member:", member);
+			console.log("MemberJsx: addOrEdit: New member:", member);
 			await memberService.saveMember(member);
 			setPageRefresh(true);
 		} else {
+			member.lp = _.map(member.lp, "plate");
+			console.log("MemberJsx: addOrEdit: Update member:", member);
 			await memberService.saveMember(member);
 			setPageRefresh(true);
 		}
@@ -142,9 +146,9 @@ function Member(props) {
 		async function fetchData() {
 			try {
 				const response = await memberService.getMembers();
+				//console.log("MemberJsx: response:", response.data);
 				setMembers(response.data);
 				setPageRefresh(true);
-				//console.log('MemberJsx: User count:',response.data.length);
 			} catch (error) {
 				console.log("MemberJsx:", error);
 			}
@@ -192,7 +196,13 @@ function Member(props) {
 						{recordsAfterPagingAndSorting().map((item) => (
 							<TableRow key={item._id}>
 								<TableCell> {item.memberName} </TableCell>
-								<TableCell> {item.lp} </TableCell>
+								<TableCell> {item.memberType} </TableCell>
+								<TableCell> {item.registrationDate} </TableCell>
+								<TableCell> {item.expireDate} </TableCell>
+								<TableCell>
+									{" "}
+									{item.lp[0].plate} {item.lp.length > 1 ? "..." : ""}
+								</TableCell>
 								<TableCell> {item.obu.obuId} </TableCell>
 								<TableCell> {item.address} </TableCell>
 								<TableCell> {item.mobile} </TableCell>
@@ -205,7 +215,6 @@ function Member(props) {
 									<Controls.ActionButton
 										color='primary'
 										onClick={() => {
-											//console.log("ActionButton Add: ", item);
 											openInPopup(item);
 										}}
 									>
@@ -238,7 +247,11 @@ function Member(props) {
 				openPopup={openPopup}
 				setOpenPopup={setOpenPopup}
 			>
-				<MemberForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} />
+				{/* <MemberForm recordForEdit={recordForEdit} addOrEdit={addOrEdit} /> */}
+				<MemberFormV2
+					recordForEdit={recordForEdit}
+					addOrEdit={addOrEdit}
+				></MemberFormV2>
 			</Popup>
 			<Notification notify={notify} setNotify={setNotify} />
 			<ConfirmDialog

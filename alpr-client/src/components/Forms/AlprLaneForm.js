@@ -21,18 +21,14 @@ export default function AlprLaneForm(props) {
 		recordForEdit,
 		addOrEdit,
 		cameraOptions,
-		// relayOptions,
 		laneOptions,
 		ioModuleOptions,
 	} = props;
 
-	// _.map(relayOptions, (arr, idx) => {
-	// 	console.log("AlprLaneForm: idx:", idx);
-	// 	console.log("AlprLaneForm: arr:", _.map(arr, "name"));
-	// });
-	//console.log("AlprLaneForm: ioModuleOptions:", ioModuleOptions);
-	//console.log("AlprLaneForm: relayOptions:", relayOptions);
-	//const [pageRefresh, setPageRefresh] = React.useState(false);
+	// console.log("AlprLaneForm: cameraOptions:", cameraOptions);
+	console.log("AlprLaneForm: ioModuleOptions:", ioModuleOptions);
+	// console.log("AlprLaneForm: laneOptions:", laneOptions);
+	//console.log("AlprLaneForm: recordForEdit:", recordForEdit);
 
 	const validate = (fieldValues = values) => {
 		let temp = { ...errors };
@@ -62,6 +58,9 @@ export default function AlprLaneForm(props) {
 		resetForm,
 	} = useForm(initialValues, true, validate);
 
+	console.log("AlprLaneForm: relay object id:", values.relay);
+	const [relayName, setRelayName] = React.useState("");
+
 	const [laneObject, setLaneObject] = React.useState({
 		name: "",
 		isExitLane: false,
@@ -79,7 +78,6 @@ export default function AlprLaneForm(props) {
 	});
 	const [relayObject, setRelayObject] = React.useState({});
 	const [relayOptions, setRelayOptions] = React.useState([]);
-	//const [isIoModChanged, setIsIoModChanged] = React.useState(null);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -93,8 +91,6 @@ export default function AlprLaneForm(props) {
 		// 	addOrEdit(values, resetForm);
 		// }
 	};
-
-	const getLaneIndex = (id, allLanes) => {};
 
 	React.useEffect(() => {
 		_.find(laneOptions, (lane) => {
@@ -160,6 +156,16 @@ export default function AlprLaneForm(props) {
 			setValues({
 				...recordForEdit,
 			});
+
+			let relayObjectId = values.relay;
+			_.map(ioModuleOptions, (param) => {
+				//console.log(_.filter(param.ioModule.relays, ["_id", relayObjectId]));
+				let rl = _.filter(param.relays, ["_id", relayObjectId]);
+				console.log("Relay name:", _.toString(_.map(rl, "name")));
+				let relayName = _.toString(_.map(rl, "name"));
+				setRelayName(relayName);
+			});
+
 			//console.log("AlprLaneForm: recordForEdit:", values);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,7 +195,7 @@ export default function AlprLaneForm(props) {
 							variant='outlined'
 							label='Physical Lane'
 							name='lane'
-							value={values.lane}
+							value={values.lane.name}
 							onChange={handleInputChange}
 							error={errors.lane}
 							options={laneOptions}
@@ -198,7 +204,7 @@ export default function AlprLaneForm(props) {
 							variant='outlined'
 							label='Alpr-Camera'
 							name='camera'
-							value={values.camera}
+							value={values.camera.name}
 							onChange={handleInputChange}
 							error={errors.camera}
 							options={cameraOptions}
@@ -218,7 +224,7 @@ export default function AlprLaneForm(props) {
 							variant='outlined'
 							label='Relay'
 							name='relay'
-							value={values.relay}
+							value={relayName}
 							onChange={handleInputChange}
 							error={errors.relay}
 							options={relayOptions}

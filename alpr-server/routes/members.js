@@ -7,6 +7,7 @@ const { Obu } = require("../models/obuModel");
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
+const { addDays } = require("date-fns");
 
 router.get("/", auth, async (req, res) => {
 	const members = await Member.find().populate("obu");
@@ -20,11 +21,13 @@ router.get("/:id", auth, async (req, res) => {
 });
 
 router.put("/:id", [auth], async (req, res) => {
+	console.log("membersJS: receiving PUT request data:", req.body);
 	const member = await Member.findByIdAndUpdate(
 		req.params.id,
 		{
 			lp: req.body.lp,
 			memberName: req.body.memberName,
+			memberType: req.body.memberType,
 			address: req.body.address,
 			mobile: req.body.mobile,
 			email: req.body.email,
@@ -38,8 +41,8 @@ router.put("/:id", [auth], async (req, res) => {
 });
 
 router.post("/", auth, async (req, res) => {
+	console.log("membersJS: receiving POST request data:", req.body);
 	const { error } = schema.validate(req.body);
-	console.log("membersJS:", req.body, error?.details[0].message);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	let obu = await Obu.findOne({ inUsed: false });
@@ -49,6 +52,7 @@ router.post("/", auth, async (req, res) => {
 	member = new Member(
 		_.pick(req.body, [
 			"memberName",
+			"memberType",
 			"address",
 			"lp",
 			"mobile",
@@ -58,6 +62,7 @@ router.post("/", auth, async (req, res) => {
 	);
 	obu ? (member.obu = obu._id) : (member.obu = "0000000000000000");
 	member.isActive = member.isActive;
+	member.expireDate = addDays(new Date(), 90);
 	//console.log(member);
 	await member.save();
 	if (member.obu) {
@@ -77,9 +82,11 @@ router.post("/", auth, async (req, res) => {
 		.send(
 			_.pick(member, [
 				"memberName",
+				"memberType",
 				"address",
 				"lp",
 				"registrationDate",
+				"expireDate",
 				"mobile",
 				"email",
 				"isActive",

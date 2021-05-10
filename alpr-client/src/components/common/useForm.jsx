@@ -7,8 +7,8 @@ export function useForm(initialValues, validateOnChange = false, validate) {
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
-		// console.log("useForm: handleInputChange: name:", name);
-		// console.log("useForm: handleInputChange: value:", value);
+		console.log("useFormJsx: handleInputChange: name:", name);
+		console.log("useFormJsx: handleInputChange: value:", value);
 		setValues({
 			...values,
 			[name]: value,

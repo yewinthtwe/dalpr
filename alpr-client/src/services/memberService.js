@@ -1,5 +1,6 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
+import _ from "lodash";
 
 const apiEndpoint = apiUrl + "/members";
 
@@ -85,15 +86,24 @@ export function getMember(id) {
 	return http.get(memberUrl(id));
 }
 
-export function saveMember(member) {
+export function saveMember(data) {
+	let member = _.pick(data[0], [
+		"_id",
+		"memberName",
+		"memberType",
+		"address",
+		"lp",
+		"mobile",
+		"email",
+		"isActive",
+	]);
 	if (member._id) {
-		const body = { ...member };
-		delete body._id;
-		console.log("memberService: Update:", body);
-		return http.put(memberUrl(member._id), body);
+		console.log("memberService: Update:", member);
+		return http.put(memberUrl(member._id), member);
+	} else {
+		console.log("memberService: Save new member:", member);
+		return http.post(apiEndpoint, member);
 	}
-	console.log("memberService: Save new:", member);
-	return http.post(apiEndpoint, member);
 }
 
 export function deleteMember(id) {

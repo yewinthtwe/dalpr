@@ -1,6 +1,6 @@
 const { Member } = require("./models/memberModel");
 const { InOutRecord } = require("./models/inOutRecordModel");
-//const _ = require('lodash');
+const _ = require("lodash");
 
 async function getInOutRecords() {
 	const inOutRecords = await InOutRecord.find({})
@@ -16,17 +16,25 @@ async function getInOutRecord(id) {
 	return inOutRecord;
 }
 
-async function validateMember(candidates) {
+async function validateMember(lp, candidates) {
 	console.log(`validateMember: Searching in Member database.....`);
 	//const member = await Member.findOne({ $or: [{'lp': { $in: lp }}, {'candidates.plate': { $in: lp }}] });
-	const member = await Member.findOne({
+	const query = {
 		isActive: true,
 		$or: [
-			{ lp: { $in: candidates.map((l) => l.plate) } },
-			{ "candidates.plate": { $in: candidates.map((c) => c.plate) } },
+			{ lp: { $elemMatch: { plate: { $in: lp } } } },
+			{
+				candidates: {
+					$elemMatch: {
+						plate: { $in: _.map(candidates, "plate") },
+					},
+				},
+			},
 		],
-	}).populate("obu");
-	if (!member) {
+	};
+	const member = await Member.findOne(query).populate("obu");
+	//console.log("validateMember: member:", member);
+	if (_.isEmpty(member)) {
 		console.log(`validateMember: NOT found in member database.`);
 		return member;
 	} else {

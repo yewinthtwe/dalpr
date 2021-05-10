@@ -1,8 +1,11 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, IconButton } from "@material-ui/core";
 import { useForm, Form } from "../common/useForm";
 import Controls from "../common/Controls";
-
+import { nanoid } from "nanoid";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import _ from "lodash";
 // const genderItems = [
 //     {id:'male', title:'Male'},
 //     {id:'female', title:'Female'},
@@ -12,6 +15,8 @@ import Controls from "../common/Controls";
 const initialValues = {
 	id: 0,
 	memberName: "",
+	memberType: "",
+	validPeriod: 90,
 	lp: "",
 	address: "",
 	mobile: "",
@@ -21,6 +26,22 @@ const initialValues = {
 
 export default function MemberForm(props) {
 	const { addOrEdit, recordForEdit } = props;
+	const memberTypes = [
+		{
+			name: "residential",
+			_id: nanoid(10),
+		},
+		{
+			name: "seasonal",
+			_id: nanoid(10),
+		},
+	];
+
+	const [lpInputFields, setLpInputFields] = React.useState([
+		{ name: "ABC", plate: "ABC1234", _id: 1 },
+		{ name: "XY", plate: "XY3123", _id: 2 },
+	]);
+
 	// const [obus, setObus] = useState([]);
 	// const [members, setMembers] = useState([]);
 
@@ -73,7 +94,7 @@ export default function MemberForm(props) {
 	return (
 		<Form onSubmit={handleSubmit}>
 			<Grid container>
-				<Grid item xs={6}>
+				<Grid item xs={12}>
 					<Controls.Input
 						label='Member Name'
 						name='memberName'
@@ -81,14 +102,24 @@ export default function MemberForm(props) {
 						onChange={handleInputChange}
 						error={errors.memberName}
 					/>
-					<Controls.Input
-						variant='outlined'
-						label='License Plate'
-						name='lp'
-						value={values.lp}
-						onChange={handleInputChange}
-						error={errors.lp}
-					/>
+
+					{lpInputFields.map((lpInputField) => (
+						<div key={lpInputField._id}>
+							<Controls.Input
+								variant='outlined'
+								label='License Plate'
+								name='lp'
+								value={lpInputField.plate}
+								onChange={handleInputChange}
+							/>
+							<IconButton>
+								<AddIcon></AddIcon>
+							</IconButton>
+							<IconButton>
+								<RemoveIcon></RemoveIcon>
+							</IconButton>
+						</div>
+					))}
 					<Controls.Input
 						variant='outlined'
 						label='Address'
@@ -105,7 +136,6 @@ export default function MemberForm(props) {
 						onChange={handleInputChange}
 						error={errors.mobile}
 					/>
-
 					<Controls.Input
 						variant='outlined'
 						label='Email'
@@ -114,15 +144,23 @@ export default function MemberForm(props) {
 						onChange={handleInputChange}
 						error={errors.email}
 					/>
+					<Controls.Input
+						variant='outlined'
+						label='Valid Period in Days. default [0] no limit.'
+						name='validPeriod'
+						value={values.validPeriod}
+						onChange={handleInputChange}
+						error={errors.validPeriod}
+					/>
 				</Grid>
-				<Grid item xs={6}>
-					{/* <Controls.RadioGroup
-                    label="Gender" 
-                    name="gender"
-                    value={values.gender}
-                    onChange={handleInputChange}
-                    items={genderItems} 
-                    /> */}
+				<Grid item xs={12}>
+					<Controls.RadioGroup
+						label='Member Type'
+						name='memberType'
+						value={values.memberType}
+						onChange={handleInputChange}
+						items={memberTypes}
+					/>
 
 					{/* <Controls.Select
                     name="obu"

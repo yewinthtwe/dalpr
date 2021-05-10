@@ -9,19 +9,30 @@ const { casher } = require("./casher");
 
 async function lpSearchForUpdate(lp, isExitLane, candidates) {
 	const entryQuery = {
-		// lp: lp,
 		"ticket.isUsed": false,
-		$or: [{ lp: lp }, { lp: { $in: [_.map(candidates, "plate")] } }],
-		//direction: "IN",
-		//$or: [{ inTrafficId: { $ne: "" } }, { outTrafficId: { $ne: "" } }],
+		$or: [
+			{ lp: { $elemMatch: { plate: { $in: lp } } } },
+			{
+				candidates: {
+					$elemMatch: {
+						plate: { $in: _.map(candidates, "plate") },
+					},
+				},
+			},
+		],
 	};
 	const exitQuery = {
-		// lp: lp,
 		"ticket.isUsed": false,
-		$or: [{ lp: lp }, { lp: { $in: [_.map(candidates, "plate")] } }],
-		// "candidates.plate": { $in: lp },
-		//direction: "OUT",
-		//$or: [{ inTrafficId: { $ne: "" } }, { outTrafficId: { $ne: "" } }],
+		$or: [
+			{ lp: { $elemMatch: { plate: { $in: lp } } } },
+			{
+				candidates: {
+					$elemMatch: {
+						plate: { $in: _.map(candidates, "plate") },
+					},
+				},
+			},
+		],
 	};
 
 	isExitLane ? (query = exitQuery) : (query = entryQuery);
@@ -31,8 +42,11 @@ async function lpSearchForUpdate(lp, isExitLane, candidates) {
 		const searchResult = await InOutRecord.findOne(query)
 			.sort({ updatedAt: -1 })
 			.limit(1);
-		console.log("camFeedHandler: lpSearchForUpdate:", searchResult);
-		return searchResult ? searchResult : null;
+		console.log(
+			"camFeedHandler: Search result of Temp database:",
+			searchResult ? searchResult._id : "NOT Found!"
+		);
+		return searchResult;
 	} catch (error) {
 		console.log(error);
 	}
@@ -47,14 +61,14 @@ async function saveInOutRecord(newDocData) {
 }
 
 async function updateInOutRecord(_id, newUpdateData) {
-	const updatedRecord = await InOutRecord.findOneAndUpdate(
+	const updatedRecord = await InOutRecord.findByIdAndUpdate(
 		{ _id: _id },
 		{
 			$set: newUpdateData,
 		},
 		{ new: true }
 	);
-	console.log("updateInOutRecord:", updatedRecord);
+	console.log("updateInOutRecord: record updated.", _id);
 	return updatedRecord;
 }
 

@@ -7,7 +7,24 @@ const _ = require("lodash");
 
 router.get("/", async (req, res) => {
 	try {
-		const aiLane = await AiLane.find();
+		const aiLane = await AiLane.find()
+			.populate("lane")
+			.populate("camera")
+			.populate("ioModule")
+			.populate({
+				path: "relays",
+			});
+
+		Project.find(query)
+			.populate({
+				path: "pages",
+				populate: {
+					path: "components",
+					model: "Component",
+				},
+			})
+			.exec(function (err, docs) {});
+		console.log("aiLane:", aiLane);
 		res.status(200).send(aiLane);
 	} catch (ex) {
 		console.log("aiLaneJS: Error.", ex);
@@ -23,6 +40,7 @@ router.put("/:id", [auth], async (req, res) => {
 			description: req.body.description,
 			camera: req.body.camera,
 			relay: req.body.relay,
+			ioModule: req.body.ioModule,
 			lane: req.body.lane,
 			status: req.body.status,
 		},
@@ -46,6 +64,7 @@ router.post("/", auth, async (req, res) => {
 			"description",
 			"camera",
 			"relay",
+			"ioModule",
 			"lane",
 			"status",
 		])
@@ -59,6 +78,7 @@ router.post("/", auth, async (req, res) => {
 				"description",
 				"camera",
 				"relay",
+				"ioModule",
 				"lane",
 				"status",
 			])
