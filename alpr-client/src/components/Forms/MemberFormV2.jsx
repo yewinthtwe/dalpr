@@ -50,9 +50,9 @@ function MemberFormV2(props) {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		// _.map(otherFields, (o) => {
-		// 	o.lp = [...plateFields];
-		// });
+		_.map(otherFields, (o) => {
+			o.lp = [...plateFields];
+		});
 		console.log("MemberFormV2: All InputFields: values:", otherFields);
 		addOrEdit(otherFields, resetForm);
 	};

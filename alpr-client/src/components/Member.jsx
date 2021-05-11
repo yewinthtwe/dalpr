@@ -80,12 +80,8 @@ function Member(props) {
 		subTitle: "",
 	});
 
-	const {
-		TblContainer,
-		TblHead,
-		TblPagination,
-		recordsAfterPagingAndSorting,
-	} = useTable(members, headCells, filterFn);
+	const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
+		useTable(members, headCells, filterFn);
 
 	const handleSearch = (e) => {
 		let target = e.target;
@@ -101,13 +97,14 @@ function Member(props) {
 	};
 
 	const addOrEdit = async (member, resetForm) => {
+		console.log("MemberJsx: addOrEdit: called:", member);
 		if (member.id === 0) {
-			console.log("MemberJsx: addOrEdit: New member:", member);
 			await memberService.saveMember(member);
+			console.log("MemberJsx: addOrEdit: NEW:", member);
 			setPageRefresh(true);
 		} else {
 			member.lp = _.map(member.lp, "plate");
-			console.log("MemberJsx: addOrEdit: Update member:", member);
+			console.log("MemberJsx: addOrEdit: Update:", member);
 			await memberService.saveMember(member);
 			setPageRefresh(true);
 		}
@@ -125,6 +122,10 @@ function Member(props) {
 	const openInPopup = (item) => {
 		setRecordForEdit(item);
 		setOpenPopup(true);
+	};
+
+	const getPlate = (item) => {
+		if (item.lp.length >= 1) return item.lp[0].plate;
 	};
 
 	const onDelete = async (_id) => {
@@ -193,15 +194,14 @@ function Member(props) {
 				<TblContainer>
 					<TblHead />
 					<TableBody>
-						{recordsAfterPagingAndSorting().map((item) => (
+						{recordsAfterPagingAndSorting().map((item, i) => (
 							<TableRow key={item._id}>
 								<TableCell> {item.memberName} </TableCell>
 								<TableCell> {item.memberType} </TableCell>
 								<TableCell> {item.registrationDate} </TableCell>
 								<TableCell> {item.expireDate} </TableCell>
 								<TableCell>
-									{" "}
-									{item.lp[0].plate} {item.lp.length > 1 ? "..." : ""}
+									{getPlate(item)} {item.lp.length > 1 ? "..." : ""}
 								</TableCell>
 								<TableCell> {item.obu.obuId} </TableCell>
 								<TableCell> {item.address} </TableCell>
