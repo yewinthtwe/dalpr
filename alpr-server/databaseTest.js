@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 const config = require("config");
 const { InOutRecord } = require("./models/inOutRecordModel");
 const { IoModule } = require("./models/ioModuleModel");
+const { Member } = require("./models/memberModel");
 const subDays = require("date-fns/subDays");
 const logger = require("./middleware/logger");
 const photoStore = config.get("photoStore");
 const currentTime = Math.floor(new Date().getTime());
+const _ = require("lodash");
 
 mongoose
 	.connect(config.get("dbURL"), config.get("mongooseConfig"))
@@ -14,12 +16,14 @@ mongoose
 	.catch((error) => console.log("Could not connect to Database."));
 
 async function dbTest() {
+	const licensePlates = [{ plate: "4M7788" }];
 	const query = {
 		//$and: [{ name: "dummyModule", relays: { $elemMatch: { name: "relay0" } } }],
-		relays: { $elemMatch: { name: "relay0" } },
+		//relays: { $elemMatch: { name: "relay0" } },
+		lp: { $elemMatch: { plate: { $in: _.map(licensePlates, "plate") } } },
 	};
-	const ioModuleDb = await IoModule.findOne(query);
-	console.log("dbTestJs:", ioModuleDb);
+	const result = await Member.findOne(query);
+	console.log("dbTestJs: search result:", result);
 }
 dbTest();
 //   async function dbTest() {

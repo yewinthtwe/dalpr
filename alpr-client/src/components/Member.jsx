@@ -61,6 +61,8 @@ function Member(props) {
 	const [openPopup, setOpenPopup] = React.useState(false);
 	const [members, setMembers] = React.useState([]);
 	const [pageRefresh, setPageRefresh] = React.useState(false);
+	const [errorMessage, setErrorMessage] = React.useState("");
+	const [notifyType, setNotifyType] = React.useState("success");
 
 	const [filterFn, setFilterFn] = React.useState({
 		fn: (item) => {
@@ -96,27 +98,39 @@ function Member(props) {
 		});
 	};
 
+	const showNoti = (resp) => {
+		if (resp.status >= 400) {
+			setNotify({
+				isOpen: true,
+				message: resp.data,
+				type: "error",
+			});
+		} else {
+			setNotify({
+				isOpen: true,
+				message: "Submitted Successfully.",
+				type: "success",
+			});
+		}
+	};
+
 	const addOrEdit = async (member, resetForm) => {
 		console.log("MemberJsx: addOrEdit: called:", member);
-		if (member.id === 0) {
-			await memberService.saveMember(member);
-			console.log("MemberJsx: addOrEdit: NEW:", member);
+
+		if (member[0].id === 0) {
+			let resp = await memberService.saveMember(member);
+			showNoti(resp);
 			setPageRefresh(true);
 		} else {
 			member.lp = _.map(member.lp, "plate");
-			console.log("MemberJsx: addOrEdit: Update:", member);
-			await memberService.saveMember(member);
+			let resp = await memberService.saveMember(member);
+			showNoti(resp);
 			setPageRefresh(true);
 		}
 		resetForm();
 		setRecordForEdit(null);
 		setOpenPopup(false);
 		setPageRefresh(false);
-		setNotify({
-			isOpen: true,
-			message: "Submitted Successfully.",
-			type: "success",
-		});
 	};
 
 	const openInPopup = (item) => {
@@ -147,7 +161,7 @@ function Member(props) {
 		async function fetchData() {
 			try {
 				const response = await memberService.getMembers();
-				//console.log("MemberJsx: response:", response.data);
+				//console.log("MemberJsx: response:", response);
 				setMembers(response.data);
 				setPageRefresh(true);
 			} catch (error) {

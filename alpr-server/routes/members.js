@@ -42,13 +42,28 @@ router.put("/:id", [auth], async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
 	console.log("membersJS: receiving POST request data:", req.body);
+	let licensePlates = req.body.lp;
+	const query = {
+		$or: [
+			{ lp: { $elemMatch: { plate: { $in: _.map(licensePlates, "plate") } } } },
+			{
+				candidates: {
+					$elemMatch: {
+						plate: { $in: _.map(licensePlates, "plate") },
+					},
+				},
+			},
+		],
+	};
+
 	const { error } = schema.validate(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	let obu = await Obu.findOne({ inUsed: false });
 	// console.log(`Picking random OBU : ${obu}`);
-	let member = await Member.findOne({ lp: req.body.lp });
-	if (member) return res.status(400).send("Car number already registered.");
+	let member = await Member.findOne(query);
+	if (member)
+		return res.status(400).send("License plate number already registered.");
 	member = new Member(
 		_.pick(req.body, [
 			"memberName",

@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 function MemberFormV2(props) {
 	const { recordForEdit, addOrEdit } = props;
 
-	console.log("MemberFormV2: Record for edit props received:", recordForEdit);
+	//console.log("MemberFormV2: Record for edit props received:", recordForEdit);
 
 	const classes = useStyles();
 	const [plateFields, setPlateFields] = React.useState([
@@ -53,7 +53,7 @@ function MemberFormV2(props) {
 		_.map(otherFields, (o) => {
 			o.lp = [...plateFields];
 		});
-		console.log("MemberFormV2: All InputFields: values:", otherFields);
+		//console.log("MemberFormV2: All InputFields: values:", otherFields);
 		addOrEdit(otherFields, resetForm);
 	};
 
@@ -89,10 +89,10 @@ function MemberFormV2(props) {
 		if (recordForEdit != null) {
 			setOtherFields([{ ...recordForEdit }]);
 			setPlateFields(recordForEdit.lp);
-			console.log(
-				"MemberFormV2: setting recordForEdit: to otherFields:",
-				recordForEdit.lp
-			);
+			// console.log(
+			// 	"MemberFormV2: setting recordForEdit: to otherFields:",
+			// 	recordForEdit.lp
+			// );
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps

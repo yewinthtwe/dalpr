@@ -13,9 +13,9 @@ export async function getAllReport() {
 
 	try {
 		const response = await http.post(apiEndpoint, body);
-		const { data } = response;
+		//const { data } = response;
 		//console.log("AlprReportService:", data);
-		return data;
+		return response;
 	} catch (error) {
 		console.log("AlprReportService:", error);
 	}
