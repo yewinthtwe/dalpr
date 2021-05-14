@@ -162,8 +162,13 @@ function AlprLane() {
 	};
 
 	const getName = (item) => {
-		return item.name;
+		if (item) {
+			return item.name;
+		} else {
+			return "";
+		}
 	};
+
 	const getRelayName = (relayObjectId, ioModuleName) => {
 		let matchedRelay = _.filter(ioModuleName.relays, ["_id", relayObjectId]);
 		//console.log("matched relay:", matchedRelay);

@@ -124,7 +124,7 @@ export default function AlprLaneForm(props) {
 						variant='outlined'
 						label='Physical Lane'
 						name='lane'
-						value={laneOptions[getSelectedIndex(values.lane._id, laneOptions)]}
+						value={laneOptions[getSelectedIndex(values.lane?._id, laneOptions)]}
 						onChange={handleInputChange}
 						error={errors.lane}
 						options={laneOptions}
