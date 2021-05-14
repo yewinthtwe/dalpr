@@ -66,20 +66,31 @@ router.post("/", async (req, res) => {
 	}
 	const obu = member ? member.obu.obuId : "0000000000000000";
 	const isMember = member ? true : false;
-	const alprLane = await AiLane.findOne()
+
+	let result = await AiLane.find()
 		.populate({
 			path: "camera",
-			match: { camera_id: camera_id },
+			match: { camera_id: 1 },
 		})
 		.populate("lane")
 		.populate("ioModule");
 
-	const { isExitLane } = alprLane.lane;
+	let attachedCamera = result.filter(function (lane) {
+		if (lane.camera) {
+			//console.log("found camera:", lane.camera);
+			return lane.camera;
+		}
+	});
+	//console.log("alprdJs: Alpr-Lane Config Object:", attachedCamera);
+	console.log("alprdJs: Alpr-Lane Name:", attachedCamera[0].name);
+	const { isExitLane, name: laneName } = attachedCamera[0].lane;
+	console.log("alprdJs: Alpr-Camera IP:", attachedCamera[0].camera.ip);
+	console.log("alprdJs: Physical Lane Name is:", laneName);
 	console.log(
 		"alprdJs: Physical Lane type is:",
 		isExitLane ? "EXIT lane" : "ENTRY Lane"
 	);
-	const { ioModule: ioMod, relay: relayObjId } = alprLane;
+	const { ioModule: ioMod, relay: relayObjId } = attachedCamera[0];
 	const moduleInfo = _.pick(ioMod, [
 		"name",
 		"ip",
@@ -206,14 +217,8 @@ async function memberExit(tkn) {
 	if (_.isEmpty(searchResultToUpdate)) {
 		await createDoc(newDocData);
 	} else {
-		const {
-			_id,
-			inPhoto,
-			outPhoto,
-			direction,
-			inTrafficId,
-			outTrafficId,
-		} = searchResultToUpdate;
+		const { _id, inPhoto, outPhoto, direction, inTrafficId, outTrafficId } =
+			searchResultToUpdate;
 		direction === "OUT" ? (oldPhoto = outPhoto) : (oldPhoto = inPhoto);
 		const updatedRecord = await updateDoc(_id, newUpdateExitData);
 		await makeRecordUsed(updatedRecord);
@@ -266,14 +271,8 @@ async function memberEntry(tkn) {
 	if (_.isEmpty(searchResultToUpdate)) {
 		await createDoc(newDocData);
 	} else {
-		const {
-			_id,
-			inPhoto,
-			outPhoto,
-			direction,
-			inTrafficId,
-			outTrafficId,
-		} = searchResultToUpdate;
+		const { _id, inPhoto, outPhoto, direction, inTrafficId, outTrafficId } =
+			searchResultToUpdate;
 		direction === "IN" ? (oldPhoto = inPhoto) : (oldPhoto = outPhoto);
 		if (inTrafficId && outTrafficId) {
 			console.log("alprdJs: memberEntry: USED Traffic.");
