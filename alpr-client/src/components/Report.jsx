@@ -69,14 +69,17 @@ function Report(props) {
 	);
 
 	React.useEffect(() => {
-		async function fetchReport() {
+		async function fetchData() {
 			try {
-				const report = await reportService.getAllReport();
-				setReport(report);
+				const resp = await reportService.getAllReport();
+				//console.log("MemberJsx: response:", response);
+				setReport(resp.data);
 				setPageRefresh(true);
-			} catch (error) {}
+			} catch (error) {
+				console.log("ReportJsx:", error);
+			}
 		}
-		fetchReport();
+		fetchData();
 	}, [pageRefresh]);
 
 	return (

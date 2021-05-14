@@ -14,16 +14,6 @@ router.get("/", async (req, res) => {
 			.populate({
 				path: "relays",
 			});
-
-		Project.find(query)
-			.populate({
-				path: "pages",
-				populate: {
-					path: "components",
-					model: "Component",
-				},
-			})
-			.exec(function (err, docs) {});
 		console.log("aiLane:", aiLane);
 		res.status(200).send(aiLane);
 	} catch (ex) {

@@ -21,7 +21,7 @@ export default function Select(props) {
 			<MuiSelect label={label} name={name} value={value} onChange={onChange}>
 				{/* <MenuItem value=''>None</MenuItem> */}
 				{options.map((item) => (
-					<MenuItem key={item._id} value={item.name} disabled={item.inUsed}>
+					<MenuItem key={item._id} value={item} disabled={item.inUsed}>
 						<Typography color='primary'> {item.parentName} </Typography>
 						{"  "}
 						{item.name}

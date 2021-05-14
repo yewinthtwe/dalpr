@@ -31,6 +31,7 @@ import _ from "lodash";
 import * as ioModuleService from "../services/ioModuleService";
 import * as laneService from "../services/laneService";
 import * as cameraService from "../services/cameraService";
+//import AlprLaneFormV2 from "./Forms/AlprLaneFormV2";
 
 const useStyles = makeStyles((theme) => ({
 	pageContent: {
@@ -58,7 +59,7 @@ const headCells = [
 ];
 
 // const oldRelays = ["relay0", "relay1", "relay2"];
-// const newRelay = "relay2";ssss
+// const newRelay = "relay2";
 
 function AlprLane() {
 	//const { history } = props;
@@ -66,11 +67,8 @@ function AlprLane() {
 	const [pageRefresh, setPageRefresh] = React.useState(false);
 	const [recordForEdit, setRecordForEdit] = React.useState(null);
 	const [alprLanes, setAlprLanes] = React.useState([]);
-
 	const [cameraOptions, setCameraOptions] = React.useState([]);
 	const [ioModuleOptions, setIoModuleOptions] = React.useState([]);
-	const [relayOptions, setRelayOptions] = React.useState([]);
-	const [relays, setRelays] = React.useState([]);
 	const [laneOptions, setLaneOptions] = React.useState([]);
 
 	const [filterFn, setFilterFn] = React.useState({
@@ -91,12 +89,10 @@ function AlprLane() {
 		subTitle: "",
 	});
 
-	const {
-		TblContainer,
-		TblHead,
-		TblPagination,
-		recordsAfterPagingAndSorting,
-	} = useTable(alprLanes, headCells, filterFn);
+	const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
+		useTable(alprLanes, headCells, filterFn);
+
+	//console.log("AlprLaneJsx: data fetched from database: alprLanes:", alprLanes);
 
 	const handleSearch = (e) => {
 		let target = e.target;
@@ -111,25 +107,38 @@ function AlprLane() {
 		});
 	};
 
-	const addOrEdit = async (aiLane, resetForm) => {
-		if (aiLane.id === 0) {
-			delete aiLane.id;
-			await alprLaneService.saveAiLane(aiLane);
+	const showNoti = (resp) => {
+		if (resp.status >= 400) {
+			setNotify({
+				isOpen: true,
+				message: resp.data,
+				type: "error",
+			});
+		} else {
+			setNotify({
+				isOpen: true,
+				message: "Submitted Successfully.",
+				type: "success",
+			});
+		}
+	};
+
+	const addOrEdit = async (item, resetForm) => {
+		console.log("AlprLaneJsx: addOrEdit: called:", item);
+
+		if (item.id === 0) {
+			let resp = await alprLaneService.saveAiLane(item);
+			showNoti(resp);
 			setPageRefresh(true);
 		} else {
-			await alprLaneService.saveAiLane(aiLane);
-			//console.log("AiLane: Creating record: response:", resp);
+			let resp = await alprLaneService.saveAiLane(item);
+			showNoti(resp);
 			setPageRefresh(true);
 		}
 		resetForm();
 		setRecordForEdit(null);
 		setOpenPopup(false);
 		setPageRefresh(false);
-		setNotify({
-			isOpen: true,
-			message: "Submitted Successfully.",
-			type: "success",
-		});
 	};
 
 	const openInPopup = (item) => {
@@ -152,15 +161,13 @@ function AlprLane() {
 		setPageRefresh(false);
 	};
 
-	const getRelayName = (relayObjectId) => {
-		let relayName = "";
-		_.map(alprLanes, (param) => {
-			console.log(_.filter(param.ioModule.relays, ["_id", relayObjectId]));
-			let rl = _.filter(param.ioModule.relays, ["_id", relayObjectId]);
-			console.log("Relay name:", _.toString(_.map(rl, "name")));
-			relayName = _.toString(_.map(rl, "name"));
-		});
-		return relayName;
+	const getName = (item) => {
+		return item.name;
+	};
+	const getRelayName = (relayObjectId, ioModuleName) => {
+		let matchedRelay = _.filter(ioModuleName.relays, ["_id", relayObjectId]);
+		//console.log("matched relay:", matchedRelay);
+		return matchedRelay[0].name;
 	};
 
 	React.useEffect(() => {
@@ -177,53 +184,11 @@ function AlprLane() {
 
 				const ioMod = await ioModuleService.getIoModules();
 				setIoModuleOptions(ioMod.data);
-				setRelayOptions(ioMod.data.relays);
-
-				// _.map(alprLanes.data, (o) => {
-				// 	let rel = _.find(o.ioModule.relays, (relObj) => {
-				// 		return _.isEqual(o.relay, relObj._id);
-				// 	});
-				// 	console.log("matching result of a relay in IoModule:", rel);
-
-				// });
-				// const lanes = await laneService.getLanes();
-				// setLaneOptions(lanes.data);
-
-				// const cameras = await cameraService.getCameras();
-				// setCameraOptions(cameras.data);
-
-				//const ioMod = await ioModuleService.getIoModules();
-				//setIoModuleOptions(ioMod.data);
-				//console.log("AlprLaneJsx: ioModuleOptions:", ioModuleOptions);
-
-				// const response = await ioModuleService.getRelays();
-				// let rl = _.map(response.data, (modu) => {
-				// 	return _.map(modu.relays);
-				// });
-				// //console.log("rl:", _.flattenDeep(rl));
-				// setRelayOptions(_.flattenDeep(rl));
-
-				// ioModules = _.filter(ioModules, { status: "online" });
-				// console.log("AiLane: ioModule:", response.data);
-
-				// _.forEach(response.data, (ioModule) => {
-				// 	availableRelays = _.filter(ioModule.relays.map(), { inUsed: false });
-				// 	if (_.isEmpty(availableRelays)) {
-				// 		//console.log("AlprAiLane: No Relay Available.", availableRelays);
-				// 		setNotify({
-				// 			isOpen: true,
-				// 			message: "All Relays are in Used.",
-				// 			type: "error",
-				// 		});
-				// 	} else {
-				// 		//console.log("AlprAiLane: Relay Available.", availableRelays);
-				// 	}
-				// });
-				//setPageRefresh(true);
+				setPageRefresh(true);
 			} catch (error) {}
 		}
 		fetchAiLanes();
-	}, []);
+	}, [pageRefresh]);
 
 	return (
 		<>
@@ -267,12 +232,13 @@ function AlprLane() {
 							<TableRow key={item._id}>
 								<TableCell> {item.name} </TableCell>
 								<TableCell> {item.description} </TableCell>
-								<TableCell> {item.lane.name} </TableCell>
-								<TableCell> {item.camera.name} </TableCell>
-								<TableCell> {getRelayName(item.relay)}</TableCell>
-								<TableCell> {item.ioModule.name} </TableCell>
+								<TableCell> {getName(item.lane)} </TableCell>
+								<TableCell> {getName(item.camera)} </TableCell>
 								<TableCell>
-									{" "}
+									{getRelayName(item.relay, item.ioModule)} {item.relay}
+								</TableCell>
+								<TableCell> {getName(item.ioModule)} </TableCell>
+								<TableCell>
 									{item.status === true ? "Enable" : "Disabled"}{" "}
 								</TableCell>
 								<TableCell>

@@ -13,10 +13,15 @@ export async function getAllReport() {
 
 	try {
 		const response = await http.post(apiEndpoint, body);
-		//const { data } = response;
 		//console.log("AlprReportService:", data);
 		return response;
 	} catch (error) {
-		console.log("AlprReportService:", error);
+		if (error.response) {
+			return error.response;
+		} else if (error.request) {
+			return error.request;
+		} else {
+			return error.message;
+		}
 	}
 }

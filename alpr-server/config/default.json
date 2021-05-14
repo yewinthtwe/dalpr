@@ -1,6 +1,7 @@
 {
 	"jwtPrivateKey": "",
 	"dbURL": "mongodb://localhost:27017/alpr",
+	"testDbUrl": "mongodb://localhost:27017/playground",
 
 	"mongooseConfig": {
 		"useNewUrlParser": true,

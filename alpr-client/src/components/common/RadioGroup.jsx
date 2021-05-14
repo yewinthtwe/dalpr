@@ -21,7 +21,7 @@ function RadioGroup(props) {
 							key={item._id}
 							control={<Radio />}
 							label={item.name}
-							value={item.name}
+							value={item._id}
 							//disabled={item.status === "online" ? false : true}
 						/>
 					))}

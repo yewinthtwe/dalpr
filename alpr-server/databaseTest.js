@@ -1,28 +1,22 @@
 const fs = require("fs/promises");
 const mongoose = require("mongoose");
 const config = require("config");
-const { InOutRecord } = require("./models/inOutRecordModel");
-const { IoModule } = require("./models/ioModuleModel");
-const { Member } = require("./models/memberModel");
+const { YatKyay } = require("./models/yatkyayModel");
 const subDays = require("date-fns/subDays");
-const logger = require("./middleware/logger");
-const photoStore = config.get("photoStore");
 const currentTime = Math.floor(new Date().getTime());
 const _ = require("lodash");
 
 mongoose
-	.connect(config.get("dbURL"), config.get("mongooseConfig"))
+	.connect(config.get("testDbUrl"), config.get("mongooseConfig"))
 	.then(() => console.log("Connected to Database."))
 	.catch((error) => console.log("Could not connect to Database."));
 
 async function dbTest() {
-	const licensePlates = [{ plate: "4M7788" }];
+	const name = [{ အမည်: "နေတိုး" }];
 	const query = {
-		//$and: [{ name: "dummyModule", relays: { $elemMatch: { name: "relay0" } } }],
-		//relays: { $elemMatch: { name: "relay0" } },
-		lp: { $elemMatch: { plate: { $in: _.map(licensePlates, "plate") } } },
+		အမည်: { $in: _.map(name, "အမည်") },
 	};
-	const result = await Member.findOne(query);
+	const result = await YatKyay.find(query);
 	console.log("dbTestJs: search result:", result);
 }
 dbTest();

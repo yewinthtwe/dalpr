@@ -61,8 +61,8 @@ function Member(props) {
 	const [openPopup, setOpenPopup] = React.useState(false);
 	const [members, setMembers] = React.useState([]);
 	const [pageRefresh, setPageRefresh] = React.useState(false);
-	const [errorMessage, setErrorMessage] = React.useState("");
-	const [notifyType, setNotifyType] = React.useState("success");
+	// const [errorMessage, setErrorMessage] = React.useState("");
+	// const [notifyType, setNotifyType] = React.useState("success");
 
 	const [filterFn, setFilterFn] = React.useState({
 		fn: (item) => {
