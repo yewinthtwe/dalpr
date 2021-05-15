@@ -63,6 +63,7 @@ function Obus() {
 	React.useEffect(() => {
 		async function fetchObus() {
 			const response = await obuService.getObuCollection();
+			showNoti(response);
 			setObus(response.data);
 			setInUsedObu(_.filter(response.data, ["inUsed", true]));
 			let obuLeft = obus.length - inUsedObu.length;
@@ -92,12 +93,8 @@ function Obus() {
 		subTitle: "",
 	});
 
-	const {
-		TblContainer,
-		TblHead,
-		TblPagination,
-		recordsAfterPagingAndSorting,
-	} = useTable(obus, headCells, filterFn);
+	const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
+		useTable(obus, headCells, filterFn);
 
 	const handleSearch = (e) => {
 		let target = e.target;
@@ -110,6 +107,22 @@ function Obus() {
 					});
 			},
 		});
+	};
+
+	const showNoti = (resp) => {
+		if (resp.status >= 400) {
+			setNotify({
+				isOpen: true,
+				message: resp.data,
+				type: "error",
+			});
+		} else {
+			setNotify({
+				isOpen: true,
+				message: "Submitted Successfully.",
+				type: "success",
+			});
+		}
 	};
 
 	return (

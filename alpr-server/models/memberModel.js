@@ -20,16 +20,16 @@ const MemberSchema = new Schema({
 	expireDate: { type: Date },
 	candidates: { type: Array },
 	isActive: { type: Boolean },
-	obu: { type: mongoose.Schema.Types.ObjectId, ref: "Obu" },
+	obuObjectId: { type: mongoose.Schema.Types.ObjectId, ref: "Obu" },
 });
 
 const Member = mongoose.model("Member", MemberSchema);
 
 const schema = Joi.object({
 	lp: Joi.array().required(),
-	memberName: Joi.string().min(6).max(100).required(),
+	memberName: Joi.string().min(4).max(100).required(),
 	memberType: Joi.string().required(),
-	address: Joi.string().min(6).max(254).required(),
+	address: Joi.string().min(4).max(254).required(),
 	mobile: Joi.number().min(9).required(),
 	email: Joi.string(),
 	isActive: Joi.boolean(),

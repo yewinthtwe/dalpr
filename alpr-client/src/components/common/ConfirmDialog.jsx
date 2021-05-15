@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 
 	titleIcon: {
-		backgroundColor: theme.palette.secondary.light,
+		//backgroundColor: theme.palette.primary.light,
 		color: theme.palette.secondary.main,
 		"&:hover": {
 			backgroundColor: theme.palette.secondary.light,

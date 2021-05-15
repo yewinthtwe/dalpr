@@ -33,6 +33,7 @@ export async function saveMember(data) {
 		"memberType",
 		"address",
 		"lp",
+		"obuObjectId",
 		"mobile",
 		"email",
 		"isActive",

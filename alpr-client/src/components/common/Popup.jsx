@@ -38,7 +38,7 @@ export default function Popup(props) {
 						{title}
 					</Typography>
 					<Controls.ActionButton
-						color='secondary'
+						color='primary'
 						onClick={() => {
 							setOpenPopup(false);
 						}}

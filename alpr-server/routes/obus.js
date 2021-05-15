@@ -9,4 +9,9 @@ router.get("/", [auth], async (req, res) => {
 	res.status(200).send(obus);
 });
 
+router.get("/one", [auth], async (req, res) => {
+	const obu = await Obu.findOne({ inUsed: false });
+	console.log("obusJs: single obu:", obu);
+	res.status(200).send(obu);
+});
 module.exports = router;

@@ -11,10 +11,17 @@ import {
 	FormControlLabel,
 	FormControl,
 	FormLabel,
+	Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import _ from "lodash";
+//import Controls from "../common/Controls";
+import * as obuService from "../../services/obuService";
+import Notification from "../common/Notification";
+import ConfirmDialog from "../common/ConfirmDialog";
+import PageHeader from "../common/PageHeader";
+import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,19 +29,22 @@ const useStyles = makeStyles((theme) => ({
 	},
 	button: { margin: theme.spacing(2) },
 	radio: { margin: theme.spacing(2) },
+	renew: { margib: theme.spacing(2) },
 }));
 
 function MemberFormV2(props) {
-	const { recordForEdit, addOrEdit } = props;
+	const { recordForEdit, addOrEdit, isEditing } = props;
 
-	//console.log("MemberFormV2: Record for edit props received:", recordForEdit);
+	console.log("MemberFormV2: recordForEdit:", recordForEdit);
 
 	const classes = useStyles();
+
 	const [plateFields, setPlateFields] = React.useState([
 		{
 			plate: "",
 		},
 	]);
+	const [obu, setObu] = React.useState({});
 	const [otherFields, setOtherFields] = React.useState([
 		{
 			id: 0,
@@ -44,14 +54,29 @@ function MemberFormV2(props) {
 			mobile: "",
 			email: "",
 			lp: [],
+			obuObjectId: "",
 			isActive: true,
 		},
 	]);
+
+	const [confirmDialog, setConfirmDialog] = React.useState({
+		isOpen: false,
+		title: "",
+		subTitle: "",
+	});
+
+	const [notify, setNotify] = React.useState({
+		isOpen: false,
+		message: "",
+		type: "",
+	});
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		_.map(otherFields, (o) => {
 			o.lp = [...plateFields];
+			o.obuObjectId = obu?._id;
+			//console.log("MemberFormV2: new obu Object:", obu);
 		});
 		//console.log("MemberFormV2: All InputFields: values:", otherFields);
 		addOrEdit(otherFields, resetForm);
@@ -89,18 +114,64 @@ function MemberFormV2(props) {
 		if (recordForEdit != null) {
 			setOtherFields([{ ...recordForEdit }]);
 			setPlateFields(recordForEdit.lp);
+			setObu(recordForEdit.obuObjectId);
 			// console.log(
 			// 	"MemberFormV2: setting recordForEdit: to otherFields:",
 			// 	recordForEdit.lp
 			// );
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [recordForEdit]);
+
+	const onRefresh = async () => {
+		setConfirmDialog({
+			...confirmDialog,
+			isOpen: false,
+		});
+		let resp = await obuService.getObu();
+		// {_id: "6051d3da636d7412cc193468", srNo: 24, obuId: "7295676561709616", inUsed: false, __v: 0}
+		setObu(resp.data);
+		//console.log("MemberFormV2: renew Obu:", resp.data);
+		setNotify({
+			isOpen: true,
+			message: "OBU renewed Successfully.",
+			type: "success",
+		});
+	};
 
 	return (
 		<div>
 			<Container>
+				<PageHeader
+					title={obu?.obuId}
+					subTitle='On-Board Unit Number is automatically assigned.'
+					icon={<SettingsRemoteIcon fontSize='small' />}
+				/>
+				{isEditing ? (
+					<div>
+						<Button
+							className={classes.button}
+							variant='outlined'
+							color='primary'
+							endIcon={<Icon>refresh</Icon>}
+							onClick={() => {
+								setConfirmDialog({
+									isOpen: true,
+									title: "Are you sure to Revoke this OBU?",
+									subTitle: "You can't undo this operation.",
+									onConfirm: () => {
+										onRefresh();
+									},
+								});
+							}}
+						>
+							Renew OBU
+						</Button>
+					</div>
+				) : (
+					""
+				)}
+
 				<form className={classes.root} onSubmit={handleSubmit}>
 					{_.map(otherFields, (o, i) => (
 						<div key={i}>
@@ -188,6 +259,11 @@ function MemberFormV2(props) {
 					</Button>
 				</form>
 			</Container>
+			<Notification notify={notify} setNotify={setNotify} />
+			<ConfirmDialog
+				confirmDialog={confirmDialog}
+				setConfirmDialog={setConfirmDialog}
+			/>
 		</div>
 	);
 }

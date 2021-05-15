@@ -10,7 +10,7 @@ const _ = require("lodash");
 const { addDays } = require("date-fns");
 
 router.get("/", auth, async (req, res) => {
-	const members = await Member.find().populate("obu");
+	const members = await Member.find().populate("obuObjectId");
 	res.status(200).send(members);
 });
 
@@ -31,13 +31,28 @@ router.put("/:id", [auth], async (req, res) => {
 			address: req.body.address,
 			mobile: req.body.mobile,
 			email: req.body.email,
+			obuObjectId: req.body.obuObjectId,
 			isActive: req.body.isActive,
 		},
 		{ new: true }
 	);
-	if (!member)
+	if (member.obuObjectId) {
+		const updatedRecord = await Obu.updateOne(
+			{ _id: req.body.obuObjectId },
+			{
+				$set: {
+					inUsed: true,
+					memberId: member._id,
+				},
+			}
+		);
+		console.log("membersJS: OBU: updatedData:", updatedRecord);
+	}
+	if (!member) {
 		return res.status(404).send("The member with the given ID was not found.");
-	res.send(member);
+	} else {
+		res.status(200).send(member);
+	}
 });
 
 router.post("/", auth, async (req, res) => {
@@ -59,7 +74,7 @@ router.post("/", auth, async (req, res) => {
 	const { error } = schema.validate(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
-	let obu = await Obu.findOne({ inUsed: false });
+	let obuResult = await Obu.findOne({ inUsed: false });
 	// console.log(`Picking random OBU : ${obu}`);
 	let member = await Member.findOne(query);
 	if (member)
@@ -75,14 +90,16 @@ router.post("/", auth, async (req, res) => {
 			"isActive",
 		])
 	);
-	obu ? (member.obu = obu._id) : (member.obu = "0000000000000000");
+	obuResult
+		? (member.obuObjectId = obuResult._id)
+		: (member.obuObjectId = "000000");
 	member.isActive = member.isActive;
 	member.expireDate = addDays(new Date(), 90);
 	//console.log(member);
 	await member.save();
-	if (member.obu) {
+	if (member.obuObjectId) {
 		const updatedRecord = await Obu.updateOne(
-			{ _id: obu._id },
+			{ _id: member.obuObjectId },
 			{
 				$set: {
 					inUsed: true,

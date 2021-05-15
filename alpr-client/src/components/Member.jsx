@@ -19,6 +19,7 @@ import PageHeader from "./common/PageHeader";
 import MemberFormV2 from "./Forms/MemberFormV2";
 import useTable from "./common/useTable";
 import * as memberService from "../services/memberService";
+import * as obuService from "../services/obuService";
 import Popup from "./common/Popup";
 import Notification from "./common/Notification";
 import ConfirmDialog from "./common/ConfirmDialog";
@@ -54,13 +55,16 @@ const headCells = [
 	{ id: "actions", label: "Actions", disableSorting: true },
 ];
 
-function Member(props) {
+function Member() {
 	//const { history } = props;
 	const classes = useStyles();
 	const [recordForEdit, setRecordForEdit] = React.useState(null);
 	const [openPopup, setOpenPopup] = React.useState(false);
 	const [members, setMembers] = React.useState([]);
+	//const [obuOptions, setObuOptions] = React.useState([]);
 	const [pageRefresh, setPageRefresh] = React.useState(false);
+	const [isEditing, setIsEditing] = React.useState(false);
+
 	// const [errorMessage, setErrorMessage] = React.useState("");
 	// const [notifyType, setNotifyType] = React.useState("success");
 
@@ -115,8 +119,7 @@ function Member(props) {
 	};
 
 	const addOrEdit = async (member, resetForm) => {
-		console.log("MemberJsx: addOrEdit: called:", member);
-
+		//console.log("MemberJsx: addOrEdit: called:", member);
 		if (member[0].id === 0) {
 			let resp = await memberService.saveMember(member);
 			showNoti(resp);
@@ -161,8 +164,12 @@ function Member(props) {
 		async function fetchData() {
 			try {
 				const response = await memberService.getMembers();
-				//console.log("MemberJsx: response:", response);
+				showNoti(response);
+
 				setMembers(response.data);
+				//console.log("MemberJsx: response:", response.data);
+				// const obuResponse = await obuService.getObuCollection();
+				// setObuOptions(obuResponse.data);
 				setPageRefresh(true);
 			} catch (error) {
 				console.log("MemberJsx:", error);
@@ -202,6 +209,7 @@ function Member(props) {
 						onClick={() => {
 							setOpenPopup(true);
 							setRecordForEdit(null);
+							setIsEditing(false);
 						}}
 					/>
 				</Toolbar>
@@ -217,7 +225,7 @@ function Member(props) {
 								<TableCell>
 									{getPlate(item)} {item.lp.length > 1 ? "..." : ""}
 								</TableCell>
-								<TableCell> {item.obu.obuId} </TableCell>
+								<TableCell> {item.obuObjectId?.obuId} </TableCell>
 								<TableCell> {item.address} </TableCell>
 								<TableCell> {item.mobile} </TableCell>
 								<TableCell> {item.email} </TableCell>
@@ -229,6 +237,7 @@ function Member(props) {
 									<Controls.ActionButton
 										color='primary'
 										onClick={() => {
+											setIsEditing(true);
 											openInPopup(item);
 										}}
 									>
@@ -265,6 +274,7 @@ function Member(props) {
 				<MemberFormV2
 					recordForEdit={recordForEdit}
 					addOrEdit={addOrEdit}
+					isEditing={isEditing}
 				></MemberFormV2>
 			</Popup>
 			<Notification notify={notify} setNotify={setNotify} />

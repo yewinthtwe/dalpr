@@ -24,7 +24,7 @@ export default function Select(props) {
 					<MenuItem key={item._id} value={item} disabled={item.inUsed}>
 						<Typography color='primary'> {item.parentName} </Typography>
 						{"  "}
-						{item.name}
+						{item.name ?? item._id}
 					</MenuItem>
 				))}
 			</MuiSelect>
