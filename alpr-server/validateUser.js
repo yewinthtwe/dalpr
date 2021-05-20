@@ -32,7 +32,7 @@ async function validateMember(lp, candidates) {
 			},
 		],
 	};
-	const member = await Member.findOne(query).populate("obu");
+	const member = await Member.findOne(query).populate("obuObjectId");
 	//console.log("validateMember: member:", member);
 	if (_.isEmpty(member)) {
 		console.log(`validateMember: NOT found in member database.`);

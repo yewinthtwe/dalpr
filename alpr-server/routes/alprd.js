@@ -56,15 +56,16 @@ router.post("/", async (req, res) => {
 	console.log("alprdJs: Alpr-Camera ID:", camera_id);
 
 	const member = await validateMember(lp, candidates);
+	//console.log("alprdJs: Validated memberObject:", member);
 	if (member) {
 		const { memberName, memberId, lp: memberPlate, memberType } = member;
 		console.log("alprdJs: member Name:", memberName);
 		console.log("alprdJs: member Id:", memberId);
 		console.log("alprdJs: registered license plate(s):", memberPlate);
 		console.log("alprdJs: member type:", memberType);
-		console.log("alprdJs: OBU Id:", member.obu.obuId);
+		console.log("alprdJs: OBU Id:", member.obuObjectId.obuId);
 	}
-	const obu = member ? member.obu.obuId : "0000000000000000";
+	const obu = member ? member.obuObjectId.obuId : "0000000000000000";
 	const isMember = member ? true : false;
 
 	let result = await AiLane.find()

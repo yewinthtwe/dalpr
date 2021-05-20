@@ -11,7 +11,6 @@ import {
 	FormControlLabel,
 	FormControl,
 	FormLabel,
-	Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -35,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function MemberFormV2(props) {
 	const { recordForEdit, addOrEdit, isEditing } = props;
 
-	console.log("MemberFormV2: recordForEdit:", recordForEdit);
+	//console.log("MemberFormV2: recordForEdit:", recordForEdit);
 
 	const classes = useStyles();
 

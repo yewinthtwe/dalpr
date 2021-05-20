@@ -18,6 +18,7 @@ export function saveIoModule(ioModule) {
 		return http.post(apiEndpoint, ioModule);
 	}
 }
+
 export function updateRelayStatus(body) {
 	return http.patch(`${apiEndpoint}/${body.ioModule}`, {
 		relay: body.relay,

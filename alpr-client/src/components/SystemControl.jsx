@@ -9,12 +9,13 @@ import {
 	Grid,
 	IconButton,
 } from "@material-ui/core";
-// import Controls from "./Controls";
+
 import PageHeader from "./common/PageHeader";
-import * as relayService from "../services/relayService";
+import * as ioModuleService from "../services/ioModuleService";
+import _ from "lodash";
 // import http from "../services/httpService";
 // import { withRouter } from "react-router-dom";
-import _ from "lodash";
+// import Controls from "./Controls";
 
 // const useStyles = makeStyles((theme) => ({
 // 	pageContent: {
@@ -31,20 +32,25 @@ import _ from "lodash";
 // }));
 
 export default function SystemControl() {
-	const [relays, setRelays] = React.useState([]);
+	const [ioModule, setIoModule] = React.useState([]);
+	// const [relays, setRelays] = React.useState([]);
 	const [pageRefresh, setPageRefresh] = React.useState(false);
-
 	React.useEffect(() => {
 		async function fetchRelays() {
 			try {
-				const response = await relayService.getRelays();
-				setRelays(response);
+				const response = await ioModuleService.getRelays();
+				let ioModules = _.map(response.data, (ioMod) => {
+					console.log("SystemControl: ioModule:", ioMod);
+					return ioMod;
+				});
+
+				setIoModule(ioModules);
+				// setRelays(_.get(ioModules, "name"));
 				setPageRefresh(true);
 			} catch (error) {}
 		}
 		fetchRelays();
 	}, [pageRefresh]);
-
 	// console.log("SystemControl: response:", relays);
 	return (
 		<>
@@ -53,12 +59,11 @@ export default function SystemControl() {
 				subTitle='Vehicle Access Control'
 				icon={<TrafficIcon fontSize='large' />}
 			/>
-
 			<Paper>
-				{_.map(relays, (o) => (
-					<Grid container key={o._id}>
-						<Grid item xs={4}>
-							{o.name}
+				{_.map(ioModule, (o) => (
+					<Grid container>
+						<Grid item xs={4} key={o._id}>
+							Module Name: {o.name}
 						</Grid>
 						<Grid item xs={4}>
 							{o.relayValue === 1 ? (
