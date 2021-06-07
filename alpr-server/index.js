@@ -83,6 +83,7 @@ app.use(
 			"http://localhost:3000",
 			"http://127.0.0.1:3000",
 			"http://192.168.11.247:3000",
+			"http://172.16.22.231:3000",
 		],
 		credentials: true,
 	})

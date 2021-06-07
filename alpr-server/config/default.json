@@ -9,17 +9,7 @@
 		"useCreateIndex": true
 	},
 
-	"apiURL": "http://localhost:30000/api",
-
-	"adamURL": {
-		"1": "http://192.168.11.151/digitaloutput/all/value",
-		"2": "http://192.168.11.151/digitaloutput/all/value"
-	},
-
-	"dummyAdam": {
-		"1": "<?xml version=\"1.0\" ?><ADAM-6060 status=\"OK\"><DO> <ID>0</ID> <VALUE>0</VALUE> </DO><DO> <ID>1</ID> <VALUE>0</VALUE> </DO><DO> <ID>2</ID> <VALUE>0</VALUE> </DO><DO> <ID>3</ID> <VALUE>0</VALUE> </DO><DO> <ID>4</ID> <VALUE>0</VALUE> </DO><DO> <ID>5</ID> <VALUE>0</VALUE> </DO></ADAM-6060>",
-		"2": "<?xml version=\"1.0\" ?><ADAM-6060 status=\"OK\"><DO> <ID>0</ID> <VALUE>0</VALUE> </DO><DO> <ID>1</ID> <VALUE>0</VALUE> </DO><DO> <ID>2</ID> <VALUE>0</VALUE> </DO><DO> <ID>3</ID> <VALUE>0</VALUE> </DO><DO> <ID>4</ID> <VALUE>0</VALUE> </DO><DO> <ID>5</ID> <VALUE>0</VALUE> </DO></ADAM-6060>"
-	},
+	"apiURL": "http://172.16.22.231:30000/api",
 
 	"photoStore": {
 		"location": "/home/alprsvr/plateimages"

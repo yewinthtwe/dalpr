@@ -38,7 +38,17 @@ const { AiLane } = require("../models/aiLaneModel");
 // };
 // const { data } = await axios.post( config.get(`adamURL.${ioModuleId}`), datastring, config.get('adamConfig') );
 
+async function getConfig() {
+	let configResult = await AiLane.find()
+		.populate("camera")
+		.populate("lane")
+		.populate("ioModule");
+	return configResult;
+}
+
 router.post("/", async (req, res) => {
+	const alprLaneConfig = await getConfig();
+
 	const cameraFeed = _.pick(
 		req.body,
 		"epoch_time",
@@ -53,45 +63,50 @@ router.post("/", async (req, res) => {
 	const photo = `${uuid}.jpg`;
 	const candidates = _.flatten(_.map(results, "candidates"));
 	console.log(`alprdJs: Starting traffic scan for >>>>>>>>>>>>>>> ${lp}`);
-	console.log("alprdJs: Alpr-Camera ID:", camera_id);
+	console.log("alprdJs: Alpr-Camera ID is:", camera_id);
 
+	let currentConfig = _.filter(alprLaneConfig, (o) => {
+		return o.camera.camera_id === camera_id;
+	});
+	//console.log("alprdJs: Active CONFIG:", currentConfig);
 	const member = await validateMember(lp, candidates);
+
 	//console.log("alprdJs: Validated memberObject:", member);
 	if (member) {
 		const { memberName, memberId, lp: memberPlate, memberType } = member;
 		console.log("alprdJs: member Name:", memberName);
 		console.log("alprdJs: member Id:", memberId);
-		console.log("alprdJs: registered license plate(s):", memberPlate);
+		console.log("alprdJs: Registered license plate(s):", memberPlate);
 		console.log("alprdJs: member type:", memberType);
 		console.log("alprdJs: OBU Id:", member.obuObjectId.obuId);
 	}
 	const obu = member ? member.obuObjectId.obuId : "0000000000000000";
 	const isMember = member ? true : false;
 
-	let result = await AiLane.find()
-		.populate({
-			path: "camera",
-			match: { camera_id: 1 },
-		})
-		.populate("lane")
-		.populate("ioModule");
+	// let result = await AiLane.find()
+	// 	.populate({
+	// 		path: "camera",
+	// 		match: { camera_id: camera_id },
+	// 	})
+	// 	.populate("lane")
+	// 	.populate("ioModule");
 
-	let attachedCamera = result.filter(function (lane) {
-		if (lane.camera) {
-			//console.log("found camera:", lane.camera);
-			return lane.camera;
-		}
-	});
+	// let attachedCamera = result.filter(function (lane) {
+	// 	if (lane.camera) {
+	// 		//console.log("found camera:", lane.camera);
+	// 		return lane.camera;
+	// 	}
+	// });
 	//console.log("alprdJs: Alpr-Lane Config Object:", attachedCamera);
-	console.log("alprdJs: Alpr-Lane Name:", attachedCamera[0].name);
-	const { isExitLane, name: laneName } = attachedCamera[0].lane;
-	console.log("alprdJs: Alpr-Camera IP:", attachedCamera[0].camera.ip);
+	console.log("alprdJs: Alpr-Lane Name:", currentConfig[0].name);
+	const { isExitLane, name: laneName } = currentConfig[0].lane;
+	console.log("alprdJs: Alpr-Camera IP:", currentConfig[0].camera.ip);
 	console.log("alprdJs: Physical Lane Name is:", laneName);
 	console.log(
 		"alprdJs: Physical Lane type is:",
 		isExitLane ? "EXIT lane" : "ENTRY Lane"
 	);
-	const { ioModule: ioMod, relay: relayObjId } = attachedCamera[0];
+	const { ioModule: ioMod, relay: relayObjId } = currentConfig[0];
 	const moduleInfo = _.pick(ioMod, [
 		"name",
 		"ip",

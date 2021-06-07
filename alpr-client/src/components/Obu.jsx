@@ -16,7 +16,7 @@ import Controls from "./common/Controls";
 // import MemberForm from "./memberForm";
 // import CloseIcon from "@material-ui/icons/Close";
 // import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-// import Popup from "./Popup";
+// import Popup from "./Popup";s
 import useTable from "./common/useTable";
 import * as obuService from "../services/obuService";
 import Notification from "./common/Notification";
@@ -160,9 +160,9 @@ function Obus() {
 					<TblHead />
 					<TableBody>
 						{recordsAfterPagingAndSorting().map((item) => (
-							<TableRow key={item._id}>
-								<TableCell> {item.srNo} </TableCell>
-								<TableCell> {item.obuId} </TableCell>
+							<TableRow key={item?._id}>
+								<TableCell> {item?.srNo} </TableCell>
+								<TableCell> {item?.obuId} </TableCell>
 								<TableCell>
 									{" "}
 									{item.inUsed ? (

@@ -43,8 +43,26 @@ async function validateMember(lp, candidates) {
 	}
 }
 
+async function findActiveMembers() {
+	console.log(`findActiveMembers: Searching in Member database.....`);
+	//const member = await Member.findOne({ $or: [{'lp': { $in: lp }}, {'candidates.plate': { $in: lp }}] });
+	const query = {
+		isActive: true,
+	};
+	const member = await Member.find(query).populate("obuObjectId");
+	console.log("findActiveMembers: member:", member);
+	if (_.isEmpty(member)) {
+		console.log(`findActiveMembers: NO Active member found in database.`);
+		return member;
+	} else {
+		console.log(`findActiveMembers: Active members in database.`);
+		return member;
+	}
+}
+
 module.exports = {
 	validateMember,
 	getInOutRecords,
 	getInOutRecord,
+	findActiveMembers,
 };
