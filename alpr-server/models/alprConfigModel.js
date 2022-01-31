@@ -14,5 +14,4 @@ const ConfigSchema = new Schema ({
   status: { type: Boolean },
 });
 const Config = mongoose.model("Config", ConfigSchema);
-
 exports.Config = Config;

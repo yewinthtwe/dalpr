@@ -2,18 +2,18 @@ const { verify } = require("jsonwebtoken");
 const config = require("config");
 
 module.exports = function (req, res, next) {
-	const token = req.cookies.authToken;
+	
+	const cookieToken = req.cookies.authToken;
 
-	//const token = req.headers.authorization;
-	//console.log("Middleware: req:", req);
-	console.log("Middleware: cookie request received:", token);
-	if (!token) {
-		res.status(401).send("Unauthenticated.");
+	//console.log("Middleware: cookie browser request received:", req.cookies);
+
+	if (!cookieToken) {
+		res.status(401).send("No cookie token provided.");
 		return;
 	} else {
-		verify(token, config.get("jwtPrivateKey"), function (err, decoded) {
+		verify(cookieToken, config.get("jwtPrivateKey"), function (err, decoded) {
 			if (!err && decoded) {
-				console.log("auth Middleware: access token decoded :", decoded);
+				console.log("auth Middleware: access cookieToken decoded :", decoded);
 				next();
 			} else {
 				res.status(401).send("Unauthenticated.");

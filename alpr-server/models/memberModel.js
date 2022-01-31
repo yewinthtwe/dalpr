@@ -37,3 +37,4 @@ const schema = Joi.object({
 
 exports.Member = Member;
 exports.schema = schema;
+

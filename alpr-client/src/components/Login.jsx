@@ -53,7 +53,7 @@ export default function Login() {
 		if (resp.data.isLoggedIn) {
 			setAuthUser(resp.data);
 			setSubmitting(false);
-			console.log("LoginJsx: resp:", resp);
+			console.log("LoginJsx: resp.cookies:", resp);
 		}
 		setGoToOrigin(true);
 		resetForm();

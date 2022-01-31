@@ -1,5 +1,5 @@
 import React from "react";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import MemoryIcon from "@material-ui/icons/Memory";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
@@ -152,8 +152,8 @@ export default function IoModule() {
 		<>
 			<PageHeader
 				title='IoModule'
-				subTitle='Io Modules'
-				icon={<PeopleAltIcon fontSize='large' />}
+				subTitle='Diamond Inya'
+				icon={<MemoryIcon fontSize='large' />}
 			/>
 
 			<Paper className={classes.pageContent}>

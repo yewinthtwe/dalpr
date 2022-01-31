@@ -238,7 +238,7 @@ function HomeDrawer() {
 		},
 		{
 			icon: <CameraIcon />,
-			text: "ALPR Camera",
+			text: "Camera",
 			onClick: () => history.push("/camera"),
 		},
 		// {
@@ -307,20 +307,24 @@ function HomeDrawer() {
 									</IconButton>
 								</Tooltip>
 							) : (
-								"login"
+								""
 							)}
-							<Tooltip title='Alert'>
+
+							{authUser ? (							<Tooltip title='Alert'>
 								<IconButton>
 									<Badge badgeContent={alerts.length} color='secondary'>
 										<NotificationsIcon />
 									</Badge>
 								</IconButton>
-							</Tooltip>
-							<Tooltip title='Logout'>
+							</Tooltip>) : ("")}
+
+							{authUser ? (<Tooltip title='Logout'>
 								<IconButton onClick={() => history.push("/logout")}>
 									<PowerSettingsNewIcon />
 								</IconButton>
-							</Tooltip>
+							</Tooltip>) : ("")}
+
+							
 						</Grid>
 					</Grid>
 				</Toolbar>

@@ -17,7 +17,8 @@ async function getInOutRecord(id) {
 }
 
 async function validateMember(lp, candidates) {
-	console.log(`validateMember: Searching in Member database.....`);
+	console.log(`validateMember: Searching ${lp} in Member database.....`);
+
 	//const member = await Member.findOne({ $or: [{'lp': { $in: lp }}, {'candidates.plate': { $in: lp }}] });
 	const query = {
 		isActive: true,
@@ -32,8 +33,24 @@ async function validateMember(lp, candidates) {
 			},
 		],
 	};
+
+// 	$or: [
+// 		{ lp: { $elemMatch: { plate: { $in: _.map(lp, "plate") } } } },
+// 		{
+// 			candidates: {
+// 				$elemMatch: {
+// 					plate: { $in: _.map(candidates, "plate") },
+// 				},
+// 			},
+// 		},
+// 	],
+// };
+
+	
 	const member = await Member.findOne(query).populate("obuObjectId");
-	//console.log("validateMember: member:", member);
+	
+	//console.log("validateMember: member object:", member);
+	
 	if (_.isEmpty(member)) {
 		console.log(`validateMember: NOT found in member database.`);
 		return member;

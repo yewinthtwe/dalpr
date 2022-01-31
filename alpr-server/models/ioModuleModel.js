@@ -16,6 +16,7 @@ const IoModuleSchema = new Schema({
 	Status: { type: String, default: "OK" },
 	configParam: { type: Object },
 	url: { type: String },
+	// url: digitaloutput/
 	numberOfRelays: { type: Number, default: 6 },
 	relays: [
 		{

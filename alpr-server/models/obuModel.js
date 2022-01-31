@@ -16,3 +16,4 @@ const ObuSchema = new Schema({
 
 const Obu = mongoose.model("Obu", ObuSchema);
 exports.Obu = Obu;
+

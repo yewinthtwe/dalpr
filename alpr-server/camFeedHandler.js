@@ -68,7 +68,7 @@ async function updateInOutRecord(_id, newUpdateData) {
 		},
 		{ new: true }
 	);
-	console.log("updateInOutRecord: record updated.", _id);
+	console.log("updateInOutRecord: Doc updated.", _id);
 	return updatedRecord;
 }
 
@@ -76,7 +76,7 @@ async function deleteOldPhoto(photo) {
 	await fs.unlink(`${photoStoreTemp}/${photo}`, (err) => {
 		if (err) throw err;
 		console.log(
-			`deleteOldPhoto: old photo file ${photoStoreTemp}/${photo} is deleted.`
+			`deleteOldPhoto: Old vehicle photo file ${photoStoreTemp}/${photo} is deleted.`
 		);
 	});
 }
@@ -101,7 +101,7 @@ async function makeRecordUsed(updatedRecord) {
 	const result = await InOutRecord.findOneAndUpdate(query, update, {
 		new: true,
 	});
-	console.log("camFeedHandler: makeRecordUsed:", result);
+	console.log("camFeedHandler: makeRecordUsed: Marking ticket as used.", result);
 	return result ? result : null;
 }
 
@@ -116,7 +116,7 @@ async function verifyInTraffic(lp) {
 		const searchResult = await InOutRecord.findOne(query)
 			.sort({ updatedAt: -1 })
 			.limit(1);
-		console.log("camFeedHandler: verifyInTraffic:", searchResult);
+		console.log("camFeedHandler: verifyInTraffic: Verifying License Plate is in Entry records.", searchResult);
 		return searchResult ? searchResult : null;
 	} catch (error) {
 		console.log(error);

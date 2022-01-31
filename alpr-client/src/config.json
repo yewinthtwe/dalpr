@@ -1,7 +1,7 @@
 {
-	"apiUrl": "http://172.16.22.231:30000/api",
+	"apiUrl": "http://localhost:30000/api",
 
-	"imageUrl": "http://172.16.22.231:30000/",
+	"imageUrl": "http://localhost:30000/",
 
 	"xmlOptions": {
 		"object": true,

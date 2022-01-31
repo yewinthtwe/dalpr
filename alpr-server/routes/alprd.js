@@ -43,6 +43,9 @@ async function getConfig() {
 		.populate("camera")
 		.populate("lane")
 		.populate("ioModule");
+
+		// console.log(`getConfig: Getting AI Lane configuration...`);
+		// console.log(configResult);
 	return configResult;
 }
 
@@ -62,13 +65,18 @@ router.post("/", async (req, res) => {
 	const lp = _.map(results, "plate");
 	const photo = `${uuid}.jpg`;
 	const candidates = _.flatten(_.map(results, "candidates"));
+
 	console.log(`alprdJs: Starting traffic scan for >>>>>>>>>>>>>>> ${lp}`);
+
+	console.log(`alprdJs: Scanned License Plates as Candidates are : >>>>>>>>>>>>>>>`, candidates);
+
 	console.log("alprdJs: Alpr-Camera ID is:", camera_id);
 
+	//console.log("alprdJs: alprLane configuration:", alprLaneConfig);
 	let currentConfig = _.filter(alprLaneConfig, (o) => {
 		return o.camera.camera_id === camera_id;
 	});
-	//console.log("alprdJs: Active CONFIG:", currentConfig);
+
 	const member = await validateMember(lp, candidates);
 
 	//console.log("alprdJs: Validated memberObject:", member);
@@ -98,15 +106,22 @@ router.post("/", async (req, res) => {
 	// 	}
 	// });
 	//console.log("alprdJs: Alpr-Lane Config Object:", attachedCamera);
+
 	console.log("alprdJs: Alpr-Lane Name:", currentConfig[0].name);
 	const { isExitLane, name: laneName } = currentConfig[0].lane;
 	console.log("alprdJs: Alpr-Camera IP:", currentConfig[0].camera.ip);
+
 	console.log("alprdJs: Physical Lane Name is:", laneName);
 	console.log(
 		"alprdJs: Physical Lane type is:",
 		isExitLane ? "EXIT lane" : "ENTRY Lane"
 	);
+	
 	const { ioModule: ioMod, relay: relayObjId } = currentConfig[0];
+
+	// console.log("alprdJs: IO module info:", ioMod);
+	// console.log("alprdJs: relay info:", relayObjId);
+
 	const moduleInfo = _.pick(ioMod, [
 		"name",
 		"ip",
@@ -118,6 +133,10 @@ router.post("/", async (req, res) => {
 	console.log("alprdJs: IO Module IP:", moduleInfo ? moduleInfo.ip : "0.0.0.0");
 
 	let relayObj = _.find(moduleInfo.relays, (o) => {
+
+		// console.log("alprdJs: moduleInfo:", o);
+		// console.log("alprdJs: relayObjId:", relayObjId);
+
 		if (_.isEqual(o._id, relayObjId)) {
 			return true;
 		}
@@ -131,12 +150,14 @@ router.post("/", async (req, res) => {
 
 	const { ip, port, url, configParam: adamConfig, name: ioModule } = moduleInfo;
 	const axiosUrl = `http://${ip}:${port}/${url}/all/value`;
+
 	//const axiosUrl = adamUrl;
 	//console.log("alprdJS: :", axiosUrl);
 	//const relayStatus = await playAdam.showDO(ioModuleId);
 	//relayStatus.DO[relayId].VALUE == 0;
 
 	console.log("alprdJs: Performing duplicate record search in tempo database.");
+	
 	let searchResult = await lpSearchForUpdate(lp, isExitLane, candidates); // return document object
 	const tkn = {
 		newDocData: {
@@ -295,7 +316,7 @@ async function memberEntry(tkn) {
 			await createDoc(newDocData);
 		} else {
 			const updatedRecord = await updateDoc(_id, newUpdateEntryData);
-			await makeRecordUsed(updatedRecord);
+			//await makeRecordUsed(updatedRecord);
 			await deleteOldPhoto(oldPhoto);
 		}
 	}
@@ -316,7 +337,7 @@ async function nonMemberEntry(tkn) {
 		const { _id, inPhoto, outPhoto, direction } = searchResultToUpdate;
 		direction === "IN" ? (oldPhoto = inPhoto) : (oldPhoto = outPhoto);
 		const updatedRecord = await updateDoc(_id, newUpdateEntryData);
-		await makeRecordUsed(updatedRecord);
+		//await makeRecordUsed(updatedRecord);
 		await deleteOldPhoto(oldPhoto);
 	}
 	console.log("alprdJs: nonMemberEntry: Must open ALB manually for", lp);

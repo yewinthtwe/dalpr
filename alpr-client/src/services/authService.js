@@ -5,6 +5,7 @@ import http from "./httpService";
 export function login(data) {
 	//console.log("authService: login:", data);
 	return http.post(apiUrl + "/login", data);
+	//return http.loginPost(apiUrl + "/login", data);
 	//console.log("authService: login: response:", response);
 	// localStorage.setItem(tokenKey, jwt);
 }

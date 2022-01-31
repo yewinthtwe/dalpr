@@ -43,12 +43,21 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function () {
+
+	 //const expiration = 604800000;
 	const jwtAuthToken = jwt.sign(
 		{ username: this.username, _id: this._id, isAdmin: this.isAdmin },
 		config.get("jwtPrivateKey"),
 		{ expiresIn: "1h" }
 	);
 	return jwtAuthToken;
+
+	// return res.cookie('authToken', jwtAuthToken, {
+	// 	expires: new Date(Date.now() + expiration),
+	// 	secure: false, // set to true if your using https
+	// 	httpOnly: true,
+	//   });
+
 };
 
 // userSchema.methods.generateCookie = function () {

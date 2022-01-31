@@ -12,6 +12,7 @@ function getCancelToken() {
 const authAxios = axios.create({
 	baseURL: apiUrl,
 	withCredentials: true,
+	//headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
 });
 
 axios.interceptors.response.use(null, (error) => {
