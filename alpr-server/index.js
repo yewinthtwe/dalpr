@@ -49,41 +49,14 @@ if (!config.get("jwtPrivateKey")) {
 
 const app = express();
 
-// app.use(
-// 	cors(function (req, res, next) {
-// 		res.header("Access-Control-Allow-Origin", "*");
-// 		res.header(
-// 			"Access-Control-Allow-Headers",
-// 			"Origin, X-Requested-With, Content-Type, Accept"
-// 		);
-// 		res.header("Access-Control-Allow-Credentials", true);
-// 		next();
-// 	})
-// );
-// app.use((req, res, next) => {
-// 	const allowedOrigins = [
-// 		"http://127.0.0.1:3000",
-// 		"http://localhost:3000",
-// 		"http://192.168.11.247:3000",
-// 		"http://192.168.11.67:3000",
-// 	];
-// 	const origin = req.headers.origin;
-// 	if (allowedOrigins.includes(origin)) {
-// 		res.setHeader("Access-Control-Allow-Origin", origin);
-// 	}
-// 	res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-// 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-// 	res.header("Access-Control-Allow-Credentials", true);
-// 	return next();
-// });
-
 app.use(
 	cors({
 		origin: [
 			"http://localhost:3000",
+			"http://localhost:30000",
 			"http://127.0.0.1:3000",
 			"http://192.168.11.247:3000",
-			"http://172.16.22.231:3000",
+			"http://172.16.22.*:3000",
 			"http://192.168.11.239:3000",
 			"http://192.168.11.239:30000",
 			 
@@ -91,6 +64,13 @@ app.use(
 		credentials: true,
 	})
 );
+
+// app.use(
+// 	cors({
+// 		origin: "*",
+// 		credentials: true,
+// 	})
+// );
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 app.use(express.static("/home/alprsvr/plateimagesTemp"));

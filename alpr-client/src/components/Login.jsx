@@ -155,7 +155,7 @@ export default function Login() {
 					<Grid container justify='center' spacing={3}>
 						<Grid item>
 							<Typography variant='caption'>
-								Q-Free ASA. Copyright 2020.
+								Q-Free ASA. Copyright 2020-2021.
 							</Typography>
 						</Grid>
 					</Grid>

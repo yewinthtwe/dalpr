@@ -22,7 +22,7 @@ const NotFound = () => {
         lineHeight={5}
         fontStyle="italic" 
         textAlign="left">
-        Q-Free ASA. Copyright 2020.
+        Q-Free ASA. Copyright 2020-2021.
       </Box>
 
     </div>

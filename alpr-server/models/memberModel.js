@@ -15,11 +15,11 @@ const MemberSchema = new Schema({
 	lp: { type: Array, required: true },
 	address: { type: String, required: true },
 	mobile: { type: Number },
-	email: { type: String },
+	email: { type: String, default: "you@gmail.com" },
 	registrationDate: { type: Date, default: Date.now },
 	expireDate: { type: Date },
 	candidates: { type: Array },
-	isActive: { type: Boolean },
+	isActive: { type: Boolean, default: true },
 	obuObjectId: { type: mongoose.Schema.Types.ObjectId, ref: "Obu" },
 });
 

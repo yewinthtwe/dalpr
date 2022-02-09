@@ -9,7 +9,7 @@
 		"useCreateIndex": true
 	},
 
-	"apiURL": "http://172.16.22.231:30000/api",
+	"apiURL": "http://localhost:30000/api",
 
 	"photoStore": {
 		"location": "/home/alprsvr/plateimages"

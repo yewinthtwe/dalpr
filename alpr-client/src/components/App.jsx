@@ -11,14 +11,14 @@ import User from "./User";
 import Member from "./Member";
 import Login from "./Login";
 import Logout from "./Logout";
-import Barcode from "./Barcode";
-import Kiosk from "./Kiosk";
-import Report from "./Report";
+// import Barcode from "./Barcode";
+// import Kiosk from "./Kiosk";
+// import Report from "./Report";
 import IoModule from "./IoModule";
 import Camera from "./Camera";
 import Config from "./Config";
 import GeneralSetting from "./GeneralSetting";
-import Price from "./Price";
+// import Price from "./Price";
 import Obu from "./Obu";
 import SystemControl from "./SystemControl";
 import AlprLane from "./AlprLane";
@@ -116,16 +116,19 @@ export default function App() {
 								<InOutRecord />
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/barcode'>
-								<Barcode />
+							<NotFound />
+								{/* <Barcode /> */}
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/kiosk'>
-								<Kiosk />
+							<NotFound />
+								{/* <Kiosk /> */}
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/control'>
 								<SystemControl />
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/report'>
-								<Report />
+							<NotFound />
+								{/* <Report /> */}
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/member'>
 								<Member />
@@ -152,7 +155,8 @@ export default function App() {
 								<GeneralSetting />
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/price'>
-								<Price />
+							<NotFound />
+								{/* <Price /> */}
 							</ProtectedRoute>
 							<ProtectedRoute exact path='/obu'>
 								<Obu />

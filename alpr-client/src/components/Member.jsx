@@ -96,7 +96,7 @@ function Member() {
 				if (target.value === "") return items;
 				else
 					return items.filter((x) =>
-						x.memberName.toLowerCase().includes(target.value.toLowerCase())
+						x.memberName.toLowerCase().includes(target.value)
 					);
 			},
 		});

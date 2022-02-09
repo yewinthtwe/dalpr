@@ -52,10 +52,17 @@ async function validateMember(lp, candidates) {
 	//console.log("validateMember: member object:", member);
 	
 	if (_.isEmpty(member)) {
-		console.log(`validateMember: NOT found in member database.`);
+		console.log(`validateUserJs: validateMember: NOT found in member database.`);
 		return member;
 	} else {
-		console.log(`validateMember: FOUND in member database.`);
+		//console.log(`validateUserJs: validateMember: FOUND in member database.`);
+			const { memberName, memberId, lp: memberPlate, memberType } = member;
+			console.log("validateUserJs: validateMember: member Name:", memberName);
+			//console.log("validateUserJs: validateMember: member Id:", memberId);
+			console.log("validateUserJs: validateMember: Registered license plate(s):", memberPlate);
+			//console.log("validateUserJs: validateMember: member type:", memberType);
+			console.log("validateUserJs: validateMember: OBU Id:", member.obuObjectId.obuId);
+		
 		return member;
 	}
 }

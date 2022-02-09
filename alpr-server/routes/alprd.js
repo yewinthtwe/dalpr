@@ -3,17 +3,12 @@ const router = express.Router();
 const _ = require("lodash");
 const playAdam = require("../relayPlayer");
 const { validateMember } = require("../validateUser");
-const {
-	saveInOutRecord,
-	updateInOutRecord,
-	lpSearchForUpdate,
-	verifyInTraffic,
-	deleteOldPhoto,
-	// isTimeCheckOk,
-	makeRecordUsed,
-} = require("../camFeedHandler");
+const { getConfig } = require("../getConfig");
+const { processExit } = require("../processExit");
+const { processEntry } = require("../processEntry");
+const {	lpSearchForUpdate } = require("../camFeedHandler");
+//const { Price } = require("../models/priceModel");
 //const { Camera } = require("../models/cameraModel");
-const { AiLane } = require("../models/aiLaneModel");
 //const { Lane } = require("../models/laneModel");
 //const { IoModule } = require("../models/ioModuleModel");
 // const { isNewDoc } = require("../isNewDoc");
@@ -38,19 +33,8 @@ const { AiLane } = require("../models/aiLaneModel");
 // };
 // const { data } = await axios.post( config.get(`adamURL.${ioModuleId}`), datastring, config.get('adamConfig') );
 
-async function getConfig() {
-	let configResult = await AiLane.find()
-		.populate("camera")
-		.populate("lane")
-		.populate("ioModule");
-
-		// console.log(`getConfig: Getting AI Lane configuration...`);
-		// console.log(configResult);
-	return configResult;
-}
 
 router.post("/", async (req, res) => {
-	const alprLaneConfig = await getConfig();
 
 	const cameraFeed = _.pick(
 		req.body,
@@ -73,21 +57,14 @@ router.post("/", async (req, res) => {
 	console.log("alprdJs: Alpr-Camera ID is:", camera_id);
 
 	//console.log("alprdJs: alprLane configuration:", alprLaneConfig);
-	let currentConfig = _.filter(alprLaneConfig, (o) => {
-		return o.camera.camera_id === camera_id;
-	});
+		
+	const currentConfig = await getConfig(camera_id);
+
+	// let currentConfig = _.filter(alprLaneConfig, (o) => {
+	// 	return o.camera.camera_id === camera_id;
+	// });
 
 	const member = await validateMember(lp, candidates);
-
-	//console.log("alprdJs: Validated memberObject:", member);
-	if (member) {
-		const { memberName, memberId, lp: memberPlate, memberType } = member;
-		console.log("alprdJs: member Name:", memberName);
-		console.log("alprdJs: member Id:", memberId);
-		console.log("alprdJs: Registered license plate(s):", memberPlate);
-		console.log("alprdJs: member type:", memberType);
-		console.log("alprdJs: OBU Id:", member.obuObjectId.obuId);
-	}
 	const obu = member ? member.obuObjectId.obuId : "0000000000000000";
 	const isMember = member ? true : false;
 
@@ -156,9 +133,9 @@ router.post("/", async (req, res) => {
 	//const relayStatus = await playAdam.showDO(ioModuleId);
 	//relayStatus.DO[relayId].VALUE == 0;
 
-	console.log("alprdJs: Performing duplicate record search in tempo database.");
-	
+
 	let searchResult = await lpSearchForUpdate(lp, isExitLane, candidates); // return document object
+	
 	const tkn = {
 		newDocData: {
 			lp: lp,
@@ -228,141 +205,12 @@ router.post("/", async (req, res) => {
 			relayId: relayId,
 			relayValue: albStatus,
 		},
+		enableParkingFee: false,
 	};
-
 	res.sendStatus(200);
-	// const isNewTraffic = isNewDoc(tkn);
-	// console.log("alprdJS: isNewDoc status:", isNewTraffic);
+
 	isExitLane ? processExit(tkn) : processEntry(tkn);
 	console.log(`alprdJs: End traffic scan >>>>>>>>>>>>>>> ${lp}`);
 }); // routing POST block End
-
-function processExit(tkn) {
-	const { isMember } = tkn;
-	console.log(`alprdJs: processExit: Processing...`);
-	isMember ? memberExit(tkn) : nonMemberExit(tkn);
-}
-
-async function memberExit(tkn) {
-	const {
-		newDocData,
-		newUpdateExitData,
-		searchResult: searchResultToUpdate,
-		relay,
-	} = tkn;
-
-	if (_.isEmpty(searchResultToUpdate)) {
-		await createDoc(newDocData);
-	} else {
-		const { _id, inPhoto, outPhoto, direction, inTrafficId, outTrafficId } =
-			searchResultToUpdate;
-		direction === "OUT" ? (oldPhoto = outPhoto) : (oldPhoto = inPhoto);
-		const updatedRecord = await updateDoc(_id, newUpdateExitData);
-		await makeRecordUsed(updatedRecord);
-		await deleteOldPhoto(oldPhoto);
-	}
-	await openAlb(relay);
-}
-
-async function nonMemberExit(tkn) {
-	const { newUpdateExitData, relay } = tkn;
-	const { lp, outPhoto: unwantedPhoto, ticket } = newUpdateExitData;
-	const verifyInTrafficResult = await verifyInTraffic(lp);
-	if (!verifyInTrafficResult) {
-		console.log(
-			"alprdJs: nonMemberExit: No Valid Entry found. Use Entry lane."
-		);
-		await deleteOldPhoto(unwantedPhoto);
-	} else {
-		const { _id, outPhoto: oldPhoto } = verifyInTrafficResult;
-		const updatedRecord = await updateDoc(_id, newUpdateExitData);
-		if (oldPhoto) {
-			await deleteOldPhoto(oldPhoto);
-		}
-		await makeRecordUsed(updatedRecord);
-		ticket.isPaid
-			? await openAlb(relay)
-			: console.log(
-					"alprdJs: nonMemberExit: UNPAID Ticket. Pay at Kiosk or Man-booth."
-			  );
-	}
-}
-
-function processEntry(tkn) {
-	const { newUpdateEntryData, isMember } = tkn;
-	const { lp } = newUpdateEntryData;
-	console.log(`alprdJs: processEntry: ${lp} >>> Processing...`);
-	isMember ? memberEntry(tkn) : nonMemberEntry(tkn);
-}
-
-async function memberEntry(tkn) {
-	const {
-		newDocData,
-		newUpdateEntryData,
-		searchResult: searchResultToUpdate,
-		relay,
-	} = tkn;
-
-	const { lp } = newUpdateEntryData;
-	console.log(`alprdJs: memberEntry: ${lp} >>> Processing...`);
-	if (_.isEmpty(searchResultToUpdate)) {
-		await createDoc(newDocData);
-	} else {
-		const { _id, inPhoto, outPhoto, direction, inTrafficId, outTrafficId } =
-			searchResultToUpdate;
-		direction === "IN" ? (oldPhoto = inPhoto) : (oldPhoto = outPhoto);
-		if (inTrafficId && outTrafficId) {
-			console.log("alprdJs: memberEntry: USED Traffic.");
-			await createDoc(newDocData);
-		} else {
-			const updatedRecord = await updateDoc(_id, newUpdateEntryData);
-			//await makeRecordUsed(updatedRecord);
-			await deleteOldPhoto(oldPhoto);
-		}
-	}
-	await openAlb(relay);
-}
-
-async function nonMemberEntry(tkn) {
-	const {
-		newDocData,
-		newUpdateEntryData,
-		searchResult: searchResultToUpdate,
-	} = tkn;
-	const { lp } = newUpdateEntryData;
-	console.log(`alprdJs: nonMemberEntry: ${lp} >>> Processing...`);
-	if (_.isEmpty(searchResultToUpdate)) {
-		await createDoc(newDocData);
-	} else {
-		const { _id, inPhoto, outPhoto, direction } = searchResultToUpdate;
-		direction === "IN" ? (oldPhoto = inPhoto) : (oldPhoto = outPhoto);
-		const updatedRecord = await updateDoc(_id, newUpdateEntryData);
-		//await makeRecordUsed(updatedRecord);
-		await deleteOldPhoto(oldPhoto);
-	}
-	console.log("alprdJs: nonMemberEntry: Must open ALB manually for", lp);
-}
-
-async function createDoc(newDocData) {
-	const { lp } = newDocData;
-	console.log(`${lp} > Creating NEW document.`);
-	await saveInOutRecord(newDocData);
-}
-
-async function updateDoc(_id, newUpdateData) {
-	const { lp } = newUpdateData;
-	console.log(`alprdJs: updateDoc: ${lp} >>> Updating document...`);
-	const updatedRecord = await updateInOutRecord(_id, newUpdateData);
-	return updatedRecord;
-}
-
-async function openAlb(relay) {
-	if (relay.relayValue == 0) {
-		relay.relayValue = 1;
-		await playAdam.setRelayValue(relay);
-	} else {
-		console.log("alprdJs: openAlb: ALB is already opened.", relay.relayValue);
-	}
-}
 
 module.exports = router;
